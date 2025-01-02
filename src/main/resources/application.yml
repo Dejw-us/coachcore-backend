@@ -1,0 +1,19 @@
+spring:
+  # database config
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5433/shapeit-api
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  security:
+    # Keycloak config
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/shapeit
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+server:
+  port: 8082
