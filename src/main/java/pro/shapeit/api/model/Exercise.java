@@ -1,18 +1,23 @@
 package pro.shapeit.api.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Data;
 import pro.shapeit.api.annotation.validation.ValidLocalId;
 
 @Entity
+@Data
 public class Exercise {
   @Id
   @GeneratedValue
   private Long id;
 
+  @Column(nullable = false, length = 36, unique = true)
   @ValidLocalId
   private String localId;
 
+  @Column(nullable = false)
   private String name;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private ExerciseCategory category;
 }

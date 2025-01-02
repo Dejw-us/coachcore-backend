@@ -1,26 +1,31 @@
 package pro.shapeit.api.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
+import lombok.Data;
 import pro.shapeit.api.annotation.validation.ValidLocalId;
 
+import java.util.List;
+
 @Entity
+@Data
 public class TrainingExercise {
   @Id
   @GeneratedValue
   private Long id;
 
-  @Column(nullable = false, length = 36)
+  @Column(nullable = false, length = 36, unique = true)
   @ValidLocalId
   private String localId;
 
-  private String exerciseName;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Exercise exercise;
 
   private String notes;
 
-//  private List<TrainingSet> sets;
+  @OneToMany
+  @JoinTable(
+      joinColumns = @JoinColumn(name = "training_exercise_id"),
+      inverseJoinColumns = @JoinColumn(name = "training_set_id")
+  )
+  private List<TrainingSet> sets;
 }
