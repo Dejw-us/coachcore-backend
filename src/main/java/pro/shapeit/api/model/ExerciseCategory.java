@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 import lombok.Data;
 
 @Entity
-@Data
 public class ExerciseCategory {
   @Id
   @GeneratedValue
@@ -15,4 +14,8 @@ public class ExerciseCategory {
 
   @Column(unique = true, nullable = false)
   private String name;
+
+  public String getName() {
+    return name;
+  }
 }

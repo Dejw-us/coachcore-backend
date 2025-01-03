@@ -1,13 +1,11 @@
 package pro.shapeit.api.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import pro.shapeit.api.annotation.validation.ValidLocalId;
 
 import java.util.List;
 
 @Entity
-@Data
 public class TrainingPlan {
   @Id
   @GeneratedValue
@@ -31,4 +29,20 @@ public class TrainingPlan {
       inverseJoinColumns = @JoinColumn(name = "training_goal_id")
   )
   private List<TrainingGoal> goals;
+
+  public String getLocalId() {
+    return localId;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public List<TrainingUnit> getUnits() {
+    return units;
+  }
+
+  public List<TrainingGoal> getGoals() {
+    return goals;
+  }
 }

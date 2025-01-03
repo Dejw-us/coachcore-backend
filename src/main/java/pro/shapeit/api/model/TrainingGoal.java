@@ -1,10 +1,8 @@
 package pro.shapeit.api.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 
 @Entity
-@Data
 public class TrainingGoal {
   @Id
   @GeneratedValue
@@ -15,4 +13,8 @@ public class TrainingGoal {
   @ManyToOne
   @JoinColumn(name = "training_plan_id")
   private TrainingPlan trainingPlan;
+
+  public String getDescription() {
+    return description;
+  }
 }

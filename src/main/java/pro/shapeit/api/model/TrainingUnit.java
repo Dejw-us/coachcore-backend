@@ -8,7 +8,6 @@ import java.time.DayOfWeek;
 import java.util.List;
 
 @Entity
-@Data
 public class TrainingUnit {
   @Id
   @GeneratedValue
@@ -28,4 +27,20 @@ public class TrainingUnit {
       inverseJoinColumns = @JoinColumn(name = "training_exercise_id")
   )
   private List<TrainingExercise> exercises;
+
+  public String getLocalId() {
+    return localId;
+  }
+
+  public String getNotes() {
+    return notes;
+  }
+
+  public DayOfWeek getDayOfWeek() {
+    return dayOfWeek;
+  }
+
+  public List<TrainingExercise> getExercises() {
+    return exercises;
+  }
 }

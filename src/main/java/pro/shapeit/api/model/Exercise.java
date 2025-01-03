@@ -5,7 +5,6 @@ import lombok.Data;
 import pro.shapeit.api.annotation.validation.ValidLocalId;
 
 @Entity
-@Data
 public class Exercise {
   @Id
   @GeneratedValue
@@ -20,4 +19,16 @@ public class Exercise {
 
   @ManyToOne(fetch = FetchType.LAZY)
   private ExerciseCategory category;
+
+  public String getLocalId() {
+    return localId;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public ExerciseCategory getCategory() {
+    return category;
+  }
 }

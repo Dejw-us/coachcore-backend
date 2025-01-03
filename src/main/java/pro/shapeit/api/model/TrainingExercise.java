@@ -7,7 +7,6 @@ import pro.shapeit.api.annotation.validation.ValidLocalId;
 import java.util.List;
 
 @Entity
-@Data
 public class TrainingExercise {
   @Id
   @GeneratedValue
@@ -28,4 +27,20 @@ public class TrainingExercise {
       inverseJoinColumns = @JoinColumn(name = "training_set_id")
   )
   private List<TrainingSet> sets;
+
+  public String getLocalId() {
+    return localId;
+  }
+
+  public Exercise getExercise() {
+    return exercise;
+  }
+
+  public String getNotes() {
+    return notes;
+  }
+
+  public List<TrainingSet> getSets() {
+    return sets;
+  }
 }

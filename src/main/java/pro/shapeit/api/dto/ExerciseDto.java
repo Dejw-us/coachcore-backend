@@ -6,13 +6,13 @@ import pro.shapeit.api.model.ExerciseCategory;
 public record ExerciseDto(
     String localId,
     String name,
-    ExerciseCategory category
+    String category
 ) {
   public static ExerciseDto from(Exercise exercise) {
     return new ExerciseDto(
         exercise.getLocalId(),
         exercise.getName(),
-        exercise.getCategory()
+        exercise.getCategory().getName()
     );
   }
 }
