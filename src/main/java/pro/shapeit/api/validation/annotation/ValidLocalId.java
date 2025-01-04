@@ -1,9 +1,9 @@
-package pro.shapeit.api.annotation.validation;
+package pro.shapeit.api.validation.annotation;
 
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import pro.shapeit.api.validation.LocalIdValidator;
+import pro.shapeit.api.validation.validator.LocalIdValidator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

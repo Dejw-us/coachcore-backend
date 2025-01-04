@@ -1,8 +1,7 @@
-package pro.shapeit.api.model;
+package pro.shapeit.api.training.exercise;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import pro.shapeit.api.annotation.validation.ValidLocalId;
+import pro.shapeit.api.validation.annotation.ValidLocalId;
 
 @Entity
 public class Exercise {
@@ -19,16 +18,4 @@ public class Exercise {
 
   @ManyToOne(fetch = FetchType.LAZY)
   private ExerciseCategory category;
-
-  public String getLocalId() {
-    return localId;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public ExerciseCategory getCategory() {
-    return category;
-  }
 }

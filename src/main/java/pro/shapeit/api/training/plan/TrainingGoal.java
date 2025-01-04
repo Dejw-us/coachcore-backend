@@ -1,4 +1,4 @@
-package pro.shapeit.api.model;
+package pro.shapeit.api.training.plan;
 
 import jakarta.persistence.*;
 

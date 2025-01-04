@@ -1,7 +1,8 @@
-package pro.shapeit.api.model;
+package pro.shapeit.api.training.plan;
 
 import jakarta.persistence.*;
-import pro.shapeit.api.annotation.validation.ValidLocalId;
+import pro.shapeit.api.validation.annotation.ValidLocalId;
+import pro.shapeit.api.training.unit.TrainingUnit;
 
 import java.util.List;
 
