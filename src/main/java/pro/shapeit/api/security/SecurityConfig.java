@@ -1,5 +1,6 @@
 package pro.shapeit.api.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,8 +23,7 @@ public class SecurityConfig {
     http.csrf(AbstractHttpConfigurer::disable);
 
     http.authorizeHttpRequests(auth -> {
-      auth.requestMatchers("/training-plans/**").permitAll();
-      auth.anyRequest().authenticated();
+      auth.anyRequest().permitAll();
     });
 
     http.oauth2ResourceServer(server -> {

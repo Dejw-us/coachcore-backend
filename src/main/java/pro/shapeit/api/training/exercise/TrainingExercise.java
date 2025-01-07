@@ -1,46 +1,32 @@
 package pro.shapeit.api.training.exercise;
 
 import jakarta.persistence.*;
-import pro.shapeit.api.validation.annotation.ValidLocalId;
+import lombok.Data;
+import pro.shapeit.api.training.exercise.catalog.CatalogExercise;
 import pro.shapeit.api.training.set.TrainingSet;
+import pro.shapeit.api.training.unit.TrainingUnit;
 
 import java.util.List;
 
 @Entity
+@Data
 public class TrainingExercise {
   @Id
   @GeneratedValue
   private Long id;
 
   @Column(nullable = false, length = 36, unique = true)
-  @ValidLocalId
   private String localId;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private Exercise exercise;
+  private CatalogExercise catalogExercise;
 
   private String notes;
 
-  @OneToMany
-  @JoinTable(
-      joinColumns = @JoinColumn(name = "training_exercise_id"),
-      inverseJoinColumns = @JoinColumn(name = "training_set_id")
-  )
+  @OneToMany(mappedBy = "trainingExercise")
   private List<TrainingSet> sets;
 
-  public String getLocalId() {
-    return localId;
-  }
-
-  public Exercise getExercise() {
-    return exercise;
-  }
-
-  public String getNotes() {
-    return notes;
-  }
-
-  public List<TrainingSet> getSets() {
-    return sets;
-  }
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "training_unit_id")
+  private TrainingUnit trainingUnit;
 }

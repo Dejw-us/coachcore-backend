@@ -1,7 +1,7 @@
 package pro.shapeit.api.training.set;
 
 import jakarta.persistence.*;
-import pro.shapeit.api.validation.annotation.ValidLocalId;
+import pro.shapeit.api.training.exercise.TrainingExercise;
 
 @Entity
 public class TrainingSet {
@@ -9,7 +9,6 @@ public class TrainingSet {
   @GeneratedValue
   private Long id;
 
-  @ValidLocalId
   private String localId;
 
   private Integer reps;
@@ -21,6 +20,10 @@ public class TrainingSet {
   private String rate;
 
   private Double rest;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "training_exercise_id")
+  private TrainingExercise trainingExercise;
 
   public enum IntensityType {
     RIR,
