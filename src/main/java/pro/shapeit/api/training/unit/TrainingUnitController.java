@@ -1,5 +1,6 @@
 package pro.shapeit.api.training.unit;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,9 @@ public class TrainingUnitController {
 
 
   @GetMapping("/{unitLocalId}")
+  @Operation(
+      summary = "Get specific training unit"
+  )
   public ResponseEntity<?> getTrainingUnit(@PathVariable String unitLocalId) {
     var unit = trainingUnitService.findTrainingUnit(unitLocalId);
     var unitDto = trainingUnitMapper.map(unit);
@@ -32,6 +36,9 @@ public class TrainingUnitController {
   }
 
   @PostMapping("/{unitLocalId}/exercises")
+  @Operation(
+      summary = "Get all exercises of training unit"
+  )
   public ResponseEntity<?> getTrainingExercises(
       @PathVariable String unitLocalId,
       @RequestBody CreateTrainingExerciseDto dto
@@ -53,6 +60,9 @@ public class TrainingUnitController {
   }
 
   @PatchMapping("/{unitLocalId}")
+  @Operation(
+      summary = "Update training unit"
+  )
   public ResponseEntity<?> patchTrainingUnit(@PathVariable String unitLocalId, @RequestBody UpdateTrainingUnitDto dto) {
     var unit = trainingUnitService.updateTrainingUnit(unitLocalId, dto);
     var unitDto = trainingUnitMapper.map(unit);

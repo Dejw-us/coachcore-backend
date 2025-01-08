@@ -1,5 +1,6 @@
 package pro.shapeit.api.training.exercise.catalog;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,9 @@ public class CatalogExerciseController {
   private final CatalogExerciseMapper catalogExerciseMapper;
 
   @GetMapping
+  @Operation(
+      summary = "Get all catalog exercises"
+  )
   public ResponseEntity<?> getCatalogExercises() {
     var exercises = catalogExerciseService.finalAllCatalogExercises();
     var exercisesDto = exercises.stream()

@@ -1,5 +1,6 @@
 package pro.shapeit.api.training.exercise.category;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,9 @@ public class ExerciseCategoryController {
   private final CatalogExerciseMapper catalogExerciseMapper;
 
   @GetMapping
+  @Operation(
+      summary = "Get all exercise categories"
+  )
   public ResponseEntity<?> getExerciseCategories() {
     var categories = exerciseCategoryService.findAllExerciseCategories();
     var categoriesDto = categories.stream()
@@ -29,6 +33,9 @@ public class ExerciseCategoryController {
   }
 
   @PostMapping("{categoryLocalId}/catalog-exercises")
+  @Operation(
+      summary = "Save new catalog exercise corresponding to the given category"
+  )
   public ResponseEntity<?> postCatalogExercise(
       @PathVariable String categoryLocalId,
       @RequestBody CreateCatalogExerciseDto dto

@@ -1,5 +1,6 @@
 package pro.shapeit.api.training.set;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,9 @@ public class TrainingSetController {
   private final TrainingSetMapper trainingSetMapper;
 
   @PatchMapping("/{setLocalId}")
+  @Operation(
+      summary = "Update training set"
+  )
   public ResponseEntity<?> patchTrainingSet(@PathVariable String setLocalId, @RequestBody UpdateTrainingSetDto dto) {
     var set = trainingSetService.findTrainingSet(setLocalId);
     var updatedSet = trainingSetService.updateTrainingSet(set, dto);
