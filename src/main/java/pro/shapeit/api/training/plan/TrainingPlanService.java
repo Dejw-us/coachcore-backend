@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import pro.shapeit.api.common.exception.ResourceNotFoundException;
 import pro.shapeit.api.training.goal.TrainingGoal;
-import pro.shapeit.api.training.goal.TrainingGoalMapper;
 import pro.shapeit.api.training.goal.TrainingGoalRepository;
 
 import java.util.List;

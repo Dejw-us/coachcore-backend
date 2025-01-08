@@ -1,9 +1,12 @@
 package pro.shapeit.api.training.unit;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pro.shapeit.api.common.dto.MessageDto;
 import pro.shapeit.api.training.exercise.CreateTrainingExerciseDto;
+import pro.shapeit.api.training.exercise.TrainingExerciseMapper;
 import pro.shapeit.api.training.exercise.TrainingExerciseService;
 import pro.shapeit.api.training.exercise.catalog.CatalogExerciseService;
 
@@ -16,6 +19,7 @@ public class TrainingUnitController {
   private final TrainingExerciseService trainingExerciseService;
 
   private final TrainingUnitMapper trainingUnitMapper;
+  private final TrainingExerciseMapper trainingExerciseMapper;
 
 
   @GetMapping("/{unitLocalId}")
@@ -34,10 +38,18 @@ public class TrainingUnitController {
   ) {
     var unit = trainingUnitService.findTrainingUnit(unitLocalId);
     var catalogExercise = catalogExerciseService.findCatalogExercise(dto.catalogExerciseLocalId());
-    var trainingExercise = trainingExerciseService.saveTrainingExercise(unit, catalogExercise);
+    var savedExercise = trainingExerciseService.saveTrainingExercise(unit, catalogExercise);
+
+    if (savedExercise == null) {
+      return ResponseEntity
+          .status(HttpStatus.CONFLICT)
+          .body(new MessageDto("Failed to save training exercise"));
+    }
+
+    var unitDto = trainingUnitMapper.map(unit);
 
     return ResponseEntity
-        .ok(trainingUnitMapper.map(unit));
+        .ok(unitDto);
   }
 
   @PatchMapping("/{unitLocalId}")
