@@ -12,7 +12,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TrainingUnitService {
   private final TrainingUnitRepository trainingUnitRepository;
-  private final TrainingUnitMapper trainingUnitMapper;
 
   public TrainingUnit saveTrainingUnit(CreateTrainingUnitDto dto, TrainingPlan parent) {
     var unit = new TrainingUnit();
