@@ -10,6 +10,4 @@ import pro.shapeit.api.training.unit.TrainingUnitService;
 public class TrainingService {
   private final TrainingPlanService trainingPlanService;
   private final TrainingUnitService trainingUnitService;
-
-
 }

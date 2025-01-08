@@ -11,12 +11,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ExerciseCategoryService {
   private final ExerciseCategoryRepository exerciseCategoryRepository;
-  private final ExerciseCategoryMapper exerciseCategoryMapper;
 
-  public List<ExerciseCategoryDto> findAllExerciseCategories() {
-    return exerciseCategoryRepository.findAll().stream()
-        .map(exerciseCategoryMapper::map)
-        .toList();
+  public List<ExerciseCategory> findAllExerciseCategories() {
+    return exerciseCategoryRepository.findAll();
+
   }
 
   public ExerciseCategory findExerciseCategory(String localId) throws ResourceNotFoundException {
@@ -24,7 +22,7 @@ public class ExerciseCategoryService {
         .orElseThrow(() -> new ResourceNotFoundException("Category does not exist"));
   }
 
-  public ExerciseCategoryDto saveExerciseCategory(String name) {
+  public ExerciseCategory saveExerciseCategory(String name) {
     if (exerciseCategoryRepository.existsByName(name)) {
       return null;
     }
@@ -33,6 +31,6 @@ public class ExerciseCategoryService {
     category.setLocalId(LocalId.random());
     category.setName(name);
 
-    return exerciseCategoryMapper.map(exerciseCategoryRepository.save(category));
+    return exerciseCategoryRepository.save(category);
   }
 }
