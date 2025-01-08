@@ -16,7 +16,6 @@ import java.util.List;
 public class TrainingExerciseService {
   private final TrainingExerciseRepository trainingExerciseRepository;
   private final TrainingSetRepository trainingSetRepository;
-  private final TrainingExerciseMapper trainingExerciseMapper;
 
   public TrainingExercise findTrainingExercise(String localId) throws ResourceNotFoundException {
     return trainingExerciseRepository.findByLocalId(localId)

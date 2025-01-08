@@ -17,6 +17,7 @@ public class CatalogExerciseController {
     var exercisesDto = exercises.stream()
         .map(catalogExerciseMapper::map)
         .toList();
+
     return ResponseEntity
         .ok(exercisesDto);
   }

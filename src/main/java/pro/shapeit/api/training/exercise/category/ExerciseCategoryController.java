@@ -8,7 +8,7 @@ import pro.shapeit.api.training.exercise.catalog.CatalogExerciseService;
 import pro.shapeit.api.training.exercise.catalog.CreateCatalogExerciseDto;
 
 @RestController
-@RequestMapping("/catalogExercise-categories")
+@RequestMapping("/exercise-categories")
 @RequiredArgsConstructor
 public class ExerciseCategoryController {
   private final ExerciseCategoryService exerciseCategoryService;
@@ -28,7 +28,7 @@ public class ExerciseCategoryController {
         .ok(categoriesDto);
   }
 
-  @PostMapping("{categoryLocalId}/catalog-catalogExercise")
+  @PostMapping("{categoryLocalId}/catalog-exercises")
   public ResponseEntity<?> postCatalogExercise(
       @PathVariable String categoryLocalId,
       @RequestBody CreateCatalogExerciseDto dto
