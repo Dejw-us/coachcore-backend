@@ -1,11 +1,11 @@
 package pro.shapeit.api.training.plan;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import pro.shapeit.api.common.exception.ResourceNotFoundException;
 import pro.shapeit.api.training.goal.TrainingGoal;
-import pro.shapeit.api.training.goal.TrainingGoalDto;
 import pro.shapeit.api.training.goal.TrainingGoalMapper;
 import pro.shapeit.api.training.goal.TrainingGoalRepository;
 
@@ -17,15 +17,9 @@ import java.util.UUID;
 public class TrainingPlanService {
   private final TrainingPlanRepository trainingPlanRepository;
   private final TrainingGoalRepository trainingGoalRepository;
-  private final TrainingPlanMapper trainingPlanMapper;
-  private final TrainingGoalMapper trainingGoalMapper;
 
-
-
-  public List<TrainingPlanDto> findTrainingPlans(int limit) {
-    return trainingPlanRepository.findAll(PageRequest.of(0, limit))
-        .map(trainingPlanMapper::map)
-        .toList();
+  public Page<TrainingPlan> findTrainingPlans(int limit) {
+    return trainingPlanRepository.findAll(PageRequest.of(0, limit));
   }
 
   public TrainingPlan findTrainingPlan(String localId) throws ResourceNotFoundException {
@@ -33,13 +27,11 @@ public class TrainingPlanService {
         .orElseThrow(() -> new ResourceNotFoundException("Training plan does not exist"));
   }
 
-  public List<TrainingGoalDto> findTrainingGoals(String trainingPlanLocalId) {
-    return trainingGoalRepository.findByTrainingPlan_LocalId(trainingPlanLocalId).stream()
-        .map(trainingGoalMapper::map)
-        .toList();
+  public List<TrainingGoal> findTrainingGoals(String trainingPlanLocalId) {
+    return trainingGoalRepository.findByTrainingPlan_LocalId(trainingPlanLocalId);
   }
 
-  public TrainingPlanDto saveTrainingPlan(CreateTrainingPlanDto dto) {
+  public TrainingPlan saveTrainingPlan(CreateTrainingPlanDto dto) {
     var plan = new TrainingPlan();
     var goals = dto.goals().stream().map(TrainingGoal::new).toList();
 
@@ -51,6 +43,6 @@ public class TrainingPlanService {
     trainingGoalRepository.saveAll(goals);
     trainingPlanRepository.save(plan);
 
-    return trainingPlanMapper.map(plan);
+    return plan;
   }
 }

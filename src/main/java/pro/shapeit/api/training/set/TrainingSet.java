@@ -1,9 +1,11 @@
 package pro.shapeit.api.training.set;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import pro.shapeit.api.training.exercise.TrainingExercise;
 
 @Entity
+@Data
 public class TrainingSet {
   @Id
   @GeneratedValue

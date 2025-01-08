@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.shapeit.api.common.exception.ResourceNotFoundException;
+import pro.shapeit.api.training.goal.TrainingGoalMapper;
 import pro.shapeit.api.training.unit.CreateTrainingUnitDto;
 import pro.shapeit.api.training.unit.TrainingUnitMapper;
 import pro.shapeit.api.training.unit.TrainingUnitService;
@@ -17,20 +18,38 @@ public class TrainingPlanController {
   private final TrainingUnitService trainingUnitService;
 
   private final TrainingUnitMapper trainingUnitMapper;
+  private final TrainingPlanMapper trainingPlanMapper;
+  private final TrainingGoalMapper trainingGoalMapper;
 
   @GetMapping("/{planLocalId}/goals")
   public ResponseEntity<?> getTrainingGoal(@PathVariable String planLocalId) {
-    return ResponseEntity.ok(trainingPlanService.findTrainingGoals(planLocalId));
+    var goals = trainingPlanService.findTrainingGoals(planLocalId);
+    var goalsDto = goals.stream()
+        .map(trainingGoalMapper::map)
+        .toList();
+
+    return ResponseEntity
+        .ok(goalsDto);
   }
 
   @GetMapping
   public ResponseEntity<?> getTrainingPlans() {
-    return ResponseEntity.ok(trainingPlanService.findTrainingPlans(10));
+    var plans = trainingPlanService.findTrainingPlans(10);
+    var plansDto = plans
+        .map(trainingPlanMapper::map)
+        .toList();
+
+    return ResponseEntity
+        .ok(plansDto);
   }
 
   @GetMapping("/{planLocalId}")
   public ResponseEntity<?> getTrainingPlan(@PathVariable String planLocalId) throws ResourceNotFoundException {
-    return ResponseEntity.ok(trainingPlanService.findTrainingPlan(planLocalId));
+    var plan = trainingPlanService.findTrainingPlan(planLocalId);
+    var planDto = trainingPlanMapper.map(plan);
+
+    return ResponseEntity
+        .ok(planDto);
   }
 
   @GetMapping("/{planLocalId}/units")
@@ -39,6 +58,7 @@ public class TrainingPlanController {
     var unitsDto = units.stream()
         .map(trainingUnitMapper::map)
         .toList();
+
     return ResponseEntity.ok(unitsDto);
   }
 
@@ -48,17 +68,21 @@ public class TrainingPlanController {
       @RequestBody CreateTrainingUnitDto dto
   ) throws ResourceNotFoundException {
     var plan = trainingPlanService.findTrainingPlan(planLocalId);
-    var unit = trainingUnitService.saveTrainingUnit(dto, plan);
-    var unitDto = trainingUnitMapper.map(unit);
+    var savedUnit = trainingUnitService.saveTrainingUnit(dto, plan);
+    var savedUnitDto = trainingUnitMapper.map(savedUnit);
+
     return ResponseEntity
         .status(HttpStatus.CREATED)
-        .body(unitDto);
+        .body(savedUnitDto);
   }
 
   @PostMapping
   public ResponseEntity<?> postTrainingPlan(@RequestBody CreateTrainingPlanDto dto) {
+    var savedPlan = trainingPlanService.saveTrainingPlan(dto);
+    var savedPlanDto = trainingPlanMapper.map(savedPlan);
+
     return ResponseEntity
         .status(HttpStatus.CREATED)
-        .body(trainingPlanService.saveTrainingPlan(dto));
+        .body(savedPlanDto);
   }
 }
