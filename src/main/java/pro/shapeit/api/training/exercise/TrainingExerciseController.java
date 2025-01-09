@@ -31,7 +31,8 @@ public class TrainingExerciseController {
           content = @Content(
               schema = @Schema(implementation = TrainingSetDto.class)
           )
-      )
+      ),
+      tags = "Training plans"
   )
   public ResponseEntity<?> postTrainingSet(@PathVariable String exerciseLocalId) throws ResourceNotFoundException {
     var exerciseParent = trainingExerciseService.findTrainingExercise(exerciseLocalId);

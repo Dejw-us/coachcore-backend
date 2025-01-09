@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,8 @@ public class TrainingUnitController {
               mediaType = MediaType.APPLICATION_JSON_VALUE,
               schema = @Schema(implementation = TrainingUnitDto.class)
           )
-      )
+      ),
+      tags = "Training plans"
   )
   public ResponseEntity<?> getTrainingUnit(@PathVariable String unitLocalId) throws ResourceNotFoundException {
     var unit = trainingUnitService.findTrainingUnit(unitLocalId);
@@ -51,12 +53,13 @@ public class TrainingUnitController {
       summary = "Save new exercise on training unit",
       responses = @ApiResponse(
           description = "Saved training exercise",
-          responseCode = "200",
+          responseCode = "201",
           content = @Content(
               mediaType = MediaType.APPLICATION_JSON_VALUE,
               schema = @Schema(implementation = TrainingExerciseDto.class)
           )
-      )
+      ),
+      tags = "Training plans"
   )
   public ResponseEntity<?> getTrainingExercises(
       @PathVariable String unitLocalId,
@@ -68,7 +71,8 @@ public class TrainingUnitController {
     var savedExerciseDto = trainingExerciseMapper.map(savedExercise);
 
     return ResponseEntity
-        .ok(savedExerciseDto);
+        .status(HttpStatus.CREATED)
+        .body(savedExerciseDto);
   }
 
   @PatchMapping("/{unitLocalId}")
@@ -81,7 +85,8 @@ public class TrainingUnitController {
               mediaType = MediaType.APPLICATION_JSON_VALUE,
               schema = @Schema(implementation = TrainingUnitDto.class)
           )
-      )
+      ),
+      tags = "Training plans"
   )
   public ResponseEntity<?> patchTrainingUnit(@PathVariable String unitLocalId, @RequestBody UpdateTrainingUnitDto dto) throws ResourceNotFoundException {
     var updatedUnit = trainingUnitService.updateTrainingUnit(unitLocalId, dto);

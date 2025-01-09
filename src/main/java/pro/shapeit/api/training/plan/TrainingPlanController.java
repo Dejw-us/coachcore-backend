@@ -41,7 +41,8 @@ public class TrainingPlanController {
                   schema = @Schema(implementation = TrainingGoalDto.class)
               )
           )
-      )
+      ),
+      tags = "Training plans"
   )
   public ResponseEntity<?> getTrainingGoal(@PathVariable String planLocalId) {
     var goals = trainingPlanService.findTrainingGoals(planLocalId);
@@ -65,7 +66,8 @@ public class TrainingPlanController {
                   schema = @Schema(implementation = TrainingPlanDto.class)
               )
           )
-      )
+      ),
+      tags = "Training plans"
   )
   public ResponseEntity<?> getTrainingPlans() {
     var plans = trainingPlanService.findTrainingPlans(10);
@@ -87,7 +89,8 @@ public class TrainingPlanController {
               mediaType = MediaType.APPLICATION_JSON_VALUE,
               schema = @Schema(implementation = TrainingPlanDto.class)
           )
-      )
+      ),
+      tags = "Training plans"
   )
   public ResponseEntity<?> getTrainingPlan(@PathVariable String planLocalId) throws ResourceNotFoundException {
     var plan = trainingPlanService.findTrainingPlan(planLocalId);
@@ -109,7 +112,8 @@ public class TrainingPlanController {
                   schema = @Schema(implementation = TrainingUnitDto.class)
               )
           )
-      )
+      ),
+      tags = "Training plans"
   )
   public ResponseEntity<?> getTrainingPlanUnits(@PathVariable String planLocalId) throws ResourceNotFoundException {
     var units = trainingUnitService.findTrainingUnits(planLocalId);
@@ -130,7 +134,8 @@ public class TrainingPlanController {
               mediaType = MediaType.APPLICATION_JSON_VALUE,
               schema = @Schema(implementation = TrainingUnitDto.class)
           )
-      )
+      ),
+      tags = "Training plans"
   )
   public ResponseEntity<?> postTrainingPlanUnit(
       @PathVariable String planLocalId,
@@ -155,7 +160,8 @@ public class TrainingPlanController {
               mediaType = MediaType.APPLICATION_JSON_VALUE,
               schema = @Schema(implementation = TrainingPlanDto.class)
           )
-      )
+      ),
+      tags = "Training plans"
   )
   public ResponseEntity<?> postTrainingPlan(@RequestBody CreateTrainingPlanDto dto) {
     var savedPlan = trainingPlanService.saveTrainingPlan(dto);

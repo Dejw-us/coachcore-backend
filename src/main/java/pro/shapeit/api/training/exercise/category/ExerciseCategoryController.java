@@ -1,10 +1,17 @@
 package pro.shapeit.api.training.exercise.category;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.shapeit.api.common.exception.ResourceNotFoundException;
+import pro.shapeit.api.training.exercise.catalog.CatalogExerciseDto;
 import pro.shapeit.api.training.exercise.catalog.CatalogExerciseMapper;
 import pro.shapeit.api.training.exercise.catalog.CatalogExerciseService;
 import pro.shapeit.api.training.exercise.catalog.CreateCatalogExerciseDto;
@@ -21,7 +28,18 @@ public class ExerciseCategoryController {
 
   @GetMapping
   @Operation(
-      summary = "Get all exercise categories"
+      summary = "Get all exercise categories",
+      responses = @ApiResponse(
+          description = "List of all exercise categories",
+          responseCode = "200",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              array = @ArraySchema(
+                  schema = @Schema(implementation = ExerciseCategoryDto.class)
+              )
+          )
+      ),
+      tags = "Catalog"
   )
   public ResponseEntity<?> getExerciseCategories() {
     var categories = exerciseCategoryService.findAllExerciseCategories();
@@ -35,7 +53,16 @@ public class ExerciseCategoryController {
 
   @PostMapping("{categoryLocalId}/catalog-exercises")
   @Operation(
-      summary = "Save new catalog exercise corresponding to the given category"
+      summary = "Save new catalog exercise corresponding to the given category",
+      responses = @ApiResponse(
+          description = "Created catalog exercise",
+          responseCode = "201",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = CatalogExerciseDto.class)
+          )
+      ),
+      tags = "Catalog"
   )
   public ResponseEntity<?> postCatalogExercise(
       @PathVariable String categoryLocalId,
@@ -46,6 +73,7 @@ public class ExerciseCategoryController {
     var savedExerciseDto = catalogExerciseMapper.map(savedExercise);
 
     return ResponseEntity
-        .ok(savedExerciseDto);
+        .status(HttpStatus.CREATED)
+        .body(savedExerciseDto);
   }
 }
