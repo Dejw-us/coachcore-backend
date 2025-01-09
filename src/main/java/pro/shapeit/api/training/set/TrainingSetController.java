@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.shapeit.api.common.dto.MessageDto;
+import pro.shapeit.api.common.exception.ResourceNotFoundException;
 
 @RestController
 @RequestMapping("/training-sets")
@@ -19,7 +20,7 @@ public class TrainingSetController {
   @Operation(
       summary = "Update training set"
   )
-  public ResponseEntity<?> patchTrainingSet(@PathVariable String setLocalId, @RequestBody UpdateTrainingSetDto dto) {
+  public ResponseEntity<?> patchTrainingSet(@PathVariable String setLocalId, @RequestBody UpdateTrainingSetDto dto) throws ResourceNotFoundException {
     var set = trainingSetService.findTrainingSet(setLocalId);
     var updatedSet = trainingSetService.updateTrainingSet(set, dto);
 

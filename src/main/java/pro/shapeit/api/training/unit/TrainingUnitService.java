@@ -27,7 +27,7 @@ public class TrainingUnitService {
     return trainingUnitRepository.findByTrainingPlan_LocalId(localTrainingPlanId);
   }
 
-  public TrainingUnit updateTrainingUnit(String localId, UpdateTrainingUnitDto dto) {
+  public TrainingUnit updateTrainingUnit(String localId, UpdateTrainingUnitDto dto) throws ResourceNotFoundException {
     var unit = findTrainingUnit(localId);
 
     if (dto.notes() != null) {

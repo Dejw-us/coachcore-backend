@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pro.shapeit.api.common.exception.ResourceNotFoundException;
 import pro.shapeit.api.training.exercise.catalog.CatalogExerciseMapper;
 import pro.shapeit.api.training.exercise.catalog.CatalogExerciseService;
 import pro.shapeit.api.training.exercise.catalog.CreateCatalogExerciseDto;
@@ -39,7 +40,7 @@ public class ExerciseCategoryController {
   public ResponseEntity<?> postCatalogExercise(
       @PathVariable String categoryLocalId,
       @RequestBody CreateCatalogExerciseDto dto
-  ) {
+  ) throws ResourceNotFoundException {
     var category = exerciseCategoryService.findExerciseCategory(categoryLocalId);
     var savedExercise = catalogExerciseService.saveCatalogExercise(dto, category);
     var savedExerciseDto = catalogExerciseMapper.map(savedExercise);
