@@ -39,7 +39,6 @@ public class TrainingPlanService {
   public TrainingPlan saveTrainingPlan(CreateTrainingPlanDto dto) {
     var plan = new TrainingPlan();
 
-    plan.setLocalId(UUID.randomUUID().toString());
     plan.setDescription(dto.description());
     plan.setName(dto.name());
 

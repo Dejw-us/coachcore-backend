@@ -2,21 +2,18 @@ package pro.shapeit.api.training.plan;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import pro.shapeit.api.common.entity.BaseEntity;
 import pro.shapeit.api.training.goal.TrainingGoal;
 import pro.shapeit.api.training.unit.TrainingUnit;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-public class TrainingPlan {
-  @Id
-  @GeneratedValue
-  private Long id;
-
-  private String localId;
-
+public class TrainingPlan extends BaseEntity {
   private String name;
 
   private String description;
