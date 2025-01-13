@@ -20,9 +20,9 @@ public class TrainingPlan {
 
   private String description;
 
-  @OneToMany(mappedBy = "trainingPlan")
+  @OneToMany(mappedBy = "trainingPlan", fetch = FetchType.LAZY)
   private List<TrainingUnit> units;
 
-  @OneToMany(mappedBy = "trainingPlan")
+  @OneToMany(mappedBy = "trainingPlan", fetch = FetchType.LAZY)
   private List<TrainingGoal> goals;
 }

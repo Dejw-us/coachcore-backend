@@ -3,6 +3,7 @@ package pro.shapeit.api.training.plan;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import pro.shapeit.api.common.exception.ResourceNotFoundException;
 import pro.shapeit.api.training.goal.TrainingGoal;
@@ -17,6 +18,10 @@ public class TrainingPlanService {
   private final TrainingPlanRepository trainingPlanRepository;
   private final TrainingGoalRepository trainingGoalRepository;
 
+  public Boolean canViewTrainingPlan(TrainingPlan plan, Authentication authentication) {
+    return true;
+  }
+
   public Page<TrainingPlan> findTrainingPlans(int limit) {
     return trainingPlanRepository.findAll(PageRequest.of(0, limit));
   }
@@ -30,18 +35,22 @@ public class TrainingPlanService {
     return trainingGoalRepository.findByTrainingPlan_LocalId(trainingPlanLocalId);
   }
 
+
   public TrainingPlan saveTrainingPlan(CreateTrainingPlanDto dto) {
     var plan = new TrainingPlan();
-    var goals = dto.goals().stream().map(TrainingGoal::new).toList();
 
     plan.setLocalId(UUID.randomUUID().toString());
     plan.setDescription(dto.description());
-    plan.setGoals(goals);
     plan.setName(dto.name());
 
-    trainingGoalRepository.saveAll(goals);
-    trainingPlanRepository.save(plan);
+    var savedPlan = trainingPlanRepository.save(plan);
+    var goals = dto.goals().stream()
+        .map(TrainingGoal::new)
+        .peek(goal -> goal.setTrainingPlan(savedPlan))
+        .toList();
 
-    return plan;
+    trainingGoalRepository.saveAll(goals);
+
+    return savedPlan;
   }
 }

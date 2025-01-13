@@ -1,8 +1,8 @@
 package pro.shapeit.api.security;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -18,12 +18,23 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+  private static final Boolean SECURE_ENDPOINTS = false;
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable);
 
     http.authorizeHttpRequests(auth -> {
-      auth.anyRequest().permitAll();
+      if (SECURE_ENDPOINTS) {
+        // secure POST
+        auth.requestMatchers(HttpMethod.POST, "/training-units/**", "/training-plans/**", "/training-exercises/**").authenticated();
+
+        // secure GET
+        auth.requestMatchers(HttpMethod.GET, "/training-plans/{planLocalId}/goals").authenticated();
+        auth.requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll();
+      } else {
+        auth.anyRequest().permitAll();
+      }
     });
 
     http.oauth2ResourceServer(server -> {

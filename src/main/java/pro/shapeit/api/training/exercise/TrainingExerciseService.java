@@ -17,11 +17,6 @@ public class TrainingExerciseService {
   private final TrainingExerciseRepository trainingExerciseRepository;
   private final TrainingSetRepository trainingSetRepository;
 
-  public TrainingExercise findTrainingExercise(String localId) throws ResourceNotFoundException {
-    return trainingExerciseRepository.findByLocalId(localId)
-        .orElseThrow(() -> new ResourceNotFoundException("Training exercise does not exist"));
-  }
-
   public TrainingExercise saveTrainingExercise(
       TrainingUnit parent,
       CatalogExercise catalogExercise
@@ -37,5 +32,10 @@ public class TrainingExerciseService {
 
   public List<TrainingSet> findTrainingExerciseSets(String localId) {
     return trainingSetRepository.findByTrainingExercise_LocalId(localId);
+  }
+
+  public TrainingExercise findTrainingExercise(String localId) throws ResourceNotFoundException {
+    return trainingExerciseRepository.findByLocalId(localId)
+        .orElseThrow(() -> new ResourceNotFoundException("Training exercise does not exist"));
   }
 }

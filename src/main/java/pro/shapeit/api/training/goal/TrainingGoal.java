@@ -2,12 +2,14 @@ package pro.shapeit.api.training.goal;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import pro.shapeit.api.training.plan.TrainingPlan;
 
 import java.util.UUID;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class TrainingGoal {
   @Id
   @GeneratedValue
