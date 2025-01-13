@@ -2,6 +2,7 @@ package pro.shapeit.api.training.plan;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import pro.shapeit.api.training.goal.TrainingGoal;
 import pro.shapeit.api.training.unit.TrainingUnit;
 

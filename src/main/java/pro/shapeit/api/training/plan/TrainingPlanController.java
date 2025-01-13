@@ -11,8 +11,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.shapeit.api.common.exception.ResourceNotFoundException;
+import pro.shapeit.api.training.exercise.TrainingExerciseService;
 import pro.shapeit.api.training.goal.TrainingGoalDto;
 import pro.shapeit.api.training.goal.TrainingGoalMapper;
+import pro.shapeit.api.training.set.TrainingSetDto;
+import pro.shapeit.api.training.set.TrainingSetMapper;
+import pro.shapeit.api.training.set.TrainingSetService;
 import pro.shapeit.api.training.unit.CreateTrainingUnitDto;
 import pro.shapeit.api.training.unit.TrainingUnitDto;
 import pro.shapeit.api.training.unit.TrainingUnitMapper;
@@ -24,7 +28,10 @@ import pro.shapeit.api.training.unit.TrainingUnitService;
 public class TrainingPlanController {
   private final TrainingPlanService trainingPlanService;
   private final TrainingUnitService trainingUnitService;
+  private final TrainingExerciseService trainingExerciseService;
+  private final TrainingSetService trainingSetService;
 
+  private final TrainingSetMapper trainingSetMapper;
   private final TrainingUnitMapper trainingUnitMapper;
   private final TrainingPlanMapper trainingPlanMapper;
   private final TrainingGoalMapper trainingGoalMapper;
@@ -170,5 +177,27 @@ public class TrainingPlanController {
     return ResponseEntity
         .status(HttpStatus.CREATED)
         .body(savedPlanDto);
+  }
+
+  @PostMapping("/exercises/{exerciseLocalId}/sets")
+  @Operation(
+      summary = "Save new training set on exercise",
+      responses = @ApiResponse(
+          description = "Saved training set",
+          responseCode = "201",
+          content = @Content(
+              schema = @Schema(implementation = TrainingSetDto.class)
+          )
+      ),
+      tags = "Training plans"
+  )
+  public ResponseEntity<?> postTrainingSet(@PathVariable String exerciseLocalId) throws ResourceNotFoundException {
+    var exerciseParent = trainingExerciseService.findTrainingExercise(exerciseLocalId);
+    var savedSet = trainingSetService.saveTrainingSet(exerciseParent);
+    var savedSetDto = trainingSetMapper.map(savedSet);
+
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(savedSetDto);
   }
 }
