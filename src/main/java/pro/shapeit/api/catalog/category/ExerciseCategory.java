@@ -1,4 +1,4 @@
-package pro.shapeit.api.training.exercise.category;
+package pro.shapeit.api.catalog.category;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

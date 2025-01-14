@@ -4,9 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import pro.shapeit.api.common.entity.BaseEntity;
-import pro.shapeit.api.training.exercise.catalog.CatalogExercise;
+import pro.shapeit.api.catalog.exercise.CatalogExercise;
 import pro.shapeit.api.training.set.TrainingSet;
-import pro.shapeit.api.training.unit.TrainingUnit;
 
 import java.util.List;
 

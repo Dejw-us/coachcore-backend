@@ -1,9 +1,8 @@
-package pro.shapeit.api.training.exercise.category;
+package pro.shapeit.api.catalog.category;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pro.shapeit.api.common.exception.ResourceNotFoundException;
-import pro.shapeit.api.common.id.LocalId;
 
 import java.util.List;
 

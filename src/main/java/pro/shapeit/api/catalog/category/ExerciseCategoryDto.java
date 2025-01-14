@@ -1,4 +1,4 @@
-package pro.shapeit.api.training.exercise.category;
+package pro.shapeit.api.catalog.category;
 
 public record ExerciseCategoryDto(String localId, String name) {
 }

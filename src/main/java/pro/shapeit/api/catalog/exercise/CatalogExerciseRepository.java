@@ -1,4 +1,4 @@
-package pro.shapeit.api.training.exercise.catalog;
+package pro.shapeit.api.catalog.exercise;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

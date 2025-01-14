@@ -1,4 +1,4 @@
-package pro.shapeit.api.training.exercise.catalog;
+package pro.shapeit.api.catalog.exercise;
 
 public record CreateCatalogExerciseDto(String name) {
 }

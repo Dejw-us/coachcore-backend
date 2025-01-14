@@ -1,10 +1,10 @@
-package pro.shapeit.api.training.exercise.catalog;
+package pro.shapeit.api.catalog.exercise;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import pro.shapeit.api.common.entity.BaseEntity;
-import pro.shapeit.api.training.exercise.category.ExerciseCategory;
+import pro.shapeit.api.catalog.category.ExerciseCategory;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
