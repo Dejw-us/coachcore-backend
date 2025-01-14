@@ -28,7 +28,6 @@ public class ExerciseCategoryService {
     }
     var category = new ExerciseCategory();
 
-    category.setLocalId(LocalId.random());
     category.setName(name);
 
     return exerciseCategoryRepository.save(category);

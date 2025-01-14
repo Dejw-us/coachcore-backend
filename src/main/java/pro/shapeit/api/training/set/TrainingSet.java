@@ -2,18 +2,17 @@ package pro.shapeit.api.training.set;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import pro.shapeit.api.common.entity.BaseEntity;
 import pro.shapeit.api.training.exercise.TrainingExercise;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-public class TrainingSet {
-  @Id
-  @GeneratedValue
-  private Long id;
-
-  private String localId;
-
+public class TrainingSet extends BaseEntity {
   private Integer reps;
+
+  private Double rest;
 
   private Double intensity;
 
@@ -21,11 +20,14 @@ public class TrainingSet {
 
   private String rate;
 
-  private Double rest;
+  private Double weight;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "training_exercise_id")
-  private TrainingExercise trainingExercise;
+  private WeightType weightType;
+
+  public enum WeightType {
+    KG,
+    LBS
+  }
 
   public enum IntensityType {
     RIR,

@@ -1,21 +1,15 @@
 package pro.shapeit.api.training.exercise.catalog;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import pro.shapeit.api.common.entity.BaseEntity;
 import pro.shapeit.api.training.exercise.category.ExerciseCategory;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-public class CatalogExercise {
-  @Id
-  @GeneratedValue
-  private Long id;
-
-  @Column(nullable = false, length = 36, unique = true)
-  private String localId;
-
+public class CatalogExercise extends BaseEntity {
   @Column(nullable = false)
   private String name;
 

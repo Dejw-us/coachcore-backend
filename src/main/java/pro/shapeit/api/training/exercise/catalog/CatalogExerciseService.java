@@ -29,7 +29,6 @@ public class CatalogExerciseService {
     var exercise = new CatalogExercise();
 
     exercise.setName(dto.name());
-    exercise.setLocalId(LocalId.random());
     exercise.setCategory(category);
 
     return catalogExerciseRepository.save(exercise);

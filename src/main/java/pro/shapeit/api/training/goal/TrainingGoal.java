@@ -1,30 +1,19 @@
 package pro.shapeit.api.training.goal;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import pro.shapeit.api.training.plan.TrainingPlan;
+import pro.shapeit.api.common.entity.IdentifiableEntity;
 
-import java.util.UUID;
-
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @NoArgsConstructor
-public class TrainingGoal {
-  @Id
-  @GeneratedValue
-  private Long id;
-
-  private String localId;
-
+public class TrainingGoal extends IdentifiableEntity {
   private String description;
-
-  @ManyToOne
-  @JoinColumn(name = "training_plan_id")
-  private TrainingPlan trainingPlan;
 
   public TrainingGoal(String description) {
     this.description = description;
-    localId = UUID.randomUUID().toString();
   }
 }
