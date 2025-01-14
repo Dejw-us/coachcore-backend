@@ -1,11 +1,11 @@
-package pro.shapeit.api.training.exercise;
+package pro.shapeit.api.training.plan.unit.exercise;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import pro.shapeit.api.common.entity.BaseEntity;
 import pro.shapeit.api.catalog.exercise.CatalogExercise;
-import pro.shapeit.api.training.set.TrainingSet;
+import pro.shapeit.api.training.plan.unit.exercise.set.TrainingSet;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package pro.shapeit.api.training.unit;
+package pro.shapeit.api.training.plan.unit;
 
 import java.time.DayOfWeek;
 

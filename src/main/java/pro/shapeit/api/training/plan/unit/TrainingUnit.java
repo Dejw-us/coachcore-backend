@@ -1,10 +1,10 @@
-package pro.shapeit.api.training.unit;
+package pro.shapeit.api.training.plan.unit;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import pro.shapeit.api.common.entity.BaseEntity;
-import pro.shapeit.api.training.exercise.TrainingExercise;
+import pro.shapeit.api.training.plan.unit.exercise.TrainingExercise;
 import pro.shapeit.api.training.plan.TrainingPlan;
 
 import java.time.DayOfWeek;

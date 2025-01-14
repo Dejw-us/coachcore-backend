@@ -1,6 +1,6 @@
-package pro.shapeit.api.training.unit;
+package pro.shapeit.api.training.plan.unit;
 
-import pro.shapeit.api.training.exercise.TrainingExerciseDto;
+import pro.shapeit.api.training.plan.unit.exercise.TrainingExerciseDto;
 
 import java.time.DayOfWeek;
 import java.util.List;

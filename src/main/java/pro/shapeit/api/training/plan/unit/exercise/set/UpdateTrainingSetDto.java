@@ -1,8 +1,6 @@
-package pro.shapeit.api.training.set;
+package pro.shapeit.api.training.plan.unit.exercise.set;
 
-
-public record TrainingSetDto(
-    String localId,
+public record UpdateTrainingSetDto(
     Integer reps,
     Double intensity,
     TrainingSet.IntensityType intensityType,

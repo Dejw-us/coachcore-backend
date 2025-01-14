@@ -1,4 +1,4 @@
-package pro.shapeit.api.training.goal;
+package pro.shapeit.api.training.plan.goal;
 
 public record TrainingGoalDto(
     String description,

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import pro.shapeit.api.common.entity.BaseEntity;
-import pro.shapeit.api.training.goal.TrainingGoal;
+import pro.shapeit.api.training.plan.goal.TrainingGoal;
 
 import java.util.List;
 

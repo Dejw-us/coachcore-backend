@@ -1,4 +1,4 @@
-package pro.shapeit.api.training.exercise;
+package pro.shapeit.api.training.plan.unit.exercise;
 
 public record CreateTrainingExerciseDto(String catalogExerciseLocalId) {
 }

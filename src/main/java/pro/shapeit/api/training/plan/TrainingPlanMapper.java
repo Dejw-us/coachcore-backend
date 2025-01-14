@@ -2,9 +2,9 @@ package pro.shapeit.api.training.plan;
 
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
-import pro.shapeit.api.training.goal.TrainingGoal;
-import pro.shapeit.api.training.goal.TrainingGoalMapper;
-import pro.shapeit.api.training.set.TrainingSetMapper;
+import pro.shapeit.api.training.plan.goal.TrainingGoal;
+import pro.shapeit.api.training.plan.goal.TrainingGoalMapper;
+import pro.shapeit.api.training.plan.unit.exercise.set.TrainingSetMapper;
 
 import java.util.List;
 

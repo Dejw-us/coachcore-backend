@@ -1,8 +1,7 @@
-package pro.shapeit.api.training.set;
+package pro.shapeit.api.training.plan.unit.exercise.set;
 
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface TrainingSetMapper {
