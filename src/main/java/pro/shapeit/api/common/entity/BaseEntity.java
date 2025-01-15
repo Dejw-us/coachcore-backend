@@ -6,7 +6,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import pro.shapeit.api.common.id.LocalId;
+import pro.shapeit.api.common.util.LocalIdUtils;
 
 import java.time.LocalDateTime;
 
@@ -37,7 +37,7 @@ public abstract class BaseEntity {
   @PrePersist
   private void setupLocalId() {
     if (localId == null) {
-      localId = LocalId.random();
+      localId = LocalIdUtils.random();
     }
   }
 }

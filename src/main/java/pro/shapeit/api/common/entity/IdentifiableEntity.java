@@ -2,7 +2,7 @@ package pro.shapeit.api.common.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import pro.shapeit.api.common.id.LocalId;
+import pro.shapeit.api.common.util.LocalIdUtils;
 
 @Getter
 @MappedSuperclass
@@ -17,7 +17,7 @@ public abstract class IdentifiableEntity {
   @PrePersist
   private void setupLocalId() {
     if (localId == null) {
-      localId = LocalId.random();
+      localId = LocalIdUtils.random();
     }
   }
 }
