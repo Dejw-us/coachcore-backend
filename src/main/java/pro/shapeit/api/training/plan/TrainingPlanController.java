@@ -1,12 +1,13 @@
 package pro.shapeit.api.training.plan;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody ;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.shapeit.api.common.dto.MessageDto;
 import pro.shapeit.api.common.exception.ResourceNotFoundException;
+import pro.shapeit.api.training.plan.unit.*;
 
 import java.util.List;
 
@@ -15,23 +16,25 @@ import java.util.List;
 @RequiredArgsConstructor
 class TrainingPlanController {
   private final TrainingPlanService trainingPlanService;
+
   private final TrainingPlanMapper trainingPlanMapper;
+  private final TrainingUnitMapper trainingUnitMapper;
 
   // --- GET ---
 
   @GetMapping
   ResponseEntity<List<TrainingPlanDto>> getTrainingPlans() {
     var plans = trainingPlanService.findAllTrainingPlans();
-    var plansDto = plans.stream()
-        .map(trainingPlanMapper::map)
-        .toList();
+    var plansDto = trainingPlanMapper.map(plans);
 
     return ResponseEntity
         .ok(plansDto);
   }
 
   @GetMapping("/{planId}")
-  ResponseEntity<TrainingPlanDto> getTrainingPlan(@PathVariable String planId) throws ResourceNotFoundException {
+  ResponseEntity<TrainingPlanDto> getTrainingPlan(
+      @PathVariable String planId
+  ) throws ResourceNotFoundException {
     var plan = trainingPlanService.findTrainingPlanByLocalId(planId);
     var planDto = trainingPlanMapper.map(plan);
 
@@ -39,10 +42,23 @@ class TrainingPlanController {
         .ok(planDto);
   }
 
+  @GetMapping("/{planId}/units")
+  ResponseEntity<List<TrainingUnitDto>> getTrainingUnits(
+      @PathVariable String planId
+  ) throws ResourceNotFoundException {
+    var units = trainingPlanService.findAllTrainingUnitsByTrainingPlanLocalId(planId);
+    var unitsDto = trainingUnitMapper.map(units);
+
+    return ResponseEntity
+        .ok(unitsDto);
+  }
+
   // --- POST ---
 
   @PostMapping
-  ResponseEntity<TrainingPlanDto> postTrainingPlan(@RequestBody CreateTrainingPlanDto dto) {
+  ResponseEntity<TrainingPlanDto> postTrainingPlan(
+      @RequestBody CreateTrainingPlanDto dto
+  ) {
     var savedPlan = trainingPlanService.saveTrainingPlan(dto);
     var savedPlanDto = trainingPlanMapper.map(savedPlan);
 
@@ -51,10 +67,27 @@ class TrainingPlanController {
         .body(savedPlanDto);
   }
 
+  @PostMapping("/{planId}/units")
+  ResponseEntity<TrainingUnitDto> postTrainingUnit(
+      @PathVariable String planId,
+      @RequestBody CreateTrainingUnitDto dto
+  ) throws ResourceNotFoundException {
+    var plan = trainingPlanService.findTrainingPlanByLocalId(planId);
+    var savedUnit = trainingPlanService.saveTrainingUnit(plan, dto);
+    var savedUnitDto = trainingUnitMapper.map(savedUnit);
+
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(savedUnitDto);
+  }
+
   // --- PATCH ---
 
   @PatchMapping("/{planId}")
-  ResponseEntity<TrainingPlanDto> patchTrainingPlan(@PathVariable String planId, @RequestBody UpdateTrainingPlanDto dto) throws ResourceNotFoundException {
+  ResponseEntity<TrainingPlanDto> patchTrainingPlan(
+      @PathVariable String planId,
+      @RequestBody UpdateTrainingPlanDto dto
+  ) throws ResourceNotFoundException {
     var plan = trainingPlanService.findTrainingPlanByLocalId(planId);
     var updatedPlan = trainingPlanService.updateTrainingPlan(plan, dto);
     var updatedPlanDto = trainingPlanMapper.map(updatedPlan);
@@ -63,10 +96,26 @@ class TrainingPlanController {
         .ok(updatedPlanDto);
   }
 
+  @PostMapping("/{planId}/units/{unitId}")
+  ResponseEntity<TrainingUnitDto> patchTrainingUnit(
+      @PathVariable String planId,
+      @PathVariable String unitId,
+      @RequestBody UpdateTrainingUnitDto dto
+  ) throws ResourceNotFoundException {
+    var unit = trainingPlanService.findTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
+    var updatedUnit = trainingPlanService.updateTrainingUnit(unit, dto);
+    var updatedUnitDto = trainingUnitMapper.map(updatedUnit);
+
+    return ResponseEntity
+        .ok(updatedUnitDto);
+  }
+
   // --- DELETE ---
 
   @DeleteMapping("/{planId}")
-  ResponseEntity<MessageDto> deleteTrainingPlan(@PathVariable String planId) {
+  ResponseEntity<MessageDto> deleteTrainingPlan(
+      @PathVariable String planId
+  ) {
     var isDeleted = trainingPlanService.deleteTrainingPlanByLocalId(planId);
 
     if (isDeleted) {
@@ -74,6 +123,23 @@ class TrainingPlanController {
           .ok(new MessageDto("Training plan has been deleted"));
     }
     return ResponseEntity
-        .ok(new MessageDto("Failed to delete training plan. Training plan does not exist"));
+        .badRequest()
+        .body(new MessageDto("Failed to delete training plan. Training plan does not exist"));
+  }
+
+  @DeleteMapping("/{planId}/units/{unitId}")
+  ResponseEntity<MessageDto> deleteTrainingUnit(
+      @PathVariable String planId,
+      @PathVariable String unitId
+  ) {
+    var isDeleted = trainingPlanService.deleteTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
+
+    if (isDeleted) {
+      return ResponseEntity
+          .ok(new MessageDto("Training unit has been removed"));
+    }
+    return ResponseEntity
+        .badRequest()
+        .body(new MessageDto("Failed to delete training unit. Training unit does not exist"));
   }
 }
