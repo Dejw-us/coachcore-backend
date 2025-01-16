@@ -1,6 +1,7 @@
 package pro.shapeit.api.audition;
 
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -22,6 +23,9 @@ public class AuditorAwareImpl implements AuditorAware<String> {
   }
 
   private String getUserIdFromAuth(Authentication auth) {
-    return ((JwtAuthenticationToken) auth).getToken().getClaim("sub");
+    if (!(auth instanceof JwtAuthenticationToken jwtAuth)) {
+      throw new AuthenticationCredentialsNotFoundException("You must be authenticated to perform this action");
+    }
+    return jwtAuth.getToken().getClaim("sub");
   }
 }
