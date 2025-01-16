@@ -5,6 +5,8 @@ public record UpdateTrainingSetDto(
     Double intensity,
     TrainingSet.IntensityType intensityType,
     String rate,
-    Double rest
+    Double rest,
+    Double weight,
+    TrainingSet.WeightType weightType
 ) {
 }

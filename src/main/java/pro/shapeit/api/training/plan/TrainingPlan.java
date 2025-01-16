@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import pro.shapeit.api.common.entity.BaseEntity;
 import pro.shapeit.api.training.plan.goal.TrainingGoal;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -21,5 +22,5 @@ public class TrainingPlan extends BaseEntity {
       inverseJoinColumns = @JoinColumn(name = "training_goal_id"),
       joinColumns = @JoinColumn(name = "training_plan_id")
   )
-  private List<TrainingGoal> goals;
+  private List<TrainingGoal> goals = new ArrayList<>();
 }

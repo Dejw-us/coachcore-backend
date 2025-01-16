@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-  private static final Boolean SECURE_ENDPOINTS = true;
+  private static final Boolean SECURE_ENDPOINTS = false;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

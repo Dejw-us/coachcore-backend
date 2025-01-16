@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pro.shapeit.api.catalog.exercise.CatalogExercise;
 import pro.shapeit.api.common.exception.ResourceNotFoundException;
 import pro.shapeit.api.training.plan.goal.TrainingGoal;
+import pro.shapeit.api.training.plan.goal.TrainingGoalRepository;
 import pro.shapeit.api.training.plan.unit.CreateTrainingUnitDto;
 import pro.shapeit.api.training.plan.unit.TrainingUnit;
 import pro.shapeit.api.training.plan.unit.TrainingUnitRepository;
@@ -12,6 +13,9 @@ import pro.shapeit.api.training.plan.unit.UpdateTrainingUnitDto;
 import pro.shapeit.api.training.plan.unit.exercise.TrainingExercise;
 import pro.shapeit.api.training.plan.unit.exercise.TrainingExerciseRepository;
 import pro.shapeit.api.training.plan.unit.exercise.UpdateTrainingExerciseDto;
+import pro.shapeit.api.training.plan.unit.exercise.set.TrainingSet;
+import pro.shapeit.api.training.plan.unit.exercise.set.TrainingSetRepository;
+import pro.shapeit.api.training.plan.unit.exercise.set.UpdateTrainingSetDto;
 
 import java.util.List;
 
@@ -23,8 +27,15 @@ class TrainingPlanService {
   private final TrainingPlanRepository trainingPlanRepository;
   private final TrainingUnitRepository trainingUnitRepository;
   private final TrainingExerciseRepository trainingExerciseRepository;
+  private final TrainingGoalRepository trainingGoalRepository;
+  private final TrainingSetRepository trainingSetRepository;
 
   // --- Find methods ---
+
+  TrainingSet findTrainingSetByLocalId(String localId) throws ResourceNotFoundException {
+    return trainingSetRepository.findByLocalId(localId)
+        .orElseThrow(ResourceNotFoundException.supplier("Training set does not exist"));
+  }
 
   TrainingExercise findTrainingExerciseByLocalId(String localId) throws ResourceNotFoundException {
     return trainingExerciseRepository.findByLocalId(localId)
@@ -63,9 +74,14 @@ class TrainingPlanService {
 
   TrainingPlan saveTrainingPlan(CreateTrainingPlanDto dto) {
     var plan = new TrainingPlan();
+    var goals = dto.goals().stream()
+        .map(TrainingGoal::new)
+        .toList();
+    var savedGoals = trainingGoalRepository.saveAll(goals);
+
     plan.setName(dto.name());
     plan.setDescription(dto.description());
-    plan.setGoals(dto.goals().stream().map(TrainingGoal::new).toList());
+    plan.setGoals(savedGoals);
 
     return trainingPlanRepository.save(plan);
   }
@@ -76,6 +92,13 @@ class TrainingPlanService {
     unit.setTrainingPlan(plan);
 
     return trainingUnitRepository.save(unit);
+  }
+
+  TrainingSet saveTrainingSet(TrainingExercise exercise) {
+    var savedSet = trainingSetRepository.save(new TrainingSet());
+    exercise.getSets().add(savedSet);
+    trainingExerciseRepository.save(exercise);
+    return savedSet;
   }
 
   TrainingExercise saveTrainingExercise(TrainingUnit unit, CatalogExercise catalogExercise) {
@@ -94,6 +117,18 @@ class TrainingPlanService {
     updateIfNotNull(dto.description(), plan::setDescription);
 
     return trainingPlanRepository.save(plan);
+  }
+
+  TrainingSet updateTrainingSet(TrainingSet set, UpdateTrainingSetDto dto) {
+    updateIfNotNull(dto.intensity(), set::setIntensity);
+    updateIfNotNull(dto.rate(), set::setRate);
+    updateIfNotNull(dto.intensityType(), set::setIntensityType);
+    updateIfNotNull(dto.reps(), set::setReps);
+    updateIfNotNull(dto.rest(), set::setRest);
+    updateIfNotNull(dto.weight(), set::setWeight);
+    updateIfNotNull(dto.weightType(), set::setWeightType);
+
+    return trainingSetRepository.save(set);
   }
 
   TrainingExercise updateTrainingExercise(
@@ -127,5 +162,9 @@ class TrainingPlanService {
 
   boolean deleteTrainingExerciseByLocalId(String localId) {
     return trainingExerciseRepository.deleteByLocalIdWithCount(localId) > 0;
+  }
+
+  boolean deleteTrainingSetByLocalId(String localId) {
+    return trainingSetRepository.deleteByLocalIdWithCount(localId) > 0;
   }
 }

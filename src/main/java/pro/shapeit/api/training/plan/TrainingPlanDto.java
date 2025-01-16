@@ -10,7 +10,6 @@ public record TrainingPlanDto(
     String localId,
     String name,
     String description,
-    List<TrainingUnitDto> units,
     List<TrainingGoalDto> goals
 ) {
 }
