@@ -13,8 +13,11 @@ import pro.shapeit.api.training.plan.unit.TrainingUnitMapper;
 import pro.shapeit.api.training.plan.unit.UpdateTrainingUnitDto;
 import pro.shapeit.api.training.plan.unit.exercise.TrainingExerciseDto;
 import pro.shapeit.api.training.plan.unit.exercise.TrainingExerciseMapper;
+import pro.shapeit.api.training.plan.unit.exercise.UpdateTrainingExerciseDto;
 
 import java.util.List;
+
+import static pro.shapeit.api.common.util.ControllerUtils.deleteResponse;
 
 @RestController
 @RequestMapping("/v1/training-plans")
@@ -94,7 +97,7 @@ class TrainingPlanController {
       @RequestParam String catalogExerciseId
   ) throws ResourceNotFoundException {
     var unit = trainingPlanService.findTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
-    var catalogExercise = new CatalogExercise();
+    var catalogExercise = new CatalogExercise(); // TODO handle fetching catalog exercise
     var savedExercise = trainingPlanService.saveTrainingExercise(unit, catalogExercise);
     var savedExerciseDto = trainingExerciseMapper.map(savedExercise);
 
@@ -118,7 +121,7 @@ class TrainingPlanController {
         .ok(updatedPlanDto);
   }
 
-  @PostMapping("/{planId}/units/{unitId}")
+  @PatchMapping("/{planId}/units/{unitId}")
   ResponseEntity<TrainingUnitDto> patchTrainingUnit(
       @PathVariable String planId,
       @PathVariable String unitId,
@@ -132,6 +135,22 @@ class TrainingPlanController {
         .ok(updatedUnitDto);
   }
 
+  @PatchMapping("/{planId}/exercises/{exerciseId}")
+  ResponseEntity<TrainingExerciseDto> patchTrainingExercise(
+      @PathVariable String planId,
+      @PathVariable String exerciseId,
+      @RequestBody UpdateTrainingExerciseDto dto,
+      @RequestParam(required = false) String catalogExerciseId
+  ) throws ResourceNotFoundException {
+    var exercise = trainingPlanService.findTrainingExerciseByLocalId(exerciseId);
+    var catalogExercise = new CatalogExercise(); // TODO handle fetching catalog exercise
+    var updatedExercise = trainingPlanService.updateTrainingExercise(exercise, catalogExercise, dto);
+    var updatedExerciseDto = trainingExerciseMapper.map(updatedExercise);
+
+    return ResponseEntity
+        .ok(updatedExerciseDto);
+  }
+
   // --- DELETE ---
 
   @DeleteMapping("/{planId}")
@@ -140,13 +159,7 @@ class TrainingPlanController {
   ) {
     var isDeleted = trainingPlanService.deleteTrainingPlanByLocalId(planId);
 
-    if (isDeleted) {
-      return ResponseEntity
-          .ok(new MessageDto("Training plan has been deleted"));
-    }
-    return ResponseEntity
-        .badRequest()
-        .body(new MessageDto("Failed to delete training plan. Training plan does not exist"));
+    return deleteResponse(isDeleted, "training plan");
   }
 
   @DeleteMapping("/{planId}/units/{unitId}")
@@ -156,13 +169,7 @@ class TrainingPlanController {
   ) {
     var isDeleted = trainingPlanService.deleteTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
 
-    if (isDeleted) {
-      return ResponseEntity
-          .ok(new MessageDto("Training unit has been removed"));
-    }
-    return ResponseEntity
-        .badRequest()
-        .body(new MessageDto("Failed to delete training unit. Training unit does not exist"));
+    return deleteResponse(isDeleted, "training unit");
   }
 
   @DeleteMapping("/{planId}/exercises/{exerciseId}")
@@ -171,5 +178,7 @@ class TrainingPlanController {
       @PathVariable String exerciseId
   ) {
     var isDeleted = trainingPlanService.deleteTrainingExerciseByLocalId(exerciseId);
+
+    return deleteResponse(isDeleted, "training exercise");
   }
 }

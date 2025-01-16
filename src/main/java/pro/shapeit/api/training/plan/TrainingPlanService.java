@@ -11,6 +11,7 @@ import pro.shapeit.api.training.plan.unit.TrainingUnitRepository;
 import pro.shapeit.api.training.plan.unit.UpdateTrainingUnitDto;
 import pro.shapeit.api.training.plan.unit.exercise.TrainingExercise;
 import pro.shapeit.api.training.plan.unit.exercise.TrainingExerciseRepository;
+import pro.shapeit.api.training.plan.unit.exercise.UpdateTrainingExerciseDto;
 
 import java.util.List;
 
@@ -24,6 +25,11 @@ class TrainingPlanService {
   private final TrainingExerciseRepository trainingExerciseRepository;
 
   // --- Find methods ---
+
+  TrainingExercise findTrainingExerciseByLocalId(String localId) throws ResourceNotFoundException {
+    return trainingExerciseRepository.findByLocalId(localId)
+        .orElseThrow(ResourceNotFoundException.supplier("Training exercise does not exist"));
+  }
 
   List<TrainingPlan> findAllTrainingPlans() {
     return trainingPlanRepository.findAll();
@@ -88,6 +94,17 @@ class TrainingPlanService {
     updateIfNotNull(dto.description(), plan::setDescription);
 
     return trainingPlanRepository.save(plan);
+  }
+
+  TrainingExercise updateTrainingExercise(
+      TrainingExercise exercise,
+      CatalogExercise catalogExercise,
+      UpdateTrainingExerciseDto dto
+  ) {
+    updateIfNotNull(catalogExercise, exercise::setCatalogExercise);
+    updateIfNotNull(dto.notes(), exercise::setNotes);
+
+    return trainingExerciseRepository.save(exercise);
   }
 
   TrainingUnit updateTrainingUnit(TrainingUnit unit, UpdateTrainingUnitDto dto) {
