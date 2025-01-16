@@ -3,7 +3,7 @@ package pro.shapeit.api.audition;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -22,6 +22,6 @@ public class AuditorAwareImpl implements AuditorAware<String> {
   }
 
   private String getUserIdFromAuth(Authentication auth) {
-    return ((Jwt) auth.getPrincipal()).getClaim("sub");
+    return ((JwtAuthenticationToken) auth).getToken().getClaim("sub");
   }
 }
