@@ -2,12 +2,15 @@ package pro.shapeit.api.training.plan;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pro.shapeit.api.catalog.exercise.CatalogExercise;
 import pro.shapeit.api.common.exception.ResourceNotFoundException;
 import pro.shapeit.api.training.plan.goal.TrainingGoal;
 import pro.shapeit.api.training.plan.unit.CreateTrainingUnitDto;
 import pro.shapeit.api.training.plan.unit.TrainingUnit;
 import pro.shapeit.api.training.plan.unit.TrainingUnitRepository;
 import pro.shapeit.api.training.plan.unit.UpdateTrainingUnitDto;
+import pro.shapeit.api.training.plan.unit.exercise.TrainingExercise;
+import pro.shapeit.api.training.plan.unit.exercise.TrainingExerciseRepository;
 
 import java.util.List;
 
@@ -18,6 +21,7 @@ import static pro.shapeit.api.common.util.ServiceUtils.updateIfNotNull;
 class TrainingPlanService {
   private final TrainingPlanRepository trainingPlanRepository;
   private final TrainingUnitRepository trainingUnitRepository;
+  private final TrainingExerciseRepository trainingExerciseRepository;
 
   // --- Find methods ---
 
@@ -53,7 +57,6 @@ class TrainingPlanService {
 
   TrainingPlan saveTrainingPlan(CreateTrainingPlanDto dto) {
     var plan = new TrainingPlan();
-
     plan.setName(dto.name());
     plan.setDescription(dto.description());
     plan.setGoals(dto.goals().stream().map(TrainingGoal::new).toList());
@@ -63,11 +66,19 @@ class TrainingPlanService {
 
   TrainingUnit saveTrainingUnit(TrainingPlan plan, CreateTrainingUnitDto dto) {
     var unit = new TrainingUnit();
-
     unit.setDayOfWeek(dto.dayOfWeek());
     unit.setTrainingPlan(plan);
 
     return trainingUnitRepository.save(unit);
+  }
+
+  TrainingExercise saveTrainingExercise(TrainingUnit unit, CatalogExercise catalogExercise) {
+    var exercise = new TrainingExercise();
+    exercise.setCatalogExercise(catalogExercise);
+    var savedExercise = trainingExerciseRepository.save(exercise);
+    unit.getExercises().add(savedExercise);
+    trainingUnitRepository.save(unit);
+    return savedExercise;
   }
 
   // --- Update methods ---
@@ -95,5 +106,9 @@ class TrainingPlanService {
 
   boolean deleteTrainingUnitByTrainingPlanLocalIdAndLocalId(String planLocalId, String unitLocalId) {
     return trainingUnitRepository.deleteByTrainingPlan_LocalIdAndLocalIdWithCount(planLocalId, unitLocalId) > 0;
+  }
+
+  boolean deleteTrainingExerciseByLocalId(String localId) {
+    return trainingExerciseRepository.deleteByLocalIdWithCount(localId) > 0;
   }
 }

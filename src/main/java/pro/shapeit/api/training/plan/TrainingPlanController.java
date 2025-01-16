@@ -1,13 +1,18 @@
 package pro.shapeit.api.training.plan;
 
-import org.springframework.web.bind.annotation.RequestBody ;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pro.shapeit.api.catalog.exercise.CatalogExercise;
 import pro.shapeit.api.common.dto.MessageDto;
 import pro.shapeit.api.common.exception.ResourceNotFoundException;
-import pro.shapeit.api.training.plan.unit.*;
+import pro.shapeit.api.training.plan.unit.CreateTrainingUnitDto;
+import pro.shapeit.api.training.plan.unit.TrainingUnitDto;
+import pro.shapeit.api.training.plan.unit.TrainingUnitMapper;
+import pro.shapeit.api.training.plan.unit.UpdateTrainingUnitDto;
+import pro.shapeit.api.training.plan.unit.exercise.TrainingExerciseDto;
+import pro.shapeit.api.training.plan.unit.exercise.TrainingExerciseMapper;
 
 import java.util.List;
 
@@ -19,6 +24,7 @@ class TrainingPlanController {
 
   private final TrainingPlanMapper trainingPlanMapper;
   private final TrainingUnitMapper trainingUnitMapper;
+  private final TrainingExerciseMapper trainingExerciseMapper;
 
   // --- GET ---
 
@@ -81,6 +87,22 @@ class TrainingPlanController {
         .body(savedUnitDto);
   }
 
+  @PostMapping("/{planId}/units/{unitId}/exercises")
+  ResponseEntity<TrainingExerciseDto> postTrainingExercise(
+      @PathVariable String planId,
+      @PathVariable String unitId,
+      @RequestParam String catalogExerciseId
+  ) throws ResourceNotFoundException {
+    var unit = trainingPlanService.findTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
+    var catalogExercise = new CatalogExercise();
+    var savedExercise = trainingPlanService.saveTrainingExercise(unit, catalogExercise);
+    var savedExerciseDto = trainingExerciseMapper.map(savedExercise);
+
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(savedExerciseDto);
+  }
+
   // --- PATCH ---
 
   @PatchMapping("/{planId}")
@@ -141,5 +163,13 @@ class TrainingPlanController {
     return ResponseEntity
         .badRequest()
         .body(new MessageDto("Failed to delete training unit. Training unit does not exist"));
+  }
+
+  @DeleteMapping("/{planId}/exercises/{exerciseId}")
+  ResponseEntity<MessageDto> deleteTrainingExercise(
+      @PathVariable String planId,
+      @PathVariable String exerciseId
+  ) {
+    var isDeleted = trainingPlanService.deleteTrainingExerciseByLocalId(exerciseId);
   }
 }

@@ -7,6 +7,7 @@ import pro.shapeit.api.common.entity.BaseEntity;
 import pro.shapeit.api.catalog.exercise.CatalogExercise;
 import pro.shapeit.api.training.plan.unit.exercise.set.TrainingSet;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -23,5 +24,5 @@ public class TrainingExercise extends BaseEntity {
       inverseJoinColumns = @JoinColumn(name = "training_set_id"),
       joinColumns = @JoinColumn(name = "training_exercise_id")
   )
-  private List<TrainingSet> sets;
+  private List<TrainingSet> sets = new ArrayList<>();
 }
