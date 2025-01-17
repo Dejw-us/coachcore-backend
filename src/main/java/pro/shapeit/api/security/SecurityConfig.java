@@ -1,5 +1,6 @@
 package pro.shapeit.api.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,24 +18,21 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
-  private static final Boolean SECURE_ENDPOINTS = false;
+  private final TrainingPlanAuthorizationManager trainingPlanAuthorizationManager;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable);
 
     http.authorizeHttpRequests(auth -> {
-      if (SECURE_ENDPOINTS) {
-        // secure POST
-        auth.requestMatchers(HttpMethod.POST, "/training-units/**", "/training-plans/**", "/training-exercises/**").authenticated();
+      auth.requestMatchers(HttpMethod.POST, "/v1/**").authenticated();
 
-        // secure GET
-        auth.requestMatchers(HttpMethod.GET, "/training-plans/{planLocalId}/goals").authenticated();
-        auth.requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll();
-      } else {
-        auth.anyRequest().permitAll();
-      }
+      auth.requestMatchers("/v1/training-plans/{planId}/**").access(trainingPlanAuthorizationManager);
+
+      auth.requestMatchers(HttpMethod.GET, "/v1/training-plans").permitAll();
+      auth.requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll();
     });
 
     http.oauth2ResourceServer(server -> {

@@ -7,10 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pro.shapeit.api.catalog.exercise.CatalogExercise;
 import pro.shapeit.api.common.dto.MessageDto;
 import pro.shapeit.api.common.exception.ResourceNotFoundException;
-import pro.shapeit.api.training.plan.unit.CreateTrainingUnitDto;
-import pro.shapeit.api.training.plan.unit.TrainingUnitDto;
 import pro.shapeit.api.training.plan.unit.TrainingUnitMapper;
-import pro.shapeit.api.training.plan.unit.UpdateTrainingUnitDto;
 import pro.shapeit.api.training.plan.unit.exercise.TrainingExerciseDto;
 import pro.shapeit.api.training.plan.unit.exercise.TrainingExerciseMapper;
 import pro.shapeit.api.training.plan.unit.exercise.UpdateTrainingExerciseDto;
@@ -29,7 +26,6 @@ class TrainingPlanController {
   private final TrainingPlanService trainingPlanService;
 
   private final TrainingPlanMapper trainingPlanMapper;
-  private final TrainingUnitMapper trainingUnitMapper;
   private final TrainingExerciseMapper trainingExerciseMapper;
   private final TrainingSetMapper trainingSetMapper;
 
@@ -55,17 +51,6 @@ class TrainingPlanController {
         .ok(planDto);
   }
 
-  @GetMapping("/{planId}/units")
-  ResponseEntity<List<TrainingUnitDto>> getTrainingUnits(
-      @PathVariable String planId
-  ) throws ResourceNotFoundException {
-    var units = trainingPlanService.findAllTrainingUnitsByTrainingPlanLocalId(planId);
-    var unitsDto = trainingUnitMapper.map(units);
-
-    return ResponseEntity
-        .ok(unitsDto);
-  }
-
   // --- POST ---
 
   @PostMapping
@@ -80,65 +65,7 @@ class TrainingPlanController {
         .body(savedPlanDto);
   }
 
-  @PostMapping("/{planId}/units")
-  ResponseEntity<TrainingUnitDto> postTrainingUnit(
-      @PathVariable String planId,
-      @RequestBody CreateTrainingUnitDto dto
-  ) throws ResourceNotFoundException {
-    var plan = trainingPlanService.findTrainingPlanByLocalId(planId);
-    var savedUnit = trainingPlanService.saveTrainingUnit(plan, dto);
-    var savedUnitDto = trainingUnitMapper.map(savedUnit);
-
-    return ResponseEntity
-        .status(HttpStatus.CREATED)
-        .body(savedUnitDto);
-  }
-
-  @PostMapping("/{planId}/units/{unitId}/exercises")
-  ResponseEntity<TrainingExerciseDto> postTrainingExercise(
-      @PathVariable String planId,
-      @PathVariable String unitId,
-      @RequestParam String catalogExerciseId
-  ) throws ResourceNotFoundException {
-    var unit = trainingPlanService.findTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
-    var catalogExercise = new CatalogExercise(); // TODO handle fetching catalog exercise
-    var savedExercise = trainingPlanService.saveTrainingExercise(unit, catalogExercise);
-    var savedExerciseDto = trainingExerciseMapper.map(savedExercise);
-
-    return ResponseEntity
-        .status(HttpStatus.CREATED)
-        .body(savedExerciseDto);
-  }
-
-  @PostMapping("/{planId}/exercises/{exerciseId}/sets")
-  ResponseEntity<TrainingSetDto> postTrainingSet(
-      @PathVariable String planId,
-      @PathVariable String exerciseId
-  ) throws ResourceNotFoundException {
-    var exercise = trainingPlanService.findTrainingExerciseByLocalId(exerciseId);
-    var savedSet = trainingPlanService.saveTrainingSet(exercise);
-    var savedSetDto = trainingSetMapper.map(savedSet);
-
-    return ResponseEntity
-        .status(HttpStatus.CREATED)
-        .body(savedSetDto);
-  }
-
   // --- PATCH ---
-
-  @PatchMapping("/{planId}/sets/{setId}")
-  ResponseEntity<TrainingSetDto> patchTrainingSet(
-      @PathVariable String planId,
-      @PathVariable String setId,
-      @RequestBody UpdateTrainingSetDto dto
-  ) throws ResourceNotFoundException {
-    var set = trainingPlanService.findTrainingSetByLocalId(setId);
-    var updatedSet = trainingPlanService.updateTrainingSet(set, dto);
-    var updatedSetDto = trainingSetMapper.map(updatedSet);
-
-    return ResponseEntity
-        .ok(updatedSetDto);
-  }
 
   @PatchMapping("/{planId}")
   ResponseEntity<TrainingPlanDto> patchTrainingPlan(
@@ -153,36 +80,6 @@ class TrainingPlanController {
         .ok(updatedPlanDto);
   }
 
-  @PatchMapping("/{planId}/units/{unitId}")
-  ResponseEntity<TrainingUnitDto> patchTrainingUnit(
-      @PathVariable String planId,
-      @PathVariable String unitId,
-      @RequestBody UpdateTrainingUnitDto dto
-  ) throws ResourceNotFoundException {
-    var unit = trainingPlanService.findTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
-    var updatedUnit = trainingPlanService.updateTrainingUnit(unit, dto);
-    var updatedUnitDto = trainingUnitMapper.map(updatedUnit);
-
-    return ResponseEntity
-        .ok(updatedUnitDto);
-  }
-
-  @PatchMapping("/{planId}/exercises/{exerciseId}")
-  ResponseEntity<TrainingExerciseDto> patchTrainingExercise(
-      @PathVariable String planId,
-      @PathVariable String exerciseId,
-      @RequestBody UpdateTrainingExerciseDto dto,
-      @RequestParam(required = false) String catalogExerciseId
-  ) throws ResourceNotFoundException {
-    var exercise = trainingPlanService.findTrainingExerciseByLocalId(exerciseId);
-    var catalogExercise = new CatalogExercise(); // TODO handle fetching catalog exercise
-    var updatedExercise = trainingPlanService.updateTrainingExercise(exercise, catalogExercise, dto);
-    var updatedExerciseDto = trainingExerciseMapper.map(updatedExercise);
-
-    return ResponseEntity
-        .ok(updatedExerciseDto);
-  }
-
   // --- DELETE ---
 
   @DeleteMapping("/{planId}")
@@ -192,35 +89,5 @@ class TrainingPlanController {
     var isDeleted = trainingPlanService.deleteTrainingPlanByLocalId(planId);
 
     return deleteResponse(isDeleted, "training plan");
-  }
-
-  @DeleteMapping("/{planId}/units/{unitId}")
-  ResponseEntity<MessageDto> deleteTrainingUnit(
-      @PathVariable String planId,
-      @PathVariable String unitId
-  ) {
-    var isDeleted = trainingPlanService.deleteTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
-
-    return deleteResponse(isDeleted, "training unit");
-  }
-
-  @DeleteMapping("/{planId}/exercises/{exerciseId}")
-  ResponseEntity<MessageDto> deleteTrainingExercise(
-      @PathVariable String planId,
-      @PathVariable String exerciseId
-  ) {
-    var isDeleted = trainingPlanService.deleteTrainingExerciseByLocalId(exerciseId);
-
-    return deleteResponse(isDeleted, "training exercise");
-  }
-
-  @DeleteMapping("/{planId}/sets/{setId}")
-  ResponseEntity<MessageDto> deleteTrainingSet(
-      @PathVariable String planId,
-      @PathVariable String setId
-  ) {
-    var isDeleted = trainingPlanService.deleteTrainingSetByLocalId(setId);
-
-    return deleteResponse(isDeleted, "training set");
   }
 }

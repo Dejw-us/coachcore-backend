@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
+import pro.shapeit.api.common.util.JwtUtils;
 
 import java.util.Optional;
 
@@ -19,13 +20,6 @@ public class AuditorAwareImpl implements AuditorAware<String> {
       return Optional.empty();
     }
 
-    return Optional.ofNullable(getUserIdFromAuth(auth));
-  }
-
-  private String getUserIdFromAuth(Authentication auth) {
-    if (!(auth instanceof JwtAuthenticationToken jwtAuth)) {
-      throw new AuthenticationCredentialsNotFoundException("You must be authenticated to perform this action");
-    }
-    return jwtAuth.getToken().getClaim("sub");
+    return Optional.ofNullable(JwtUtils.extractUserIdFromAuth(auth));
   }
 }
