@@ -27,8 +27,6 @@ public class SecurityConfig {
     http.csrf(AbstractHttpConfigurer::disable);
 
     http.authorizeHttpRequests(auth -> {
-      auth.requestMatchers(HttpMethod.POST, "/v1/**").authenticated();
-
       auth.requestMatchers("/v1/training-plans/{planId}/**").access(trainingPlanAuthorizationManager);
 
       auth.requestMatchers(HttpMethod.GET, "/v1/training-plans").permitAll();

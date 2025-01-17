@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import pro.shapeit.api.common.exception.ResourceNotFoundException;
+import pro.shapeit.api.common.exception.resource.ResourceNotFoundException;
 
 @Configuration
 public class SwaggerConfig {

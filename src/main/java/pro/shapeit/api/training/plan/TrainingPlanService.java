@@ -2,20 +2,9 @@ package pro.shapeit.api.training.plan;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pro.shapeit.api.catalog.exercise.CatalogExercise;
-import pro.shapeit.api.common.exception.ResourceNotFoundException;
+import pro.shapeit.api.common.exception.resource.ResourceNotFoundException;
 import pro.shapeit.api.training.plan.goal.TrainingGoal;
 import pro.shapeit.api.training.plan.goal.TrainingGoalRepository;
-import pro.shapeit.api.training.plan.unit.CreateTrainingUnitDto;
-import pro.shapeit.api.training.plan.unit.TrainingUnit;
-import pro.shapeit.api.training.plan.unit.TrainingUnitRepository;
-import pro.shapeit.api.training.plan.unit.UpdateTrainingUnitDto;
-import pro.shapeit.api.training.plan.unit.exercise.TrainingExercise;
-import pro.shapeit.api.training.plan.unit.exercise.TrainingExerciseRepository;
-import pro.shapeit.api.training.plan.unit.exercise.UpdateTrainingExerciseDto;
-import pro.shapeit.api.training.plan.unit.exercise.set.TrainingSet;
-import pro.shapeit.api.training.plan.unit.exercise.set.TrainingSetRepository;
-import pro.shapeit.api.training.plan.unit.exercise.set.UpdateTrainingSetDto;
 
 import java.util.List;
 

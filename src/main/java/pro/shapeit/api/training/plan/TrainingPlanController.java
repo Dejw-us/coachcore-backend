@@ -4,16 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pro.shapeit.api.catalog.exercise.CatalogExercise;
 import pro.shapeit.api.common.dto.MessageDto;
-import pro.shapeit.api.common.exception.ResourceNotFoundException;
-import pro.shapeit.api.training.plan.unit.TrainingUnitMapper;
-import pro.shapeit.api.training.plan.unit.exercise.TrainingExerciseDto;
+import pro.shapeit.api.common.exception.resource.ResourceNotFoundException;
 import pro.shapeit.api.training.plan.unit.exercise.TrainingExerciseMapper;
-import pro.shapeit.api.training.plan.unit.exercise.UpdateTrainingExerciseDto;
-import pro.shapeit.api.training.plan.unit.exercise.set.TrainingSetDto;
 import pro.shapeit.api.training.plan.unit.exercise.set.TrainingSetMapper;
-import pro.shapeit.api.training.plan.unit.exercise.set.UpdateTrainingSetDto;
 
 import java.util.List;
 

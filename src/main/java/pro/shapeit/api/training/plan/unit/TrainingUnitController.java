@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.shapeit.api.common.dto.MessageDto;
-import pro.shapeit.api.common.exception.ResourceNotFoundException;
+import pro.shapeit.api.common.exception.resource.ResourceAlreadyExistsException;
+import pro.shapeit.api.common.exception.resource.ResourceFailedToUpdateException;
+import pro.shapeit.api.common.exception.resource.ResourceNotFoundException;
 import pro.shapeit.api.training.plan.TrainingPlanService;
 
 import java.util.List;
@@ -40,7 +42,7 @@ public class TrainingUnitController {
   ResponseEntity<TrainingUnitDto> postTrainingUnit(
       @PathVariable String planId,
       @RequestBody CreateTrainingUnitDto dto
-  ) throws ResourceNotFoundException {
+  ) throws ResourceNotFoundException, ResourceAlreadyExistsException {
     var plan = trainingPlanService.findTrainingPlanByLocalId(planId);
     var savedUnit = trainingUnitService.saveTrainingUnit(plan, dto);
     var savedUnitDto = trainingUnitMapper.map(savedUnit);
@@ -57,9 +59,9 @@ public class TrainingUnitController {
       @PathVariable String planId,
       @PathVariable String unitId,
       @RequestBody UpdateTrainingUnitDto dto
-  ) throws ResourceNotFoundException {
+  ) throws ResourceNotFoundException, ResourceFailedToUpdateException {
     var unit = trainingUnitService.findTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
-    var updatedUnit = trainingUnitService.updateTrainingUnit(unit, dto);
+    var updatedUnit = trainingUnitService.updateTrainingUnit(unit, dto, planId);
     var updatedUnitDto = trainingUnitMapper.map(updatedUnit);
 
     return ResponseEntity

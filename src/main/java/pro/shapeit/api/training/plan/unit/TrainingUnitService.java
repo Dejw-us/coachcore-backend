@@ -2,12 +2,15 @@ package pro.shapeit.api.training.plan.unit;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pro.shapeit.api.common.exception.ResourceNotFoundException;
+import pro.shapeit.api.common.exception.resource.ResourceAlreadyExistsException;
+import pro.shapeit.api.common.exception.resource.ResourceFailedToUpdateException;
+import pro.shapeit.api.common.exception.resource.ResourceNotFoundException;
 import pro.shapeit.api.training.plan.TrainingPlan;
 import pro.shapeit.api.training.plan.TrainingPlanRepository;
 
 import java.util.List;
 
+import static java.lang.String.format;
 import static pro.shapeit.api.common.util.ServiceUtils.updateIfNotNull;
 
 @Service
@@ -15,8 +18,6 @@ import static pro.shapeit.api.common.util.ServiceUtils.updateIfNotNull;
 public class TrainingUnitService {
   private final TrainingUnitRepository trainingUnitRepository;
   private final TrainingPlanRepository trainingPlanRepository;
-
-  // --- Find methods ---
 
   public List<TrainingUnit> findAllTrainingUnitsByTrainingPlanLocalId(
       String planLocalId
@@ -35,9 +36,13 @@ public class TrainingUnitService {
         .orElseThrow(ResourceNotFoundException.supplier("Training unit does not exist"));
   }
 
-  // --- Save methods ---
-
-  public TrainingUnit saveTrainingUnit(TrainingPlan plan, CreateTrainingUnitDto dto) {
+  public TrainingUnit saveTrainingUnit(
+      TrainingPlan plan,
+      CreateTrainingUnitDto dto
+  ) throws ResourceAlreadyExistsException {
+    if (trainingUnitRepository.existsByTrainingPlanAndDayOfWeek(plan, dto.dayOfWeek())) {
+      throw new ResourceAlreadyExistsException(format("Training unit for %s already exist", dto.dayOfWeek()));
+    }
     var unit = new TrainingUnit();
     unit.setDayOfWeek(dto.dayOfWeek());
     unit.setTrainingPlan(plan);
@@ -45,17 +50,20 @@ public class TrainingUnitService {
     return trainingUnitRepository.save(unit);
   }
 
-  // --- Update methods ---
-
-  public TrainingUnit updateTrainingUnit(TrainingUnit unit, UpdateTrainingUnitDto dto) {
+  public TrainingUnit updateTrainingUnit(
+      TrainingUnit unit,
+      UpdateTrainingUnitDto dto,
+      String planLocalId
+  ) throws ResourceFailedToUpdateException {
+    if (trainingUnitRepository.existsInTrainingPlanByDayOfWeek(dto.dayOfWeek(), planLocalId)) {
+      throw new ResourceFailedToUpdateException(format("Training unit for %s already exists", dto.dayOfWeek()));
+    }
     updateIfNotNull(dto.dayOfWeek(), unit::setDayOfWeek);
     updateIfNotNull(dto.notes(), unit::setNotes);
     updateIfNotNull(dto.name(), unit::setName);
 
     return trainingUnitRepository.save(unit);
   }
-
-  // --- Delete methods ---
 
   public boolean deleteTrainingUnitByTrainingPlanLocalIdAndLocalId(String planLocalId, String unitLocalId) {
     return trainingUnitRepository.deleteByTrainingPlan_LocalIdAndLocalIdWithCount(planLocalId, unitLocalId) > 0;

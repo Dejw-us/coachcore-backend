@@ -5,8 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.shapeit.api.common.dto.MessageDto;
-import pro.shapeit.api.common.exception.ResourceNotFoundException;
-import pro.shapeit.api.training.plan.TrainingPlanService;
+import pro.shapeit.api.common.exception.resource.ResourceNotFoundException;
 import pro.shapeit.api.training.plan.unit.exercise.TrainingExerciseService;
 
 import static pro.shapeit.api.common.util.ControllerUtils.deleteResponse;

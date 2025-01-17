@@ -2,7 +2,7 @@ package pro.shapeit.api.training.plan.unit.exercise.set;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pro.shapeit.api.common.exception.ResourceNotFoundException;
+import pro.shapeit.api.common.exception.resource.ResourceNotFoundException;
 import pro.shapeit.api.training.plan.unit.exercise.TrainingExercise;
 import pro.shapeit.api.training.plan.unit.exercise.TrainingExerciseRepository;
 

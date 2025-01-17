@@ -21,16 +21,33 @@ public class TrainingPlanAuthorizationManager implements AuthorizationManager<Re
       Supplier<Authentication> authentication,
       RequestAuthorizationContext context
   ) {
-    var planId = context.getRequest().getParameter("planId");
+    var request = context.getRequest();
+    var planId = extractPathVariable(request.getRequestURI(), "/v1/training-plans/", "/units");
     var auth = authentication.get();
 
     if (planId == null || !auth.isAuthenticated()) {
+      if (planId == null) {
+        System.out.println("plan id == null");
+      }
+      if (!auth.isAuthenticated()) {
+        System.out.println("no auth");
+      }
       return new AuthorizationDecision(false);
     }
 
     var userId = JwtUtils.extractUserIdFromAuth(auth);
     var isOwner = trainingPlanService.isTrainingPlanOwner(userId, planId);
-
+    System.out.println("auth");
     return new AuthorizationDecision(isOwner);
+  }
+
+  private String extractPathVariable(String requestUri, String prefix, String suffix) {
+    if (requestUri.startsWith(prefix) && requestUri.contains(suffix)) {
+      return requestUri.substring(
+          prefix.length(),
+          requestUri.indexOf(suffix)
+      );
+    }
+    return null;
   }
 }
