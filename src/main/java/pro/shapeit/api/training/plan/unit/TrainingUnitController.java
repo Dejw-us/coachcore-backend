@@ -1,5 +1,6 @@
 package pro.shapeit.api.training.plan.unit;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class TrainingUnitController {
   @PostMapping
   ResponseEntity<TrainingUnitDto> postTrainingUnit(
       @PathVariable String planId,
-      @RequestBody CreateTrainingUnitDto dto
+      @RequestBody @Valid CreateTrainingUnitDto dto
   ) throws ResourceNotFoundException, ResourceAlreadyExistsException {
     var plan = trainingPlanService.findTrainingPlanByLocalId(planId);
     var savedUnit = trainingUnitService.saveTrainingUnit(plan, dto);

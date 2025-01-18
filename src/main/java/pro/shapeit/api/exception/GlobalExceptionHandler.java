@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pro.shapeit.api.common.dto.ErrorDto;
@@ -54,5 +55,14 @@ public class GlobalExceptionHandler {
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(ErrorDto.create(ErrorCode.RESOURCE_FAILED_TO_UPDATE, exception.getMessage(), request));
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<?> handleMethodArgumentNotValidException(
+      MethodArgumentNotValidException exception,
+      HttpServletRequest request
+  ) {
+    return ResponseEntity
+        .ok("test");
   }
 }
