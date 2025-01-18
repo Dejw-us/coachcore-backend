@@ -1,6 +1,7 @@
 package pro.shapeit.api.training.plan.unit;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.EnumUtils;
 import org.springframework.stereotype.Service;
 import pro.shapeit.api.common.exception.resource.ResourceAlreadyExistsException;
 import pro.shapeit.api.common.exception.resource.ResourceFailedToUpdateException;
@@ -8,9 +9,12 @@ import pro.shapeit.api.common.exception.resource.ResourceNotFoundException;
 import pro.shapeit.api.training.plan.TrainingPlan;
 import pro.shapeit.api.training.plan.TrainingPlanRepository;
 
+import java.time.DayOfWeek;
 import java.util.List;
+import java.util.Objects;
 
 import static java.lang.String.format;
+import static org.apache.commons.lang3.EnumUtils.getEnum;
 import static pro.shapeit.api.common.util.ServiceUtils.updateIfNotNull;
 
 @Service
@@ -40,11 +44,12 @@ public class TrainingUnitService {
       TrainingPlan plan,
       CreateTrainingUnitDto dto
   ) throws ResourceAlreadyExistsException {
-    if (trainingUnitRepository.existsByTrainingPlanAndDayOfWeek(plan, dto.dayOfWeek())) {
+    var dayOfWeek = getEnum(DayOfWeek.class, dto.dayOfWeek());
+    if (trainingUnitRepository.existsByTrainingPlanAndDayOfWeek(plan, dayOfWeek)) {
       throw new ResourceAlreadyExistsException(format("Training unit for %s already exist", dto.dayOfWeek()));
     }
     var unit = new TrainingUnit();
-    unit.setDayOfWeek(dto.dayOfWeek());
+    unit.setDayOfWeek(dayOfWeek);
     unit.setTrainingPlan(plan);
 
     return trainingUnitRepository.save(unit);
@@ -55,10 +60,11 @@ public class TrainingUnitService {
       UpdateTrainingUnitDto dto,
       String planLocalId
   ) throws ResourceFailedToUpdateException {
-    if (trainingUnitRepository.existsInTrainingPlanByDayOfWeek(dto.dayOfWeek(), planLocalId)) {
-      throw new ResourceFailedToUpdateException(format("Training unit for %s already exists", dto.dayOfWeek()));
+    var dayOfWeek = getEnum(DayOfWeek.class, dto.dayOfWeek());
+    if (trainingUnitRepository.existsInTrainingPlanByDayOfWeek(dayOfWeek, planLocalId)) {
+      throw new ResourceFailedToUpdateException(format("Training unit for %s already exists", dayOfWeek));
     }
-    updateIfNotNull(dto.dayOfWeek(), unit::setDayOfWeek);
+    updateIfNotNull(dayOfWeek, unit::setDayOfWeek);
     updateIfNotNull(dto.notes(), unit::setNotes);
     updateIfNotNull(dto.name(), unit::setName);
 
