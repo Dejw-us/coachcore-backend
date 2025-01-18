@@ -1,5 +1,6 @@
 package pro.shapeit.api.training.plan;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,7 @@ class TrainingPlanController {
 
   @PostMapping
   ResponseEntity<TrainingPlanDto> postTrainingPlan(
-      @RequestBody CreateTrainingPlanDto dto
+      @RequestBody @Valid CreateTrainingPlanDto dto
   ) {
     var savedPlan = trainingPlanService.saveTrainingPlan(dto);
     var savedPlanDto = trainingPlanMapper.map(savedPlan);
@@ -64,7 +65,7 @@ class TrainingPlanController {
   @PatchMapping("/{planId}")
   ResponseEntity<TrainingPlanDto> patchTrainingPlan(
       @PathVariable String planId,
-      @RequestBody UpdateTrainingPlanDto dto
+      @RequestBody @Valid UpdateTrainingPlanDto dto
   ) throws ResourceNotFoundException {
     var plan = trainingPlanService.findTrainingPlanByLocalId(planId);
     var updatedPlan = trainingPlanService.updateTrainingPlan(plan, dto);
