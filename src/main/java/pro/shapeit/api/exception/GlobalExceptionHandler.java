@@ -2,6 +2,7 @@ package pro.shapeit.api.exception;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pro.shapeit.api.common.dto.ErrorDto;
+import pro.shapeit.api.common.dto.ErrorsDto;
 import pro.shapeit.api.common.exception.resource.ResourceAlreadyExistsException;
 import pro.shapeit.api.common.exception.resource.ResourceFailedToUpdateException;
 import pro.shapeit.api.common.exception.resource.ResourceNotFoundException;
@@ -58,11 +60,15 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<?> handleMethodArgumentNotValidException(
+  public ResponseEntity<ErrorsDto> handleMethodArgumentNotValidException(
       MethodArgumentNotValidException exception,
       HttpServletRequest request
   ) {
+    var errors = exception.getAllErrors().stream()
+        .map(DefaultMessageSourceResolvable::getDefaultMessage)
+        .toList();
     return ResponseEntity
-        .ok("test");
+        .badRequest()
+        .body(ErrorsDto.create(ErrorCode.DTO_VALIDATION_ERROR, errors, request));
   }
 }
