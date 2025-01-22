@@ -1,4 +1,4 @@
-package pro.shapeit.backend.catalog.category;
+package pro.shapeit.training.catalog.category;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -11,10 +11,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.shapeit.backend.common.exception.resource.ResourceNotFoundException;
-import pro.shapeit.backend.catalog.exercise.CatalogExerciseDto;
-import pro.shapeit.backend.catalog.exercise.CatalogExerciseMapper;
-import pro.shapeit.backend.catalog.exercise.CatalogExerciseService;
-import pro.shapeit.backend.catalog.exercise.CreateCatalogExerciseDto;
+import pro.shapeit.training.catalog.exercise.CatalogExerciseDto;
+import pro.shapeit.training.catalog.exercise.CatalogExerciseMapper;
+import pro.shapeit.training.catalog.exercise.CatalogExerciseService;
+import pro.shapeit.training.catalog.exercise.CreateCatalogExerciseDto;
 
 @RestController
 @RequestMapping("/exercise-categories")

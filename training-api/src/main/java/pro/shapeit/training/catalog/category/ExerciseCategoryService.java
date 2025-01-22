@@ -1,4 +1,4 @@
-package pro.shapeit.backend.catalog.category;
+package pro.shapeit.training.catalog.category;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

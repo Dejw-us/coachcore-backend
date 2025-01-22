@@ -1,4 +1,4 @@
-package pro.shapeit.backend.catalog.exercise;
+package pro.shapeit.training.catalog.exercise;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

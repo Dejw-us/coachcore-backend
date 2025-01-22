@@ -1,4 +1,4 @@
-package pro.shapeit.backend.catalog.exercise;
+package pro.shapeit.training.catalog.exercise;
 
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;

@@ -1,4 +1,4 @@
-package pro.shapeit.backend.catalog.category;
+package pro.shapeit.training.catalog.category;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

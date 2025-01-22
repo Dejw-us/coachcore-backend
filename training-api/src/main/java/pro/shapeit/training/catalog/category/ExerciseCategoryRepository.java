@@ -1,4 +1,4 @@
-package pro.shapeit.backend.catalog.category;
+package pro.shapeit.training.catalog.category;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
