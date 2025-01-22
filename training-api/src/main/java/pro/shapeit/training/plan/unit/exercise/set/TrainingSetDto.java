@@ -2,7 +2,7 @@ package pro.shapeit.training.plan.unit.exercise.set;
 
 
 public record TrainingSetDto(
-    String localId,
+    String id,
     Integer reps,
     Double intensity,
     TrainingSet.IntensityType intensityType,

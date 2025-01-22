@@ -1,7 +1,7 @@
 package pro.shapeit.training.catalog.category;
 
 public record ExerciseCategoryDto(
-    String localId,
+    String id,
     String name,
     String description
 ) {

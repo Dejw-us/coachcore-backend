@@ -26,6 +26,8 @@ public class ExerciseCategoryController {
   private final ExerciseCategoryMapper exerciseCategoryMapper;
   private final CatalogExerciseMapper catalogExerciseMapper;
 
+  // --- GET ---
+
   @GetMapping
   @Operation(
       summary = "Get all exercise categories",
@@ -49,31 +51,5 @@ public class ExerciseCategoryController {
 
     return ResponseEntity
         .ok(categoriesDto);
-  }
-
-  @PostMapping("{categoryLocalId}/catalog-exercises")
-  @Operation(
-      summary = "Save new catalog exercise corresponding to the given category",
-      responses = @ApiResponse(
-          description = "Created catalog exercise",
-          responseCode = "201",
-          content = @Content(
-              mediaType = MediaType.APPLICATION_JSON_VALUE,
-              schema = @Schema(implementation = CatalogExerciseDto.class)
-          )
-      ),
-      tags = "Catalog"
-  )
-  public ResponseEntity<?> postCatalogExercise(
-      @PathVariable String categoryLocalId,
-      @RequestBody CreateCatalogExerciseDto dto
-  ) throws ResourceNotFoundException {
-    var category = exerciseCategoryService.findExerciseCategory(categoryLocalId);
-    var savedExercise = catalogExerciseService.saveCatalogExercise(dto, category);
-    var savedExerciseDto = catalogExerciseMapper.map(savedExercise);
-
-    return ResponseEntity
-        .status(HttpStatus.CREATED)
-        .body(savedExerciseDto);
   }
 }

@@ -6,7 +6,7 @@ import java.time.DayOfWeek;
 import java.util.List;
 
 public record TrainingUnitDto(
-    String localId,
+    String id,
     String notes,
     DayOfWeek dayOfWeek,
     List<TrainingExerciseDto> exercises

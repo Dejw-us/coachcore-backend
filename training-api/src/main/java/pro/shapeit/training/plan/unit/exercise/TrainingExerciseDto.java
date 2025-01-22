@@ -7,7 +7,7 @@ import pro.shapeit.training.plan.unit.exercise.set.TrainingSetDto;
 import java.util.List;
 
 public record TrainingExerciseDto(
-    String localId,
+    String id,
     CatalogExerciseDto catalogExercise,
     String notes,
     List<TrainingSetDto> sets
