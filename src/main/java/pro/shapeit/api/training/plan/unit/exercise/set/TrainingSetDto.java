@@ -7,6 +7,6 @@ public record TrainingSetDto(
     Double intensity,
     TrainingSet.IntensityType intensityType,
     String rate,
-    Double rest
+    Double restSeconds
 ) {
 }

@@ -11,7 +11,7 @@ import pro.shapeit.api.common.entity.BaseEntity;
 public class TrainingSet extends BaseEntity {
   private Integer reps;
 
-  private Double rest;
+  private Double restSeconds;
 
   private Double intensity;
 

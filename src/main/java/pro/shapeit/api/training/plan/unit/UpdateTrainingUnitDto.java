@@ -1,12 +1,13 @@
 package pro.shapeit.api.training.plan.unit;
 
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import pro.shapeit.api.validation.annotation.ValidDayOfWeek;
+import pro.shapeit.api.validation.annotation.ValidEnum;
+
+import java.time.DayOfWeek;
 
 public record UpdateTrainingUnitDto(
-    @ValidDayOfWeek
+    @ValidEnum(DayOfWeek.class)
     String dayOfWeek,
     @Size(max = 200)
     @NotEmpty
