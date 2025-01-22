@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pro.shapeit.common.exception.ResourceNotFoundException;
 import pro.shapeit.training.catalog.category.ExerciseCategory;
-import pro.shapeit.training.catalog.category.ExerciseCategoryRepository;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class CatalogExerciseService {
     return catalogExerciseRepository.findAll();
   }
 
-  public CatalogExercise findCatalogExercise(String localId) throws ResourceNotFoundException {
+  public CatalogExercise findCatalogExerciseByLocalId(String localId) throws ResourceNotFoundException {
     return catalogExerciseRepository.findByLocalId(localId)
         .orElseThrow(() -> new ResourceNotFoundException("Catalog catalogExercise does not exist"));
   }

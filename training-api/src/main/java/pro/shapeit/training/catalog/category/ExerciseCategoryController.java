@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import pro.shapeit.training.catalog.exercise.CatalogExerciseMapper;
 import pro.shapeit.training.catalog.exercise.CatalogExerciseService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/v1/exercise-categories")
 @RequiredArgsConstructor
@@ -41,7 +43,7 @@ public class ExerciseCategoryController {
       ),
       tags = "Catalog"
   )
-  public ResponseEntity<?> getExerciseCategories() {
+  public ResponseEntity<List<ExerciseCategoryDto>> getExerciseCategories() {
     var categories = exerciseCategoryService.findAllExerciseCategories();
     var categoriesDto = categories.stream()
         .map(exerciseCategoryMapper::map)

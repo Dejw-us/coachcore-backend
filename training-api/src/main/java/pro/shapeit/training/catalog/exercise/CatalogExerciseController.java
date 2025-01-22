@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import pro.shapeit.common.exception.ResourceNotFoundException;
 import pro.shapeit.training.catalog.category.ExerciseCategoryService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/v1/catalog-exercises")
 @RequiredArgsConstructor
@@ -37,7 +39,7 @@ public class CatalogExerciseController {
       ),
       tags = "Catalog"
   )
-  public ResponseEntity<?> getCatalogExercises() {
+  public ResponseEntity<List<CatalogExerciseDto>> getCatalogExercises() {
     var exercises = catalogExerciseService.finalAllCatalogExercises();
     var exercisesDto = exercises.stream()
         .map(catalogExerciseMapper::map)

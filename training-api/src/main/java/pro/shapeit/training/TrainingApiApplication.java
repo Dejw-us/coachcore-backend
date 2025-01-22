@@ -1,5 +1,6 @@
 package pro.shapeit.training;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,6 +11,7 @@ import pro.shapeit.training.catalog.exercise.CatalogExerciseService;
 import pro.shapeit.training.catalog.exercise.CreateCatalogExerciseDto;
 
 @SpringBootApplication
+@OpenAPIDefinition
 @EnableJpaAuditing
 public class TrainingApiApplication {
   public static void main(String[] args) {

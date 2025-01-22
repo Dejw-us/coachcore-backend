@@ -1,4 +1,4 @@
-package pro.shapeit.common.swagger;
+package pro.shapeit.common.swagger.customizer;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.media.Content;

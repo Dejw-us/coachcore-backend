@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.shapeit.common.dto.MessageDto;
 import pro.shapeit.common.exception.ResourceNotFoundException;
-import pro.shapeit.training.catalog.exercise.CatalogExercise;
+import pro.shapeit.training.catalog.exercise.CatalogExerciseService;
 import pro.shapeit.training.plan.unit.TrainingUnitService;
 
 import static pro.shapeit.common.util.ControllerUtils.deleteResponse;
@@ -17,6 +17,7 @@ import static pro.shapeit.common.util.ControllerUtils.deleteResponse;
 public class TrainingExerciseController {
   private final TrainingExerciseService trainingExerciseService;
   private final TrainingUnitService trainingUnitService;
+  private final CatalogExerciseService catalogExerciseService;
 
   private final TrainingExerciseMapper trainingExerciseMapper;
 
@@ -29,7 +30,7 @@ public class TrainingExerciseController {
       @RequestParam String catalogExerciseId
   ) throws ResourceNotFoundException {
     var unit = trainingUnitService.findTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
-    var catalogExercise = new CatalogExercise(); // TODO handle fetching catalog exercise
+    var catalogExercise = catalogExerciseService.findCatalogExerciseByLocalId(catalogExerciseId);
     var savedExercise = trainingExerciseService.saveTrainingExercise(unit, catalogExercise);
     var savedExerciseDto = trainingExerciseMapper.map(savedExercise);
 
@@ -48,7 +49,7 @@ public class TrainingExerciseController {
       @RequestParam(required = false) String catalogExerciseId
   ) throws ResourceNotFoundException {
     var exercise = trainingExerciseService.findTrainingExerciseByLocalId(exerciseId);
-    var catalogExercise = new CatalogExercise(); // TODO handle fetching catalog exercise
+    var catalogExercise = catalogExerciseService.findCatalogExerciseByLocalId(catalogExerciseId);
     var updatedExercise = trainingExerciseService.updateTrainingExercise(exercise, catalogExercise, dto);
     var updatedExerciseDto = trainingExerciseMapper.map(updatedExercise);
 
