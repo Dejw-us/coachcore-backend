@@ -11,6 +11,7 @@
 	<groupId>pro.shapeit</groupId>
 	<artifactId>backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 	<name>api</name>
 	<description>Backend for shapeit apps</description>
 	<url/>
@@ -31,6 +32,13 @@
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
 	</properties>
+
+	<modules>
+		<module>common</module>
+		<module>profiles-api</module>
+		<module>training-api</module>
+	</modules>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
