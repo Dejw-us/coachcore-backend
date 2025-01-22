@@ -13,7 +13,6 @@ public class ExerciseCategoryService {
 
   public List<ExerciseCategory> findAllExerciseCategories() {
     return exerciseCategoryRepository.findAll();
-
   }
 
   public ExerciseCategory findExerciseCategory(String localId) throws ResourceNotFoundException {
@@ -21,13 +20,14 @@ public class ExerciseCategoryService {
         .orElseThrow(() -> new ResourceNotFoundException("Category does not exist"));
   }
 
-  public ExerciseCategory saveExerciseCategory(String name) {
+  public ExerciseCategory saveExerciseCategory(String name, String description) {
     if (exerciseCategoryRepository.existsByName(name)) {
       return null;
     }
     var category = new ExerciseCategory();
 
     category.setName(name);
+    category.setDescription(description);
 
     return exerciseCategoryRepository.save(category);
   }

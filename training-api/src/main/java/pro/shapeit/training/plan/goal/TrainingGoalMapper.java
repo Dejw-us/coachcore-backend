@@ -9,5 +9,6 @@ import java.util.List;
 public interface TrainingGoalMapper {
   @Mapping(target = "id", source = "localId")
   TrainingGoalDto map(TrainingGoal model);
+
   List<TrainingGoalDto> map(List<TrainingGoal> models);
 }

@@ -12,8 +12,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CatalogExerciseService {
   private final CatalogExerciseRepository catalogExerciseRepository;
-  private final ExerciseCategoryRepository exerciseCategoryRepository;
-  private final CatalogExerciseMapper catalogExerciseMapper;
 
   public List<CatalogExercise> finalAllCatalogExercises() {
     return catalogExerciseRepository.findAll();
