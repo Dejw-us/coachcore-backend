@@ -3,9 +3,9 @@ package pro.shapeit.training.plan.unit;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import pro.shapeit.backend.common.entity.BaseEntity;
-import pro.shapeit.backend.training.plan.unit.exercise.TrainingExercise;
+import pro.shapeit.common.entity.BaseEntity;
 import pro.shapeit.training.plan.TrainingPlan;
+import pro.shapeit.training.plan.unit.exercise.TrainingExercise;
 
 import java.time.DayOfWeek;
 import java.util.List;

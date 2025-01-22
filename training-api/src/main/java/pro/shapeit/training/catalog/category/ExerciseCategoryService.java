@@ -2,7 +2,7 @@ package pro.shapeit.training.catalog.category;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pro.shapeit.backend.common.exception.resource.ResourceNotFoundException;
+import pro.shapeit.common.exception.ResourceNotFoundException;
 
 import java.util.List;
 

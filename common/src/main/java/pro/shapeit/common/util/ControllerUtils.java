@@ -2,7 +2,7 @@ package pro.shapeit.common.util;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.http.ResponseEntity;
-import pro.shapeit.backend.common.dto.MessageDto;
+import pro.shapeit.common.dto.MessageDto;
 
 @UtilityClass
 public class ControllerUtils {

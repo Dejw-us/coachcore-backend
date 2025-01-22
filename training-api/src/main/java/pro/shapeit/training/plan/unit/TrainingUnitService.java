@@ -2,9 +2,9 @@ package pro.shapeit.training.plan.unit;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pro.shapeit.backend.common.exception.resource.ResourceAlreadyExistsException;
-import pro.shapeit.backend.common.exception.resource.ResourceFailedToUpdateException;
-import pro.shapeit.backend.common.exception.resource.ResourceNotFoundException;
+import pro.shapeit.common.exception.ResourceAlreadyExistsException;
+import pro.shapeit.common.exception.ResourceFailedToUpdateException;
+import pro.shapeit.common.exception.ResourceNotFoundException;
 import pro.shapeit.training.plan.TrainingPlan;
 import pro.shapeit.training.plan.TrainingPlanRepository;
 
@@ -13,7 +13,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static org.apache.commons.lang3.EnumUtils.getEnum;
-import static pro.shapeit.backend.common.util.ServiceUtils.updateIfNotNull;
+import static pro.shapeit.common.util.ServiceUtils.updateIfNotNull;
 
 @Service
 @RequiredArgsConstructor

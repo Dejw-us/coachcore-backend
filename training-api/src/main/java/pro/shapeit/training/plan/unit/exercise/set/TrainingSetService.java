@@ -2,12 +2,12 @@ package pro.shapeit.training.plan.unit.exercise.set;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pro.shapeit.backend.common.exception.resource.ResourceNotFoundException;
+import pro.shapeit.common.exception.ResourceNotFoundException;
 import pro.shapeit.training.plan.unit.exercise.TrainingExercise;
 import pro.shapeit.training.plan.unit.exercise.TrainingExerciseRepository;
 
 import static org.apache.commons.lang3.EnumUtils.getEnum;
-import static pro.shapeit.backend.common.util.ServiceUtils.updateIfNotNull;
+import static pro.shapeit.common.util.ServiceUtils.updateIfNotNull;
 
 @Service
 @RequiredArgsConstructor

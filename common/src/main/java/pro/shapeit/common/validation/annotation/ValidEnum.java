@@ -2,7 +2,7 @@ package pro.shapeit.common.validation.annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import pro.shapeit.backend.validation.validator.EnumValidator;
+import pro.shapeit.common.validation.validator.EnumValidator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

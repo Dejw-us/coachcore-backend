@@ -1,6 +1,6 @@
 package pro.shapeit.training.plan.unit;
 
-import pro.shapeit.backend.validation.annotation.ValidEnum;
+import pro.shapeit.common.validation.annotation.ValidEnum;
 
 import java.time.DayOfWeek;
 

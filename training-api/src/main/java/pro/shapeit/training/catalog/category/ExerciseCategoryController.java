@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pro.shapeit.backend.common.exception.resource.ResourceNotFoundException;
+import pro.shapeit.common.exception.ResourceNotFoundException;
 import pro.shapeit.training.catalog.exercise.CatalogExerciseDto;
 import pro.shapeit.training.catalog.exercise.CatalogExerciseMapper;
 import pro.shapeit.training.catalog.exercise.CatalogExerciseService;

@@ -2,8 +2,8 @@ package pro.shapeit.training.plan.unit;
 
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
-import pro.shapeit.backend.training.plan.unit.exercise.TrainingExerciseMapper;
-import pro.shapeit.backend.training.plan.unit.exercise.set.TrainingSetMapper;
+import pro.shapeit.training.plan.unit.exercise.TrainingExerciseMapper;
+import pro.shapeit.training.plan.unit.exercise.set.TrainingSetMapper;
 
 import java.util.List;
 

@@ -6,8 +6,8 @@ import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.stereotype.Component;
-import pro.shapeit.backend.common.util.JwtUtils;
-import pro.shapeit.backend.training.plan.TrainingPlanService;
+import pro.shapeit.common.util.JwtUtils;
+import pro.shapeit.training.plan.TrainingPlanService;
 
 import java.util.function.Supplier;
 

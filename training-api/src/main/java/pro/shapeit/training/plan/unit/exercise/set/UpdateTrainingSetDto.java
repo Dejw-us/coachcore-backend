@@ -1,7 +1,7 @@
 package pro.shapeit.training.plan.unit.exercise.set;
 
 import jakarta.validation.constraints.*;
-import pro.shapeit.backend.validation.annotation.ValidEnum;
+import pro.shapeit.common.validation.annotation.ValidEnum;
 
 public record UpdateTrainingSetDto(
     @Min(1L)

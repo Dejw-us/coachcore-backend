@@ -9,48 +9,53 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import pro.shapeit.common.dto.ErrorsDto;
+import pro.shapeit.common.error.ErrorCode;
+import pro.shapeit.common.exception.ResourceAlreadyExistsException;
+import pro.shapeit.common.exception.ResourceFailedToUpdateException;
+import pro.shapeit.common.exception.ResourceNotFoundException;
 
 @Hidden
 @RestControllerAdvice
 public class GlobalExceptionHandler {
   @ExceptionHandler(ResourceNotFoundException.class)
-  public ResponseEntity<ErrorDto> handleResourceNotFound(
+  public ResponseEntity<ErrorsDto> handleResourceNotFound(
       ResourceNotFoundException exception,
       HttpServletRequest request
   ) {
     return ResponseEntity
         .status(HttpStatus.NOT_FOUND)
-        .body(ErrorDto.create(ErrorCode.RESOURCE_NOT_FOUND, exception.getMessage(), request));
+        .body(ErrorsDto.create(ErrorCode.RESOURCE_NOT_FOUND, exception.getMessage(), request));
   }
 
   @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
-  public ResponseEntity<ErrorDto> handleAuthenticationCredentialsNotFound(
+  public ResponseEntity<ErrorsDto> handleAuthenticationCredentialsNotFound(
       AuthenticationCredentialsNotFoundException exception,
       HttpServletRequest request
   ) {
     return ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
-        .body(ErrorDto.create(ErrorCode.NOT_AUTHORIZED, exception.getMessage(), request));
+        .body(ErrorsDto.create(ErrorCode.NOT_AUTHORIZED, exception.getMessage(), request));
   }
 
   @ExceptionHandler(ResourceAlreadyExistsException.class)
-  public ResponseEntity<ErrorDto> handleResourceAlreadyExistsException(
+  public ResponseEntity<ErrorsDto> handleResourceAlreadyExistsException(
       ResourceAlreadyExistsException exception,
       HttpServletRequest request
   ) {
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
-        .body(ErrorDto.create(ErrorCode.RESOURCE_ALREADY_EXISTS, exception.getMessage(), request));
+        .body(ErrorsDto.create(ErrorCode.RESOURCE_ALREADY_EXISTS, exception.getMessage(), request));
   }
 
   @ExceptionHandler(ResourceFailedToUpdateException.class)
-  public ResponseEntity<ErrorDto> handleResourceFailedToUpdateException(
+  public ResponseEntity<ErrorsDto> handleResourceFailedToUpdateException(
       ResourceFailedToUpdateException exception,
       HttpServletRequest request
   ) {
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(ErrorDto.create(ErrorCode.RESOURCE_FAILED_TO_UPDATE, exception.getMessage(), request));
+        .body(ErrorsDto.create(ErrorCode.RESOURCE_FAILED_TO_UPDATE, exception.getMessage(), request));
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)

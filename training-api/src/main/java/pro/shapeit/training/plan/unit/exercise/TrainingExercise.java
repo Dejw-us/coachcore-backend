@@ -3,9 +3,9 @@ package pro.shapeit.training.plan.unit.exercise;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import pro.shapeit.backend.common.entity.BaseEntity;
-import pro.shapeit.backend.catalog.exercise.CatalogExercise;
-import pro.shapeit.backend.training.plan.unit.exercise.set.TrainingSet;
+import pro.shapeit.common.entity.BaseEntity;
+import pro.shapeit.training.catalog.exercise.CatalogExercise;
+import pro.shapeit.training.plan.unit.exercise.set.TrainingSet;
 
 import java.util.ArrayList;
 import java.util.List;

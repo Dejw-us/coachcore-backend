@@ -1,7 +1,8 @@
 package pro.shapeit.training.plan.unit.exercise;
 
-import pro.shapeit.backend.catalog.exercise.CatalogExerciseDto;
-import pro.shapeit.backend.training.plan.unit.exercise.set.TrainingSetDto;
+
+import pro.shapeit.training.catalog.exercise.CatalogExerciseDto;
+import pro.shapeit.training.plan.unit.exercise.set.TrainingSetDto;
 
 import java.util.List;
 
