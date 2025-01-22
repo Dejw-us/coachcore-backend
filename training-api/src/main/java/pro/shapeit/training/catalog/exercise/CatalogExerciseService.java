@@ -23,6 +23,9 @@ public class CatalogExerciseService {
   }
 
   public CatalogExercise saveCatalogExercise(CreateCatalogExerciseDto dto, ExerciseCategory category) throws ResourceNotFoundException {
+    if (catalogExerciseRepository.existsByName(dto.name())) {
+      return null;
+    }
     var exercise = new CatalogExercise();
 
     exercise.setName(dto.name());

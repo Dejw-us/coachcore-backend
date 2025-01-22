@@ -17,7 +17,7 @@ public interface TrainingPlanRepository extends JpaRepository<TrainingPlan, Long
   void deleteByLocalId(String localId);
 
   @Modifying
-  @Query("DELETE FROM TrainingPlan pro.shapeit.plan WHERE pro.shapeit.plan.localId = :localId")
+  @Query("DELETE FROM TrainingPlan plan WHERE plan.localId = :localId")
   int deleteByLocalIdWithCount(@Param("localId") String localId);
 
   boolean existsByLocalIdAndCreatedBy(String localId, String createdBy);

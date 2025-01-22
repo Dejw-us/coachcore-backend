@@ -8,4 +8,5 @@ import java.util.Optional;
 @Repository
 public interface CatalogExerciseRepository extends JpaRepository<CatalogExercise, Long> {
   Optional<CatalogExercise> findByLocalId(String localId);
+  boolean existsByName(String name);
 }

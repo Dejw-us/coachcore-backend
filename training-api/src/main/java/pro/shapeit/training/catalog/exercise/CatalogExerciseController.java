@@ -14,7 +14,7 @@ import pro.shapeit.common.exception.ResourceNotFoundException;
 import pro.shapeit.training.catalog.category.ExerciseCategoryService;
 
 @RestController
-@RequestMapping("/catalog-exercises")
+@RequestMapping("/v1/catalog-exercises")
 @RequiredArgsConstructor
 public class CatalogExerciseController {
   private final CatalogExerciseService catalogExerciseService;

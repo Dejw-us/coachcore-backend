@@ -30,7 +30,9 @@ public class SecurityConfig {
       auth.requestMatchers(HttpMethod.POST, "/v1/training-plans").authenticated();
 
       auth.requestMatchers("/v1/training-plans/{planId}/**").access(trainingPlanAuthorizationManager);
+      auth.requestMatchers("/v1/catalog-exercises").permitAll();
 
+      auth.requestMatchers(HttpMethod.GET, "/v1/exercise-categories").permitAll();
       auth.requestMatchers(HttpMethod.GET, "/v1/training-plans").permitAll();
       auth.requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll();
     });
