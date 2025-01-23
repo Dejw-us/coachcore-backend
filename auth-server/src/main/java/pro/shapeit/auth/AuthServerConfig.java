@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -40,7 +41,7 @@ public class AuthServerConfig {
     var client = RegisteredClient.withId("shapeit")
         .clientId("shapeit")
         .clientSecret("{noop}secret")
-        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
+        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
         .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
         .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
@@ -61,7 +62,7 @@ public class AuthServerConfig {
         .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
         .with(authorizationServerConfigurer, (authorizationServer) ->
             authorizationServer
-                .oidc(withDefaults())  // Enable OpenID Connect 1.0
+                .oidc(Customizer.withDefaults())	// Enable OpenID Connect 1.0
         )
         .authorizeHttpRequests((authorize) ->
             authorize
@@ -89,7 +90,7 @@ public class AuthServerConfig {
         )
         // Form login handles the redirect to the login page from the
         // authorization server filter chain
-        .formLogin(withDefaults());
+        .formLogin(Customizer.withDefaults());
 
     return http.build();
   }

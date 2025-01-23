@@ -8,7 +8,6 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.web.SecurityFilterChain;
-import pro.shapeit.common.util.HttpUtils;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -16,7 +15,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class AuthClientConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests(HttpUtils::anyAuthenticated);
+    http.authorizeHttpRequests(auth -> auth.anyRequest().authenticated());
     http.oauth2Login(withDefaults());
 
     return http.build();
