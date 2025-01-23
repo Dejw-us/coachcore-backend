@@ -11,6 +11,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -37,10 +38,10 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class AuthServerConfig {
   @Bean
-  public RegisteredClientRepository registeredClientRepository() {
+  public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
     var client = RegisteredClient.withId("shapeit")
         .clientId("shapeit")
-        .clientSecret("{noop}secret")
+        .clientSecret(passwordEncoder.encode("secret"))
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
         .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)

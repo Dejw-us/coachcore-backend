@@ -10,9 +10,9 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @Configuration(proxyBeanMethods = false)
 public class UserConfig {
   @Bean
-  public UserDetailsService userDetailsService() {
+  public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
     var user = User.withUsername("test")
-        .password("{noop}test")
+        .password(passwordEncoder.encode("test"))
         .roles("test")
         .build();
     return new InMemoryUserDetailsManager(user);
