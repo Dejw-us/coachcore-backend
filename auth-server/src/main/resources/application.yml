@@ -14,4 +14,4 @@ logging:
       springframework:
         security: DEBUG
 server:
-  port: 8083
+  port: 9000

@@ -37,6 +37,7 @@
     <module>common</module>
     <module>training-api</module>
     <module>auth-server</module>
+    <module>auth-client</module>
   </modules>
 
   <dependencies>

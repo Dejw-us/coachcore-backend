@@ -29,6 +29,7 @@ public class SecurityConfig {
     http.authorizeHttpRequests(auth -> {
       auth.requestMatchers(HttpMethod.POST, "/v1/training-plans").authenticated();
 
+      auth.requestMatchers("/home").permitAll();
       auth.requestMatchers("/v1/training-plans/{planId}/**").access(trainingPlanAuthorizationManager);
       auth.requestMatchers("/v1/catalog-exercises").permitAll();
 
