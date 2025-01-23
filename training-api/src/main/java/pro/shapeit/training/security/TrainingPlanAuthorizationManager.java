@@ -6,7 +6,6 @@ import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.stereotype.Component;
-import pro.shapeit.common.util.JwtUtils;
 import pro.shapeit.training.plan.TrainingPlanService;
 
 import java.util.function.Supplier;
@@ -35,7 +34,7 @@ public class TrainingPlanAuthorizationManager implements AuthorizationManager<Re
       return new AuthorizationDecision(false);
     }
 
-    var userId = JwtUtils.extractUserIdFromAuth(auth);
+    var userId = "test";
     var isOwner = trainingPlanService.isTrainingPlanOwner(userId, planId);
     System.out.println("auth");
     return new AuthorizationDecision(isOwner);

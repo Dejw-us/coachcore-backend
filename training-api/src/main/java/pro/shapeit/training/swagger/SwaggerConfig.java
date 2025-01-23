@@ -1,12 +1,14 @@
 package pro.shapeit.training.swagger;
 
+import io.swagger.v3.oas.models.security.OAuthFlows;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import pro.shapeit.common.swagger.customizer.AccessTokenApiCustomizer;
-import pro.shapeit.common.swagger.customizer.ResourceNotFoundOpenApiCustomizer;
+import pro.shapeit.swagger.customizer.AccessTokenApiCustomizer;
+import pro.shapeit.swagger.customizer.ResourceNotFoundOpenApiCustomizer;
 
 @Configuration
 public class SwaggerConfig {
