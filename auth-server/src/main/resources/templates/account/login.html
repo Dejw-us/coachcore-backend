@@ -7,7 +7,7 @@
 <body>
 <div class="container mt-5">
   <h1 class="text-center">Login</h1>
-  <form action="/login" method="post" class="mx-auto mt-4" style="max-width: 400px;">
+  <form action="/account/login" method="post" class="mx-auto mt-4" style="max-width: 400px;">
     <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
     <div class="mb-3">
       <label for="username" class="form-label">Username</label>

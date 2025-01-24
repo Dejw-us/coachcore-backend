@@ -78,7 +78,9 @@ public class AuthServerConfig {
       auth.requestMatchers("/account/register", "/account/login").permitAll();
       auth.anyRequest().authenticated();
     });
-    http.formLogin(withDefaults());
+    http.formLogin(form -> {
+      form.loginPage("/account/login");
+    });
 
     return http.build();
   }
