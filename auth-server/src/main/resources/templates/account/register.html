@@ -7,23 +7,23 @@
 <body>
 <div class="container mt-5">
   <h1 class="text-center">Register</h1>
-  <form action="/account/register" method="post" class="mx-auto mt-4" style="max-width: 400px;">
+  <form action="/account/register" method="post" class="mx-auto mt-4" style="max-width: 400px;" th:object="${registerUser}">
     <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
     <div class="mb-3">
       <label for="username" class="form-label">Username</label>
-      <input type="text" class="form-control" id="username" name="username" placeholder="Choose a username" required>
+      <input th:field="*{username}" type="text" class="form-control" id="username" name="username" placeholder="Choose a username" required>
     </div>
     <div class="mb-3">
       <label for="email" class="form-label">Email</label>
-      <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+      <input th:field="*{email}" type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
     </div>
     <div class="mb-3">
       <label for="password" class="form-label">Password</label>
-      <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" required>
+      <input th:field="*{password}" type="password" class="form-control" id="password" name="password" placeholder="Create a password" required>
     </div>
     <div class="mb-3">
       <label for="confirm-password" class="form-label">Confirm Password</label>
-      <input type="password" class="form-control" id="confirm-password" name="confirmPassword" placeholder="Confirm your password" required>
+      <input th:field="*{confirmPassword}" type="password" class="form-control" id="confirm-password" name="confirmPassword" placeholder="Confirm your password" required>
     </div>
     <button type="submit" class="btn btn-primary w-100">Register</button>
     <p class="text-center mt-3">
