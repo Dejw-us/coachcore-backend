@@ -11,6 +11,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -62,7 +63,7 @@ public class AuthServerConfig {
     http.authorizeHttpRequests(HttpUtils::anyAuthenticated);
     http.exceptionHandling(exceptions -> exceptions
         .defaultAuthenticationEntryPointFor(
-            new LoginUrlAuthenticationEntryPoint("/login"),
+            new LoginUrlAuthenticationEntryPoint("/account/login"),
             new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
         )
     );
@@ -73,7 +74,10 @@ public class AuthServerConfig {
   @Bean
   @Order(2)
   public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests(HttpUtils::anyAuthenticated);
+    http.authorizeHttpRequests(auth -> {
+      auth.requestMatchers("/account/register", "/account/login").permitAll();
+      auth.anyRequest().authenticated();
+    });
     http.formLogin(withDefaults());
 
     return http.build();
