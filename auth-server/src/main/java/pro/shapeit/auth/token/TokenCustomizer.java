@@ -21,10 +21,10 @@ public class TokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext
     if (context.getTokenType().equals(ACCESS_TOKEN)) {
       var claims = context.getClaims();
       var user = getAppUserFromContext(context);
-      var userId = user.getLocalId();
 
       claims.expiresAt(Instant.now().plusSeconds(3600L * 24L));
-      claims.claim("id", userId);
+      claims.claim("id", user.getLocalId());
+      claims.claim("pid", user.getPublicId());
     }
   }
 

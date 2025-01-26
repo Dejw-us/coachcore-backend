@@ -9,7 +9,6 @@ spring:
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   security:
-    # Keycloak config
     oauth2:
       resourceserver:
         jwt:
