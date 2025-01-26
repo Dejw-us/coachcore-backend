@@ -38,6 +38,7 @@
     <module>training-api</module>
     <module>auth-server</module>
     <module>auth-client</module>
+    <module>images-api</module>
   </modules>
 
   <dependencies>

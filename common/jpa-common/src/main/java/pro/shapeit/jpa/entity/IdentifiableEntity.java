@@ -11,7 +11,7 @@ public abstract class IdentifiableEntity {
   @GeneratedValue
   private Long id;
 
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false, unique = true, updatable = false)
   private String localId;
 
   @PrePersist

@@ -6,23 +6,36 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import pro.shapeit.exception.ResourceNotFoundException;
+
+import java.util.function.Supplier;
 
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
-  private final AppUserRepository appUserRepository;
+  private final UserRepository appUserRepository;
   private final UserRoleRepository userRoleRepository;
   private final PasswordEncoder passwordEncoder;
 
-  public UserRole saveRole(String authority) {
+  private static final Supplier<ResourceNotFoundException> USER_NOT_FOUND = ResourceNotFoundException.supplier("User does not exist");
+
+  public UserRole saveDefaultRole(String authority) {
     if (userRoleRepository.existsByAuthority(authority)) {
       return null;
     }
     var role = new UserRole();
     role.setAuthority(authority);
     return userRoleRepository.save(role);
+  }
+
+  public AppUser findUserByUsername(String username) throws ResourceNotFoundException {
+    return appUserRepository.findByUsername(username)
+        .orElseThrow(USER_NOT_FOUND);
+  }
+
+  public AppUser findUserByLocalId(String localId) throws ResourceNotFoundException {
+    return appUserRepository.findByLocalId(localId)
+        .orElseThrow(USER_NOT_FOUND);
   }
 
   public UserRole findRole(String authority) throws ResourceNotFoundException {
@@ -54,7 +67,10 @@ public class UserService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    return appUserRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException("User does no exist"));
+    try {
+      return findUserByUsername(username);
+    } catch (ResourceNotFoundException exception) {
+      throw new UsernameNotFoundException("User does no exist");
+    }
   }
 }

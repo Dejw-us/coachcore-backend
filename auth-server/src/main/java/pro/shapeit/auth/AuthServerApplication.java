@@ -17,9 +17,9 @@ public class AuthServerApplication {
   @Bean
   public ApplicationRunner defaultRolesRunner(UserService userService) {
     return args -> {
-      userService.saveRole("USER");
-      userService.saveRole("ADMIN");
-      userService.saveRole("TRAINER");
+      userService.saveDefaultRole("USER");
+      userService.saveDefaultRole("ADMIN");
+      userService.saveDefaultRole("TRAINER");
     };
   }
 }

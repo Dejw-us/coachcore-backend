@@ -11,4 +11,8 @@ import pro.shapeit.jpa.entity.IdentifiableEntity;
 @Data
 public class UserRole extends IdentifiableEntity implements GrantedAuthority {
   private String authority;
+
+  public static boolean isTrainer(UserRole role) {
+    return "TRAINER".equals(role.getAuthority());
+  }
 }

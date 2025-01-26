@@ -5,9 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pro.shapeit.jpa.entity.BaseEntity;
 import pro.shapeit.jpa.entity.IdentifiableEntity;
 
 import java.time.LocalDate;
@@ -15,10 +15,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
+@EntityListeners(AuditingEntityListener.class)
 public class AppUser extends IdentifiableEntity implements UserDetails {
   private String username;
 
@@ -31,6 +33,9 @@ public class AppUser extends IdentifiableEntity implements UserDetails {
   private String lastName;
 
   private LocalDate dateOfBirth;
+
+  @Column(updatable = false, nullable = false, unique = true)
+  private String publicId;
 
   @CreatedDate
   @Column(updatable = false)
@@ -49,5 +54,12 @@ public class AppUser extends IdentifiableEntity implements UserDetails {
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return roles;
+  }
+
+  @PrePersist
+  private void setupPublicId() {
+    if (publicId == null) {
+      publicId = UUID.randomUUID().toString();
+    }
   }
 }

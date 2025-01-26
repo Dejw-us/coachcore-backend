@@ -18,6 +18,7 @@
     <module>swagger-common</module>
     <module>validation-common</module>
     <module>exception-common</module>
+    <module>exception-handler-common</module>
   </modules>
   <packaging>pom</packaging>
 </project>

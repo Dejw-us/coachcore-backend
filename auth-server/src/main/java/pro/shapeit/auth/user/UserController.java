@@ -1,33 +1,25 @@
 package pro.shapeit.auth.user;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import pro.shapeit.exception.ResourceNotFoundException;
 
-@Controller
+@RestController
+@RequestMapping("/v1/users")
 @RequiredArgsConstructor
 public class UserController {
   private final UserService userService;
+  private final UserMapper userMapper;
 
-  @GetMapping("/account/login")
-  String getLoginPage() {
-    return "account/login";
-  }
+  @GetMapping("/public/{username}")
+  ResponseEntity<PublicUserDto> getPublicAppUser(
+      @PathVariable String username
+  ) throws ResourceNotFoundException {
+    var user = userService.findUserByUsername(username);
+    var publicUserDto = userMapper.mapToPublic(user);
 
-  @GetMapping("/account/register")
-  String getRegisterPage(Model model) {
-    model.addAttribute("registerUser", new RegisterUserDto());
-    return "account/register";
-  }
-
-  @PostMapping("/account/register")
-  String postRegister(@Valid @ModelAttribute("registerUser") RegisterUserDto dto) throws ResourceNotFoundException {
-    userService.registerUser(dto);
-    return "redirect:/account/login";
+    return ResponseEntity
+        .ok(publicUserDto);
   }
 }

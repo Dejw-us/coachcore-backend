@@ -15,10 +15,14 @@ public class UserAuditorAware implements AuditorAware<String> {
     if (auth == null || !auth.isAuthenticated()) {
       return Optional.empty();
     }
-    return Optional.of(getUserLocalIdFromAuth(auth));
+    return getUserLocalIdFromAuth(auth);
   }
 
-  private String getUserLocalIdFromAuth(Authentication auth) {
-    return ((AppUser) auth.getPrincipal()).getLocalId();
+  private Optional<String> getUserLocalIdFromAuth(Authentication auth) {
+    try {
+      return Optional.of(((AppUser) auth.getPrincipal()).getLocalId());
+    } catch (ClassCastException ignore) {
+      return Optional.empty();
+    }
   }
 }

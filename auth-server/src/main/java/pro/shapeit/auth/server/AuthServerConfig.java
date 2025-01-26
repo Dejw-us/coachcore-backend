@@ -8,6 +8,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -75,6 +76,7 @@ public class AuthServerConfig {
   public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(auth -> {
       auth.requestMatchers("/account/register", "/account/login").permitAll();
+      auth.requestMatchers(HttpMethod.GET, "/v1/users/public/**").permitAll();
       auth.anyRequest().authenticated();
     });
     http.formLogin(form -> {
