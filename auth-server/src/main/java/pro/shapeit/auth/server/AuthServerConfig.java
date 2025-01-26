@@ -5,6 +5,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -25,19 +26,19 @@ import org.springframework.security.oauth2.server.authorization.settings.Authori
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+import pro.shapeit.auth.security.RsaKeyProperties;
 import pro.shapeit.util.HttpUtils;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration(proxyBeanMethods = false)
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class AuthServerConfig {
+  private final RsaKeyProperties rsaKeyProperties;
+
   @Bean
   public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
     var client = RegisteredClient.withId("shapeit")
@@ -88,11 +89,8 @@ public class AuthServerConfig {
 
   @Bean
   public JWKSource<SecurityContext> jwkSource() {
-    var keyPair = generateRsaKey();
-    var publicKey = (RSAPublicKey) keyPair.getPublic();
-    var privateKey = (RSAPrivateKey) keyPair.getPrivate();
-    var rsaKey = new RSAKey.Builder(publicKey)
-        .privateKey(privateKey)
+    var rsaKey = new RSAKey.Builder(rsaKeyProperties.publicKey())
+        .privateKey(rsaKeyProperties.privateKey())
         .keyID(UUID.randomUUID().toString())
         .build();
     var jwkSet = new JWKSet(rsaKey);
@@ -109,15 +107,5 @@ public class AuthServerConfig {
     return AuthorizationServerSettings.builder()
         .issuer("http://localhost:9000")
         .build();
-  }
-
-  private static KeyPair generateRsaKey() {
-    try {
-      var keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-      keyPairGenerator.initialize(2048);
-      return keyPairGenerator.generateKeyPair();
-    } catch (Exception ex) {
-      throw new IllegalStateException(ex);
-    }
   }
 }
