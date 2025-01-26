@@ -20,17 +20,10 @@ public class TrainingPlanAuthorizationManager implements AuthorizationManager<Re
       Supplier<Authentication> authentication,
       RequestAuthorizationContext context
   ) {
-    var request = context.getRequest();
-    var planId = extractPathVariable(request.getRequestURI(), "/v1/training-plans/", "/units");
+    var planId = getTrainingPlanId(context);
     var auth = authentication.get();
 
-    if (planId == null || !auth.isAuthenticated()) {
-      if (planId == null) {
-        System.out.println("pro.shapeit.plan id == null");
-      }
-      if (!auth.isAuthenticated()) {
-        System.out.println("no auth");
-      }
+    if (!auth.isAuthenticated()) {
       return new AuthorizationDecision(false);
     }
 
@@ -40,13 +33,7 @@ public class TrainingPlanAuthorizationManager implements AuthorizationManager<Re
     return new AuthorizationDecision(isOwner);
   }
 
-  private String extractPathVariable(String requestUri, String prefix, String suffix) {
-    if (requestUri.startsWith(prefix) && requestUri.contains(suffix)) {
-      return requestUri.substring(
-          prefix.length(),
-          requestUri.indexOf(suffix)
-      );
-    }
-    return null;
+  private String getTrainingPlanId(RequestAuthorizationContext context) {
+    return context.getRequest().getRequestURI().split("/")[3];
   }
 }
