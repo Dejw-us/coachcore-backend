@@ -19,6 +19,6 @@ public class UserAuditorAware implements AuditorAware<String> {
   }
 
   private String getUserLocalIdFromAuth(Authentication auth) {
-    return "guest"; // TODO fetch user local id
+    return ((AppUser) auth.getPrincipal()).getLocalId();
   }
 }
