@@ -19,6 +19,7 @@
     <module>validation-common</module>
     <module>exception-common</module>
     <module>exception-handler-common</module>
+    <module>test-common</module>
   </modules>
   <packaging>pom</packaging>
 </project>

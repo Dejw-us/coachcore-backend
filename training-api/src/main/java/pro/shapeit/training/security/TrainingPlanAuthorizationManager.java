@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.stereotype.Component;
 import pro.shapeit.training.plan.TrainingPlanService;
@@ -23,13 +24,13 @@ public class TrainingPlanAuthorizationManager implements AuthorizationManager<Re
     var planId = getTrainingPlanId(context);
     var auth = authentication.get();
 
-    if (!auth.isAuthenticated()) {
+    if (!auth.isAuthenticated() || !(auth instanceof JwtAuthenticationToken jwt)) {
       return new AuthorizationDecision(false);
     }
 
-    var userId = "test";
+    var userId = (String) jwt.getToken().getClaim("id");
     var isOwner = trainingPlanService.isTrainingPlanOwner(userId, planId);
-    System.out.println("auth");
+    System.out.println("user id: " + userId);
     return new AuthorizationDecision(isOwner);
   }
 

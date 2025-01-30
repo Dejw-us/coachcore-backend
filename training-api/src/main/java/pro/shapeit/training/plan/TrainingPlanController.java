@@ -5,14 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pro.shapeit.common.dto.MessageDto;
-import pro.shapeit.common.exception.ResourceNotFoundException;
+import pro.shapeit.dto.MessageDto;
+import pro.shapeit.exception.ResourceNotFoundException;
 import pro.shapeit.training.plan.unit.exercise.TrainingExerciseMapper;
 import pro.shapeit.training.plan.unit.exercise.set.TrainingSetMapper;
 
 import java.util.List;
 
-import static pro.shapeit.common.util.ControllerUtils.deleteResponse;
+import static pro.shapeit.util.ControllerUtils.deleteResponse;
 
 @RestController
 @RequestMapping("/v1/training-plans")
@@ -23,8 +23,6 @@ class TrainingPlanController {
   private final TrainingPlanMapper trainingPlanMapper;
   private final TrainingExerciseMapper trainingExerciseMapper;
   private final TrainingSetMapper trainingSetMapper;
-
-  // --- GET ---
 
   @GetMapping
   ResponseEntity<List<TrainingPlanDto>> getTrainingPlans() {
@@ -46,8 +44,6 @@ class TrainingPlanController {
         .ok(planDto);
   }
 
-  // --- POST ---
-
   @PostMapping
   ResponseEntity<TrainingPlanDto> postTrainingPlan(
       @RequestBody @Valid CreateTrainingPlanDto dto
@@ -59,8 +55,6 @@ class TrainingPlanController {
         .status(HttpStatus.CREATED)
         .body(savedPlanDto);
   }
-
-  // --- PATCH ---
 
   @PatchMapping("/{planId}")
   ResponseEntity<TrainingPlanDto> patchTrainingPlan(
@@ -74,8 +68,6 @@ class TrainingPlanController {
     return ResponseEntity
         .ok(updatedPlanDto);
   }
-
-  // --- DELETE ---
 
   @DeleteMapping("/{planId}")
   ResponseEntity<MessageDto> deleteTrainingPlan(

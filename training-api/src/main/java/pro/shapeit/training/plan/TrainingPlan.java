@@ -3,7 +3,7 @@ package pro.shapeit.training.plan;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import pro.shapeit.common.entity.BaseEntity;
+import pro.shapeit.jpa.entity.BaseEntity;
 import pro.shapeit.training.plan.goal.TrainingGoal;
 
 import java.util.ArrayList;

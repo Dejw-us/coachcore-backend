@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 
 @Service
 public class ProfilePictureService {
-  private static final String STORAGE_PATH = "/home/json/app-data/images/profile-pictures/";
+  private static final String STORAGE_PATH = "app-data/images/profile-pictures/";
 
   public ProfilePictureService() {
     var path = Paths.get(STORAGE_PATH);

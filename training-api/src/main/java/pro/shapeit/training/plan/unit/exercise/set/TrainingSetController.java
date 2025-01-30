@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pro.shapeit.common.dto.MessageDto;
-import pro.shapeit.common.exception.ResourceNotFoundException;
+import pro.shapeit.dto.MessageDto;
+import pro.shapeit.exception.ResourceNotFoundException;
 import pro.shapeit.training.plan.unit.exercise.TrainingExerciseService;
 
-import static pro.shapeit.common.util.ControllerUtils.deleteResponse;
+import static pro.shapeit.util.ControllerUtils.deleteResponse;
 
 @RestController
 @RequestMapping("/v1/training-plans/{planId}")

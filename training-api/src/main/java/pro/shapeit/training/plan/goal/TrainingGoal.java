@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import pro.shapeit.common.entity.IdentifiableEntity;
+import pro.shapeit.jpa.entity.IdentifiableEntity;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity

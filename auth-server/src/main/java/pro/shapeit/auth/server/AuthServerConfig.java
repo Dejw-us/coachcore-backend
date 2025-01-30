@@ -46,6 +46,7 @@ public class AuthServerConfig {
         .clientSecret(passwordEncoder.encode("secret"))
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+        .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
         .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
         .redirectUri("https://oidcdebugger.com/debug")
         .scope("openid")
@@ -104,8 +105,12 @@ public class AuthServerConfig {
 
   @Bean
   public AuthorizationServerSettings authorizationServerSettings() {
+    var issuer = System.getenv("ISSUER");
+    if (issuer == null || issuer.isBlank()) {
+      issuer = "http://localhost:9000";
+    }
     return AuthorizationServerSettings.builder()
-        .issuer("http://localhost:9000")
+        .issuer(issuer)
         .build();
   }
 }

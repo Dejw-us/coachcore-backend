@@ -5,15 +5,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pro.shapeit.common.dto.MessageDto;
-import pro.shapeit.common.exception.ResourceAlreadyExistsException;
-import pro.shapeit.common.exception.ResourceFailedToUpdateException;
-import pro.shapeit.common.exception.ResourceNotFoundException;
+import pro.shapeit.dto.MessageDto;
+import pro.shapeit.exception.ResourceAlreadyExistsException;
+import pro.shapeit.exception.ResourceFailedToUpdateException;
+import pro.shapeit.exception.ResourceNotFoundException;
 import pro.shapeit.training.plan.TrainingPlanService;
 
 import java.util.List;
 
-import static pro.shapeit.common.util.ControllerUtils.deleteResponse;
+import static pro.shapeit.util.ControllerUtils.deleteResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,9 +30,10 @@ public class TrainingUnitController {
   ResponseEntity<List<TrainingUnitDto>> getTrainingUnits(
       @PathVariable String planId
   ) throws ResourceNotFoundException {
+    System.out.println("dziala");
     var units = trainingUnitService.findAllTrainingUnitsByTrainingPlanLocalId(planId);
     var unitsDto = trainingUnitMapper.map(units);
-
+    System.out.println(unitsDto);
     return ResponseEntity
         .ok(unitsDto);
   }
