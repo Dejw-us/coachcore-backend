@@ -8,6 +8,7 @@ import pro.shapeit.training.plan.TrainingPlan;
 import pro.shapeit.training.plan.unit.exercise.TrainingExercise;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -30,5 +31,5 @@ public class TrainingUnit extends BaseEntity {
       inverseJoinColumns = @JoinColumn(name = "training_exercise_id"),
       joinColumns = @JoinColumn(name = "training_unit_id")
   )
-  private List<TrainingExercise> exercises;
+  private List<TrainingExercise> exercises = new ArrayList<>();
 }

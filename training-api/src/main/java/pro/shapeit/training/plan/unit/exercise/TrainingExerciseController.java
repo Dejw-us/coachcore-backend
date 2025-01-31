@@ -9,8 +9,6 @@ import pro.shapeit.exception.ResourceNotFoundException;
 import pro.shapeit.training.catalog.exercise.CatalogExerciseService;
 import pro.shapeit.training.plan.unit.TrainingUnitService;
 
-import static pro.shapeit.util.ControllerUtils.deleteResponse;
-
 @RestController
 @RequestMapping("/v1/training-plans/{planId}")
 @RequiredArgsConstructor
@@ -20,8 +18,6 @@ public class TrainingExerciseController {
   private final CatalogExerciseService catalogExerciseService;
 
   private final TrainingExerciseMapper trainingExerciseMapper;
-
-  // --- POST ---
 
   @PostMapping("/units/{unitId}/exercises")
   ResponseEntity<TrainingExerciseDto> postTrainingExercise(
@@ -39,8 +35,6 @@ public class TrainingExerciseController {
         .body(savedExerciseDto);
   }
 
-  // --- PATCH ---
-
   @PatchMapping("/exercises/{exerciseId}")
   ResponseEntity<TrainingExerciseDto> patchTrainingExercise(
       @PathVariable String planId,
@@ -49,7 +43,7 @@ public class TrainingExerciseController {
       @RequestParam(required = false) String catalogExerciseId
   ) throws ResourceNotFoundException {
     var exercise = trainingExerciseService.findTrainingExerciseByLocalId(exerciseId);
-    var catalogExercise = catalogExerciseService.findCatalogExerciseByLocalId(catalogExerciseId);
+    var catalogExercise = catalogExerciseId == null ? null : catalogExerciseService.findCatalogExerciseByLocalId(catalogExerciseId);
     var updatedExercise = trainingExerciseService.updateTrainingExercise(exercise, catalogExercise, dto);
     var updatedExerciseDto = trainingExerciseMapper.map(updatedExercise);
 
@@ -57,15 +51,14 @@ public class TrainingExerciseController {
         .ok(updatedExerciseDto);
   }
 
-  // --- DELETE ---
-
   @DeleteMapping("/exercises/{exerciseId}")
   ResponseEntity<MessageDto> deleteTrainingExercise(
       @PathVariable String planId,
       @PathVariable String exerciseId
   ) {
-    var isDeleted = trainingExerciseService.deleteTrainingExerciseByLocalId(exerciseId);
+    trainingExerciseService.deleteTrainingExerciseByLocalId(exerciseId);
 
-    return deleteResponse(isDeleted, "training exercise");
+    return ResponseEntity
+        .ok(new MessageDto("Training exercise has been deleted"));
   }
 }

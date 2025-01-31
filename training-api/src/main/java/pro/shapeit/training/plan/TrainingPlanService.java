@@ -20,9 +20,7 @@ public class TrainingPlanService {
     return trainingPlanRepository.findAll();
   }
 
-  public TrainingPlan findTrainingPlanByLocalId(
-      String localId
-  ) throws ResourceNotFoundException {
+  public TrainingPlan findTrainingPlanByLocalId(String localId) {
     return trainingPlanRepository.findByLocalId(localId)
         .orElseThrow(ResourceNotFoundException.supplier("Training pro.shapeit.plan does not exist"));
   }
@@ -48,8 +46,11 @@ public class TrainingPlanService {
     return trainingPlanRepository.save(plan);
   }
 
-  public boolean deleteTrainingPlanByLocalId(String planLocalId) {
-    return trainingPlanRepository.deleteByLocalIdWithCount(planLocalId) > 0;
+  public void deleteTrainingPlanByLocalId(String planLocalId) {
+    if (!trainingPlanRepository.existsByLocalId(planLocalId)) {
+      throw new ResourceNotFoundException("Training plan does not exist");
+    }
+    trainingPlanRepository.deleteByLocalId(planLocalId);
   }
 
   public boolean isTrainingPlanOwner(String userId, String planId) {

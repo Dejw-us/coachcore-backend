@@ -19,8 +19,6 @@ public class TrainingSetController {
 
   private final TrainingSetMapper trainingSetMapper;
 
-  // --- POST ---
-
   @PostMapping("/exercises/{exerciseId}/sets")
   ResponseEntity<TrainingSetDto> postTrainingSet(
       @PathVariable String planId,
@@ -34,8 +32,6 @@ public class TrainingSetController {
         .status(HttpStatus.CREATED)
         .body(savedSetDto);
   }
-
-  // --- PATCH ---
 
   @PatchMapping("/sets/{setId}")
   ResponseEntity<TrainingSetDto> patchTrainingSet(
@@ -51,15 +47,14 @@ public class TrainingSetController {
         .ok(updatedSetDto);
   }
 
-  // --- DELETE ---
-
   @DeleteMapping("/sets/{setId}")
   ResponseEntity<MessageDto> deleteTrainingSet(
       @PathVariable String planId,
       @PathVariable String setId
   ) {
-    var isDeleted = trainingSetService.deleteTrainingSetByLocalId(setId);
+    trainingSetService.deleteTrainingSetByLocalId(setId);
 
-    return deleteResponse(isDeleted, "training set");
+    return ResponseEntity
+        .ok(new MessageDto("Training set has been deleted"));
   }
 }

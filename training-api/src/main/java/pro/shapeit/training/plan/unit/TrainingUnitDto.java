@@ -7,6 +7,7 @@ import java.util.List;
 
 public record TrainingUnitDto(
     String id,
+    String name,
     String notes,
     DayOfWeek dayOfWeek,
     List<TrainingExerciseDto> exercises

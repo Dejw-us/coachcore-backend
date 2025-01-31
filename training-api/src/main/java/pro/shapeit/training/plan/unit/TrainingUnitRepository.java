@@ -17,11 +17,14 @@ public interface TrainingUnitRepository extends JpaRepository<TrainingUnit, Long
 
   Optional<TrainingUnit> findByTrainingPlan_LocalIdAndLocalId(String planLocalId, String unitLocalId);
 
-  @Modifying
-  @Query("DELETE FROM TrainingUnit unit WHERE unit.trainingPlan.localId = :planLocalId AND unit.localId = :unitLocalId")
-  int deleteByTrainingPlan_LocalIdAndLocalIdWithCount(
-      @Param("planLocalId") String planLocalId,
-      @Param("unitLocalId") String unitLocalId
+  boolean existsByTrainingPlan_LocalIdAndLocalId(
+      String trainingPlanLocalId,
+      String localId
+  );
+
+  void deleteByTrainingPlan_LocalIdAndLocalId(
+      String trainingPlanLocalId,
+      String localId
   );
 
   boolean existsByTrainingPlanAndDayOfWeek(TrainingPlan trainingPlan, DayOfWeek dayOfWeek);

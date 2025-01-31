@@ -15,7 +15,7 @@ public class TrainingSetService {
   private final TrainingSetRepository trainingSetRepository;
   private final TrainingExerciseRepository trainingExerciseRepository;
 
-  public TrainingSet findTrainingSetByLocalId(String localId) throws ResourceNotFoundException {
+  public TrainingSet findTrainingSetByLocalId(String localId) {
     return trainingSetRepository.findByLocalId(localId)
         .orElseThrow(ResourceNotFoundException.supplier("Training set does not exist"));
   }
@@ -39,7 +39,10 @@ public class TrainingSetService {
     return trainingSetRepository.save(set);
   }
 
-  public boolean deleteTrainingSetByLocalId(String localId) {
-    return trainingSetRepository.deleteByLocalIdWithCount(localId) > 0;
+  public void deleteTrainingSetByLocalId(String localId) {
+    if (!trainingSetRepository.existsByLocalId(localId)) {
+      throw new ResourceNotFoundException("Training set does not exist");
+    }
+    trainingSetRepository.deleteByLocalId(localId);
   }
 }

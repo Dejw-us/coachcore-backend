@@ -2,12 +2,11 @@ package pro.shapeit.training.plan.unit;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.shapeit.dto.MessageDto;
-import pro.shapeit.exception.ResourceAlreadyExistsException;
-import pro.shapeit.exception.ResourceFailedToUpdateException;
 import pro.shapeit.exception.ResourceNotFoundException;
 import pro.shapeit.training.plan.TrainingPlanService;
 
@@ -24,27 +23,21 @@ public class TrainingUnitController {
 
   private final TrainingUnitMapper trainingUnitMapper;
 
-  // --- GET ---
-
   @GetMapping
   ResponseEntity<List<TrainingUnitDto>> getTrainingUnits(
       @PathVariable String planId
-  ) throws ResourceNotFoundException {
-    System.out.println("dziala");
+  ) throws BadRequestException {
     var units = trainingUnitService.findAllTrainingUnitsByTrainingPlanLocalId(planId);
     var unitsDto = trainingUnitMapper.map(units);
-    System.out.println(unitsDto);
     return ResponseEntity
         .ok(unitsDto);
   }
-
-  // --- POST ---
 
   @PostMapping
   ResponseEntity<TrainingUnitDto> postTrainingUnit(
       @PathVariable String planId,
       @RequestBody @Valid CreateTrainingUnitDto dto
-  ) throws ResourceNotFoundException, ResourceAlreadyExistsException {
+  ) throws ResourceNotFoundException, BadRequestException {
     var plan = trainingPlanService.findTrainingPlanByLocalId(planId);
     var savedUnit = trainingUnitService.saveTrainingUnit(plan, dto);
     var savedUnitDto = trainingUnitMapper.map(savedUnit);
@@ -54,14 +47,12 @@ public class TrainingUnitController {
         .body(savedUnitDto);
   }
 
-  // --- PATCH ---
-
   @PatchMapping("/{unitId}")
   ResponseEntity<TrainingUnitDto> patchTrainingUnit(
       @PathVariable String planId,
       @PathVariable String unitId,
       @RequestBody UpdateTrainingUnitDto dto
-  ) throws ResourceNotFoundException, ResourceFailedToUpdateException {
+  ) throws ResourceNotFoundException, BadRequestException {
     var unit = trainingUnitService.findTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
     var updatedUnit = trainingUnitService.updateTrainingUnit(unit, dto, planId);
     var updatedUnitDto = trainingUnitMapper.map(updatedUnit);
@@ -69,8 +60,6 @@ public class TrainingUnitController {
     return ResponseEntity
         .ok(updatedUnitDto);
   }
-
-  // --- DELETE ---
 
   @DeleteMapping("/{unitId}")
   ResponseEntity<MessageDto> deleteTrainingUnit(

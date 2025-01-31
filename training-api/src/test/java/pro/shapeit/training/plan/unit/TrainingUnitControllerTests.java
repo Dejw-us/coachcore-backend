@@ -1,4 +1,4 @@
-package pro.shapeit.training.plan;
+package pro.shapeit.training.plan.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,9 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pro.shapeit.common.test.security.jwt.JwtTestContext;
 import pro.shapeit.training.TestDtos;
 import pro.shapeit.training.jwt.JwtTestConfig;
-import pro.shapeit.training.plan.goal.TrainingGoalRepository;
-
-import java.util.List;
+import pro.shapeit.training.plan.TrainingPlanDto;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -31,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
 @Import(JwtTestConfig.class)
-public class TrainingPlanControllerTests {
+public class TrainingUnitControllerTests {
   @Autowired
   private MockMvc mockMvc;
 
@@ -42,6 +40,8 @@ public class TrainingPlanControllerTests {
   private JwtTestContext jwtTestContext;
 
   private String createdPlanId;
+
+  private String createdUnitId;
 
   @BeforeEach
   void setup() throws Exception {
@@ -58,61 +58,43 @@ public class TrainingPlanControllerTests {
       var json = result.getResponse().getContentAsString();
       var plan = objectMapper.readValue(json, TrainingPlanDto.class);
       createdPlanId = plan.id();
+
+      result = mockMvc.perform(post("/v1/training-plans/" + createdPlanId + "/units")
+              .with(jwtTestContext.getJwtPostProcessor(1))
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(TestDtos.CREATE_UNIT_DTO)))
+          .andExpect(status().isCreated())
+          .andReturn();
+
+      createdUnitId = objectMapper.readValue(result.getResponse().getContentAsString(), TrainingUnitDto.class).id();
     }
   }
 
   @Test
-  void shouldNotPostTrainingPlan() throws Exception {
-    var requestBody = objectMapper.writeValueAsString(TestDtos.CREATE_PLAN_DTO);
-
-    mockMvc.perform(post("/v1/training-plans")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(requestBody))
-        .andExpect(status().is(401));
-  }
-
-  @Test
-  void shouldGetTrainingPlans() throws Exception {
-    mockMvc.perform(get("/v1/training-plans"))
+  void shouldGetTrainingPlanUnits() throws Exception {
+    mockMvc.perform(get("/v1/training-plans/" + createdPlanId + "/units")
+            .with(jwtTestContext.getJwtPostProcessor(1)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$").isArray());
   }
 
   @Test
-  void shouldGetTrainingPlan() throws Exception {
-    mockMvc.perform(get("/v1/training-plans/" + createdPlanId)
-            .with(jwtTestContext.getJwtPostProcessor(1)))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id", is(createdPlanId)))
-        .andExpect(jsonPath("$.createdBy", is(jwtTestContext.getId(1))))
-        .andExpect(jsonPath("$.goals.size()", is(TestDtos.CREATE_PLAN_DTO.goals().size())));
-  }
-
-  @Test
-  void shouldPatchTrainingPlan() throws Exception {
-    var dto = new UpdateTrainingPlanDto("New name", "new description");
-
-    mockMvc.perform(patch("/v1/training-plans/" + createdPlanId)
+  void shouldPatchTrainingPlanUnits() throws Exception {
+    mockMvc.perform(patch("/v1/training-plans/" + createdPlanId + "/units/" + createdUnitId)
             .with(jwtTestContext.getJwtPostProcessor(1))
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(dto)))
+            .content(objectMapper.writeValueAsString(TestDtos.UPDATE_UNIT_DTO)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.name", is(dto.name())))
-        .andExpect(jsonPath("$.description", is(dto.description())));
+        .andExpect(jsonPath("$.notes", is(TestDtos.UPDATE_UNIT_DTO.notes())))
+        .andExpect(jsonPath("$.dayOfWeek", is(TestDtos.UPDATE_UNIT_DTO.dayOfWeek())))
+        .andExpect(jsonPath("$.name", is(TestDtos.UPDATE_UNIT_DTO.name())));
   }
 
   @Test
-  void shouldDeleteTrainingPlan() throws Exception {
-    mockMvc.perform(delete("/v1/training-plans/" + createdPlanId)
+  void shouldDeleteTrainingPlanUnit() throws Exception {
+    mockMvc.perform(delete("/v1/training-plans/" + createdPlanId + "/units/" + createdUnitId)
             .with(jwtTestContext.getJwtPostProcessor(1)))
         .andExpect(status().isOk());
-    createdPlanId = null;
-  }
-
-  @Test
-  void shouldNotDeleteTrainingPlan() throws Exception {
-    mockMvc.perform(delete("/v1/training-plans/" + createdPlanId)
-            .with(jwtTestContext.getJwtPostProcessor(0)))
-        .andExpect(status().is(403));
+    createdUnitId = null;
   }
 }

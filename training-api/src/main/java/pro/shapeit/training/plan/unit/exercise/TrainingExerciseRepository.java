@@ -10,9 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface TrainingExerciseRepository extends JpaRepository<TrainingExercise, Long> {
-  @Modifying
-  @Query("DELETE FROM TrainingExercise exercise WHERE exercise.localId = :localId")
-  int deleteByLocalIdWithCount(@Param("localId") String localId);
+  boolean existsByLocalId(String localId);
+  void deleteByLocalId(String localId);
 
   Optional<TrainingExercise> findByLocalId(String localId);
 }

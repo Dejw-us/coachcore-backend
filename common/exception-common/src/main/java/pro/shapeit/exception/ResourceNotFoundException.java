@@ -1,8 +1,12 @@
 package pro.shapeit.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 import java.util.function.Supplier;
 
-public class ResourceNotFoundException extends Exception {
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class ResourceNotFoundException extends RuntimeException {
   public ResourceNotFoundException(String message) {
     super(message);
   }
