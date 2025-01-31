@@ -1,5 +1,6 @@
 package pro.shapeit.training;
 
+import pro.shapeit.training.catalog.exercise.CreateCatalogExerciseDto;
 import pro.shapeit.training.plan.CreateTrainingPlanDto;
 import pro.shapeit.training.plan.unit.CreateTrainingUnitDto;
 import pro.shapeit.training.plan.unit.UpdateTrainingUnitDto;
@@ -28,4 +29,6 @@ public class TestDtos {
   public static final UpdateTrainingSetDto UPDATE_SET_DTO = new UpdateTrainingSetDto(
       5, 5D, "RIR", "2-3-2-x", 60D, 4D, "KG"
   );
+
+  public static final CreateCatalogExerciseDto CREATE_CATALOG_EXERCISE_DTO = new CreateCatalogExerciseDto("running");
 }

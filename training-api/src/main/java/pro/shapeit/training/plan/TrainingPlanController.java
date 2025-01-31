@@ -73,8 +73,9 @@ class TrainingPlanController {
   ResponseEntity<MessageDto> deleteTrainingPlan(
       @PathVariable String planId
   ) {
-    var isDeleted = trainingPlanService.deleteTrainingPlanByLocalId(planId);
+    trainingPlanService.deleteTrainingPlanByLocalId(planId);
 
-    return deleteResponse(isDeleted, "training pro.shapeit.plan");
+    return ResponseEntity
+        .ok(new MessageDto("Training plan has been deleted"));
   }
 }

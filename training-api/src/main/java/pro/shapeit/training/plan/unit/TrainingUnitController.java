@@ -12,8 +12,6 @@ import pro.shapeit.training.plan.TrainingPlanService;
 
 import java.util.List;
 
-import static pro.shapeit.util.ControllerUtils.deleteResponse;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/training-plans/{planId}/units")
@@ -66,8 +64,9 @@ public class TrainingUnitController {
       @PathVariable String planId,
       @PathVariable String unitId
   ) {
-    var isDeleted = trainingUnitService.deleteTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
+    trainingUnitService.deleteTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
 
-    return deleteResponse(isDeleted, "training unit");
+    return ResponseEntity
+        .ok(new MessageDto("Training unit has been deleted"));
   }
 }

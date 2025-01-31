@@ -1,7 +1,6 @@
 package pro.shapeit.training.plan.unit;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import pro.shapeit.exception.ResourceAlreadyExistsException;
 import pro.shapeit.exception.ResourceNotFoundException;
@@ -21,27 +20,19 @@ public class TrainingUnitService {
   private final TrainingUnitRepository trainingUnitRepository;
   private final TrainingPlanRepository trainingPlanRepository;
 
-  public List<TrainingUnit> findAllTrainingUnitsByTrainingPlanLocalId(
-      String planLocalId
-  ) {
+  public List<TrainingUnit> findAllTrainingUnitsByTrainingPlanLocalId(String planLocalId) {
     if (!trainingPlanRepository.existsByLocalId(planLocalId)) {
       throw new ResourceNotFoundException("Training plan does not exist");
     }
     return trainingUnitRepository.findAllByTrainingPlan_LocalId(planLocalId);
   }
 
-  public TrainingUnit findTrainingUnitByTrainingPlanLocalIdAndLocalId(
-      String planLocalId,
-      String unitLocalId
-  ) {
+  public TrainingUnit findTrainingUnitByTrainingPlanLocalIdAndLocalId(String planLocalId, String unitLocalId) {
     return trainingUnitRepository.findByTrainingPlan_LocalIdAndLocalId(planLocalId, unitLocalId)
         .orElseThrow(ResourceNotFoundException.supplier("Training unit does not exist"));
   }
 
-  public TrainingUnit saveTrainingUnit(
-      TrainingPlan plan,
-      CreateTrainingUnitDto dto
-  ) {
+  public TrainingUnit saveTrainingUnit(TrainingPlan plan, CreateTrainingUnitDto dto) {
     var dayOfWeek = getEnum(DayOfWeek.class, dto.dayOfWeek());
     if (trainingUnitRepository.existsByTrainingPlanAndDayOfWeek(plan, dayOfWeek)) {
       throw new ResourceAlreadyExistsException(format("Training unit for %s already exists", dayOfWeek));
@@ -53,11 +44,7 @@ public class TrainingUnitService {
     return trainingUnitRepository.save(unit);
   }
 
-  public TrainingUnit updateTrainingUnit(
-      TrainingUnit unit,
-      UpdateTrainingUnitDto dto,
-      String planLocalId
-  ) {
+  public TrainingUnit updateTrainingUnit(TrainingUnit unit, UpdateTrainingUnitDto dto, String planLocalId) {
     var dayOfWeek = getEnum(DayOfWeek.class, dto.dayOfWeek());
     if (trainingUnitRepository.existsInTrainingPlanByDayOfWeek(dayOfWeek, planLocalId)) {
       throw new ResourceAlreadyExistsException(format("Training unit for %s already exists", dayOfWeek));

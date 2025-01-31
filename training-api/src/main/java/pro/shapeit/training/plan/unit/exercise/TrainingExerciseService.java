@@ -2,7 +2,6 @@ package pro.shapeit.training.plan.unit.exercise;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import pro.shapeit.exception.ResourceNotFoundException;
 import pro.shapeit.training.catalog.exercise.CatalogExercise;
 import pro.shapeit.training.plan.unit.TrainingUnit;
@@ -16,7 +15,7 @@ public class TrainingExerciseService {
   private final TrainingExerciseRepository trainingExerciseRepository;
   private final TrainingUnitRepository trainingUnitRepository;
 
-  public TrainingExercise findTrainingExerciseByLocalId(String localId) throws ResourceNotFoundException {
+  public TrainingExercise findTrainingExerciseByLocalId(String localId) {
     return trainingExerciseRepository.findByLocalId(localId)
         .orElseThrow(ResourceNotFoundException.supplier("Training exercise does not exist"));
   }
@@ -41,7 +40,7 @@ public class TrainingExerciseService {
     return trainingExerciseRepository.save(exercise);
   }
 
-  public void deleteTrainingExerciseByLocalId(String localId) throws ResourceNotFoundException {
+  public void deleteTrainingExerciseByLocalId(String localId) {
     if (!trainingExerciseRepository.existsByLocalId(localId)) {
       throw new ResourceNotFoundException("Training exercise does not exist");
     }
