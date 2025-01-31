@@ -1,11 +1,15 @@
 package pro.shapeit.training.plan;
 
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 public record UpdateTrainingPlanDto(
-    @Max(50L)
+    @Size(max = 50, min = 5)
+    @NotEmpty
     String name,
-    @Max(200L)
+    @Size(max = 200, min = 10)
+    @NotEmpty
     String description
 ) {
 }

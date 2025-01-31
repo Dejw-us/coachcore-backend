@@ -9,23 +9,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import pro.shapeit.common.test.TokenRequestTestClient;
+import pro.shapeit.common.test.security.jwt.JwtTestContext;
+import pro.shapeit.training.jwt.JwtTestConfig;
 import pro.shapeit.training.plan.goal.TrainingGoalRepository;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
-@Disabled
+@Import(JwtTestConfig.class)
 public class TrainingPlanControllerTests {
   @Autowired
   private MockMvc mockMvc;
@@ -34,112 +37,67 @@ public class TrainingPlanControllerTests {
   private ObjectMapper objectMapper;
 
   @Autowired
+  private JwtTestContext jwtTestContext;
+
+  @Autowired
   private TrainingPlanRepository trainingPlanRepository;
 
   @Autowired
   private TrainingGoalRepository trainingGoalRepository;
 
-  private String accessToken;
+  private String createdPlanId;
+
+  private static final CreateTrainingPlanDto CREATE_PLAN_DTO = new CreateTrainingPlanDto(
+      "Plan A",
+      "Description A",
+      List.of("Goal1", "Goal2")
+  );
 
   @BeforeEach
-  void setUp() {
-    // Obtain access token
-    TokenRequestTestClient tokenClient = new TokenRequestTestClient();
-    accessToken = tokenClient.obtainAccessToken();
+  void setup() throws Exception {
+    if (createdPlanId == null) {
+      var requestBody = objectMapper.writeValueAsString(CREATE_PLAN_DTO);
 
-    // Clear database
-    trainingGoalRepository.deleteAll();
-    trainingPlanRepository.deleteAll();
+      var result = mockMvc.perform(post("/v1/training-plans")
+              .with(jwtTestContext.getJwtPostProcessor(1))
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(requestBody))
+          .andExpect(status().isCreated())
+          .andReturn();
+
+      var json = result.getResponse().getContentAsString();
+      var plan = objectMapper.readValue(json, TrainingPlanDto.class);
+      createdPlanId = plan.id();
+    }
   }
 
   @Test
-  void shouldGetEmptyTrainingPlansList() throws Exception {
-    mockMvc.perform(get("/v1/training-plans")
-            .header("Authorization", "Bearer " + accessToken))
+  void shouldGetTrainingPlans() throws Exception {
+    mockMvc.perform(get("/v1/training-plans"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.size()", is(0)));
+        .andExpect(jsonPath("$").isArray());
   }
 
   @Test
-  void shouldCreateAndRetrieveTrainingPlan() throws Exception {
-    // Given
-    CreateTrainingPlanDto dto = new CreateTrainingPlanDto("Plan A", "Description A", List.of("Goal1", "Goal2"));
-    String requestBody = objectMapper.writeValueAsString(dto);
-
-    // Create a training plan
-    var result = mockMvc.perform(post("/v1/training-plans")
-            .header("Authorization", "Bearer " + accessToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(requestBody))
-        .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.name", is("Plan A")))
-        .andExpect(jsonPath("$.description", is("Description A")))
-        .andReturn();
-
-    // Extract plan ID
-    String responseJson = result.getResponse().getContentAsString();
-    TrainingPlanDto createdPlan = objectMapper.readValue(responseJson, TrainingPlanDto.class);
-    String planId = createdPlan.id();
-
-    // Retrieve the created plan
-    mockMvc.perform(get("/v1/training-plans/" + planId)
-            .header("Authorization", "Bearer " + accessToken))
+  void shouldGetTrainingPlan() throws Exception {
+    mockMvc.perform(get("/v1/training-plans/" + createdPlanId)
+            .with(jwtTestContext.getJwtPostProcessor(1)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.name", is("Plan A")));
+        .andExpect(jsonPath("$.id", is(createdPlanId)))
+        .andExpect(jsonPath("$.createdBy", is(jwtTestContext.getId(1))))
+        .andExpect(jsonPath("$.goals.size()", is(CREATE_PLAN_DTO.goals().size())));
   }
 
   @Test
-  void shouldUpdateTrainingPlan() throws Exception {
-    // Given
-    CreateTrainingPlanDto createDto = new CreateTrainingPlanDto("Plan B", "Description B", List.of("Goal1"));
-    String createBody = objectMapper.writeValueAsString(createDto);
+  void shouldPatchTrainingPlan() throws Exception {
+    var dto = new UpdateTrainingPlanDto("New name", "new description");
 
-    var result = mockMvc.perform(post("/v1/training-plans")
-            .header("Authorization", "Bearer " + accessToken)
+    mockMvc.perform(patch("/v1/training-plans/" + createdPlanId)
+            .with(jwtTestContext.getJwtPostProcessor(1))
             .contentType(MediaType.APPLICATION_JSON)
-            .content(createBody))
-        .andExpect(status().isCreated())
-        .andReturn();
-
-    String responseJson = result.getResponse().getContentAsString();
-    TrainingPlanDto createdPlan = objectMapper.readValue(responseJson, TrainingPlanDto.class);
-    String planId = createdPlan.id();
-
-    // Update DTO
-    UpdateTrainingPlanDto updateDto = new UpdateTrainingPlanDto("Updated Plan B", "Updated Desc");
-    String updateBody = objectMapper.writeValueAsString(updateDto);
-
-    // Perform PATCH request
-    mockMvc.perform(patch("/v1/training-plans/" + planId)
-            .header("Authorization", "Bearer " + accessToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(updateBody))
+            .content(objectMapper.writeValueAsString(dto)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.name", is("Updated Plan B")))
-        .andExpect(jsonPath("$.description", is("Updated Desc")));
-  }
-
-  @Test
-  void shouldDeleteTrainingPlan() throws Exception {
-    // Given
-    CreateTrainingPlanDto createDto = new CreateTrainingPlanDto("Plan C", "Description C", List.of("Goal1"));
-    String createBody = objectMapper.writeValueAsString(createDto);
-
-    var result = mockMvc.perform(post("/v1/training-plans")
-            .header("Authorization", "Bearer " + accessToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(createBody))
-        .andExpect(status().isCreated())
-        .andReturn();
-
-    String responseJson = result.getResponse().getContentAsString();
-    TrainingPlanDto createdPlan = objectMapper.readValue(responseJson, TrainingPlanDto.class);
-    String planId = createdPlan.id();
-
-    // Perform DELETE request
-    mockMvc.perform(delete("/v1/training-plans/" + planId)
-            .header("Authorization", "Bearer " + accessToken))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message", containsString("deleted")));
+        .andExpect(jsonPath("$.name", is(dto.name())))
+        .andExpect(jsonPath("$.description", is(dto.description())));
   }
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 public record TrainingPlanDto(
     String id,
+    String createdBy,
     String name,
     String description,
     List<TrainingGoalDto> goals
