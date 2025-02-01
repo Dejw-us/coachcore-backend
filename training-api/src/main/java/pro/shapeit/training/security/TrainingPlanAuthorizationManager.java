@@ -30,7 +30,7 @@ public class TrainingPlanAuthorizationManager implements AuthorizationManager<Re
 
     var userId = (String) jwt.getToken().getClaim("id");
     var isOwner = trainingPlanService.isTrainingPlanOwner(userId, planId);
-    System.out.println("user id: " + userId);
+
     return new AuthorizationDecision(isOwner);
   }
 

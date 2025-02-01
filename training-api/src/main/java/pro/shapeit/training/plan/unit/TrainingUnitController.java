@@ -50,7 +50,7 @@ public class TrainingUnitController {
       @PathVariable String planId,
       @PathVariable String unitId,
       @RequestBody UpdateTrainingUnitDto dto
-  ) throws ResourceNotFoundException, BadRequestException {
+  ) throws ResourceNotFoundException {
     var unit = trainingUnitService.findTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
     var updatedUnit = trainingUnitService.updateTrainingUnit(unit, dto, planId);
     var updatedUnitDto = trainingUnitMapper.map(updatedUnit);

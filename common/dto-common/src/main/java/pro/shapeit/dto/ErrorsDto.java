@@ -1,19 +1,18 @@
 package pro.shapeit.dto;
 
 import jakarta.servlet.http.HttpServletRequest;
-import pro.shapeit.error.ErrorCode;
 
 import java.time.Instant;
 import java.util.List;
 
 public record ErrorsDto(
     List<String> errorMessages,
-    ErrorCode errorCode,
+    String errorCode,
     Instant timestamp,
     String path
 ) {
   public static ErrorsDto create(
-      ErrorCode code,
+      String code,
       List<String> errorMessages,
       HttpServletRequest request
   ) {
@@ -21,7 +20,7 @@ public record ErrorsDto(
   }
 
   public static ErrorsDto create(
-      ErrorCode code,
+      String code,
       String message,
       HttpServletRequest request
   ) {
