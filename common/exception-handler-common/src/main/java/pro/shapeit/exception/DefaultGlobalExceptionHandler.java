@@ -32,6 +32,6 @@ public class DefaultGlobalExceptionHandler {
   ) {
     return ResponseEntity
         .status(exception.getStatus())
-        .body(ErrorsDto.create("GENERIC_ERROR", exception.getMessage(), request));
+        .body(ErrorsDto.create(exception.getErrorCode(), exception.getMessage(), request));
   }
 }

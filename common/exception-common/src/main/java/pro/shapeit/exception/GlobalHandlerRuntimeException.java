@@ -11,4 +11,6 @@ public abstract class GlobalHandlerRuntimeException extends RuntimeException {
     super(message);
     this.status = status;
   }
+
+  public abstract String getErrorCode();
 }

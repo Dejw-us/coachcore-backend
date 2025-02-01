@@ -8,4 +8,9 @@ public class ResourceFailedToUpdateException extends GlobalHandlerRuntimeExcepti
   public ResourceFailedToUpdateException(String message) {
     super(message, HttpStatus.BAD_REQUEST);
   }
+
+  @Override
+  public String getErrorCode() {
+    return "RESOURCE_FAILED_TO_UPDATE";
+  }
 }

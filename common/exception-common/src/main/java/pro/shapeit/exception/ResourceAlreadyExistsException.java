@@ -8,4 +8,9 @@ public class ResourceAlreadyExistsException extends GlobalHandlerRuntimeExceptio
   public ResourceAlreadyExistsException(String message) {
     super(message, HttpStatus.BAD_REQUEST);
   }
+
+  @Override
+  public String getErrorCode() {
+    return "RESOURCE_ALREADY_EXISTS";
+  }
 }

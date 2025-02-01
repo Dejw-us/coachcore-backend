@@ -14,4 +14,9 @@ public class ResourceNotFoundException extends GlobalHandlerRuntimeException {
   public static Supplier<ResourceNotFoundException> supplier(String message) {
     return () -> new ResourceNotFoundException(message);
   }
+
+  @Override
+  public String getErrorCode() {
+    return "RESOURCE_NOT_FOUND";
+  }
 }
