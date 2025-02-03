@@ -40,10 +40,6 @@ public class SecurityConfig {
       session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     });
 
-    http.exceptionHandling(exceptionHandling -> {
-      exceptionHandling.accessDeniedHandler(new AccessDeniedHandlerImpl());
-    });
-
     return http.build();
   }
 }

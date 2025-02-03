@@ -34,9 +34,6 @@ public class AppUser extends IdentifiableEntity implements UserDetails {
 
   private LocalDate dateOfBirth;
 
-  @Column(updatable = false, nullable = false, unique = true)
-  private String publicId;
-
   @CreatedDate
   @Column(updatable = false)
   private LocalDateTime createdAt;
@@ -54,12 +51,5 @@ public class AppUser extends IdentifiableEntity implements UserDetails {
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return roles;
-  }
-
-  @PrePersist
-  private void setupPublicId() {
-    if (publicId == null) {
-      publicId = UUID.randomUUID().toString();
-    }
   }
 }

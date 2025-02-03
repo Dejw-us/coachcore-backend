@@ -49,6 +49,7 @@ public class AuthServerConfig {
         .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
         .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
         .redirectUri("https://oidcdebugger.com/debug")
+        .redirectUri("http://localhost:5173")
         .scope("openid")
         .build();
     return new InMemoryRegisteredClientRepository(client);

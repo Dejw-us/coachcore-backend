@@ -10,16 +10,21 @@ import java.util.stream.Collectors;
 
 public class EnumValidator implements ConstraintValidator<ValidEnum, String> {
   private Set<String> acceptedValues;
+  private boolean acceptNull;
 
   @Override
   public void initialize(ValidEnum annotation) {
     acceptedValues = Arrays.stream(annotation.value().getEnumConstants())
         .map(Enum::name)
         .collect(Collectors.toSet());
+    acceptNull = annotation.acceptNull();
   }
 
   @Override
   public boolean isValid(String string, ConstraintValidatorContext context) {
-    return string != null && acceptedValues.contains(string);
+    if (string == null) {
+      return acceptNull;
+    }
+    return acceptedValues.contains(string);
   }
 }

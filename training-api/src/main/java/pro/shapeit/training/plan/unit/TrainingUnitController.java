@@ -49,7 +49,7 @@ public class TrainingUnitController {
   ResponseEntity<TrainingUnitDto> patchTrainingUnit(
       @PathVariable String planId,
       @PathVariable String unitId,
-      @RequestBody UpdateTrainingUnitDto dto
+      @RequestBody @Valid UpdateTrainingUnitDto dto
   ) throws ResourceNotFoundException {
     var unit = trainingUnitService.findTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
     var updatedUnit = trainingUnitService.updateTrainingUnit(unit, dto, planId);

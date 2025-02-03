@@ -8,21 +8,19 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pro.shapeit.dto.ErrorsDto;
+import pro.shapeit.dto.ValidationErrorsDto;
 
 @Hidden
 @RestControllerAdvice
 public class DefaultGlobalExceptionHandler {
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<ErrorsDto> handleMethodArgumentNotValidException(
+  public ResponseEntity<ValidationErrorsDto> handleMethodArgumentNotValidException(
       MethodArgumentNotValidException exception,
       HttpServletRequest request
   ) {
-    var errors = exception.getAllErrors().stream()
-        .map(DefaultMessageSourceResolvable::getDefaultMessage)
-        .toList();
     return ResponseEntity
         .badRequest()
-        .body(ErrorsDto.create("DTO_VALIDATION_ERROR", errors, request));
+        .body(ValidationErrorsDto.create("DTO_VALIDATION_ERROR", exception, request));
   }
 
   @ExceptionHandler(GlobalHandlerRuntimeException.class)

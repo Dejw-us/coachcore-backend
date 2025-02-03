@@ -12,7 +12,7 @@ public record UpdateTrainingSetDto(
     @DecimalMax("10.0")
     Double intensity,
 
-    @ValidEnum(TrainingSet.IntensityType.class)
+    @ValidEnum(value = TrainingSet.IntensityType.class, acceptNull = true)
     String intensityType,
 
     @Pattern(
@@ -29,7 +29,7 @@ public record UpdateTrainingSetDto(
     @DecimalMax("10000.0")
     Double weight,
 
-    @ValidEnum(TrainingSet.WeightType.class)
+    @ValidEnum(value = TrainingSet.WeightType.class, acceptNull = true)
     String weightType
 ) {
 }

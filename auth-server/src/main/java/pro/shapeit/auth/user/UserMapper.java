@@ -9,6 +9,7 @@ import java.util.List;
 public interface UserMapper {
   @Mapping(target = "isTrainer", expression = "java(isTrainer(entity.getRoles()))")
   @Mapping(target = "createdAt", source = "createdAt", dateFormat = "yyyy-MM-dd")
+  @Mapping(target = "id", source = "localId")
   PublicUserDto mapToPublic(AppUser entity);
 
   default boolean isTrainer(List<UserRole> roles) {

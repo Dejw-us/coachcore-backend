@@ -6,7 +6,7 @@ import pro.shapeit.validation.annotation.ValidEnum;
 import java.time.DayOfWeek;
 
 public record UpdateTrainingUnitDto(
-    @ValidEnum(DayOfWeek.class)
+    @ValidEnum(value = DayOfWeek.class, acceptNull = true)
     String dayOfWeek,
     @Size(max = 200)
     String notes,

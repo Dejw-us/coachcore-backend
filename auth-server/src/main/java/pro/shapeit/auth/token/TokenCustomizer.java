@@ -27,11 +27,9 @@ public class TokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext
 
         claims.expiresAt(Instant.now().plusSeconds(3600L * 24L));
         claims.claim("id", user.getLocalId());
-        claims.claim("pid", user.getPublicId());
       }
       if (context.getAuthorizationGrantType().equals(AuthorizationGrantType.CLIENT_CREDENTIALS)) {
         claims.claim("id", UUID.randomUUID());
-        claims.claim("pid", UUID.randomUUID());
       }
     }
   }

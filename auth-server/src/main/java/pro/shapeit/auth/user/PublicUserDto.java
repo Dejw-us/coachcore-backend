@@ -1,10 +1,8 @@
 package pro.shapeit.auth.user;
 
-import java.time.LocalDate;
-
 public record PublicUserDto(
     String username,
-    String publicId,
+    String id,
     String createdAt,
     boolean isTrainer
 ) {
