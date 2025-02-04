@@ -16,7 +16,7 @@ public class TestDtos {
       List.of("Goal1", "Goal2")
   );
 
-  public static final CreateTrainingUnitDto CREATE_UNIT_DTO = new CreateTrainingUnitDto("MONDAY");
+  public static final CreateTrainingUnitDto CREATE_UNIT_DTO = new CreateTrainingUnitDto("MONDAY", "some notes", "name");
 
   public static final UpdateTrainingUnitDto UPDATE_UNIT_DTO = new UpdateTrainingUnitDto(
       "FRIDAY",

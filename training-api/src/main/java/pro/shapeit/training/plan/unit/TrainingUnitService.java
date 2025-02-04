@@ -38,6 +38,8 @@ public class TrainingUnitService {
       throw new ResourceAlreadyExistsException(format("Training unit for %s already exists", dayOfWeek));
     }
     var unit = new TrainingUnit();
+    unit.setName(dto.name());
+    unit.setNotes(dto.notes());
     unit.setDayOfWeek(dayOfWeek);
     unit.setTrainingPlan(plan);
 

@@ -7,7 +7,7 @@ import java.time.Instant;
 import java.util.*;
 
 public record ValidationErrorsDto(
-    Map<String, List<String>> errorMessages,
+    List<ValidationErrorDto> errors,
     String errorCode,
     Instant timestamp,
     String path
@@ -17,17 +17,19 @@ public record ValidationErrorsDto(
       MethodArgumentNotValidException exception,
       HttpServletRequest request
   ) {
-    var errors = new HashMap<String, List<String>>();
+    var errors = new ArrayList<ValidationErrorDto>();
 
-    for (var error : exception.getBindingResult().getFieldErrors()) {
-      if (errors.containsKey(error.getField())) {
-        var list = errors.get(error.getField());
-        list.add(error.getDefaultMessage());
-      } else {
-        var list = new LinkedList<String>();
-        list.add(error.getDefaultMessage());
-        errors.put(error.getField(), list);
-      }
+    for (var fieldError : exception.getBindingResult().getFieldErrors()) {
+      var error = errors.stream()
+          .filter(err -> err.field().equals(fieldError.getField()))
+          .findFirst()
+          .orElseGet(() -> {
+            var dto = new ValidationErrorDto(fieldError.getField(), new ArrayList<>());
+            errors.add(dto);
+            return dto;
+          });
+
+      error.errorMessages().add(fieldError.getDefaultMessage());
     }
 
     return new ValidationErrorsDto(errors, errorCode, Instant.now(), request.getRequestURI());

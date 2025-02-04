@@ -10,7 +10,7 @@ public record UpdateTrainingUnitDto(
     String dayOfWeek,
     @Size(max = 200)
     String notes,
-    @Size(max = 50)
+    @Size(max = 50, min = 1)
     String name
 ) {
 }

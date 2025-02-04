@@ -41,7 +41,7 @@ class TrainingUnitServiceTests {
 
   @Test
   void throwsResourceAlreadyExists_saveTrainingUnit() {
-    var dto = new CreateTrainingUnitDto("MONDAY");
+    var dto = new CreateTrainingUnitDto("MONDAY", "some notes", "name");
     var plan = new TrainingPlan();
 
     when(trainingUnitRepository.existsByTrainingPlanAndDayOfWeek(plan, DayOfWeek.MONDAY)).thenReturn(true);
