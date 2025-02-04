@@ -1,9 +1,7 @@
 package pro.shapeit.exception;
 
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-@Getter
 public abstract class GlobalHandlerRuntimeException extends RuntimeException {
   private final HttpStatus status;
 
@@ -13,4 +11,8 @@ public abstract class GlobalHandlerRuntimeException extends RuntimeException {
   }
 
   public abstract String getErrorCode();
+
+  public HttpStatus getStatus() {
+    return status;
+  }
 }

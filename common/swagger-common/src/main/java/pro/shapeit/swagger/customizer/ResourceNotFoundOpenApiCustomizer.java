@@ -5,14 +5,16 @@ import io.swagger.v3.oas.models.media.Content;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
-import lombok.RequiredArgsConstructor;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import pro.shapeit.exception.ResourceNotFoundException;
 
-@RequiredArgsConstructor
 public class ResourceNotFoundOpenApiCustomizer implements OpenApiCustomizer {
   private final RequestMappingHandlerMapping mappings;
+
+  public ResourceNotFoundOpenApiCustomizer(RequestMappingHandlerMapping mappings) {
+    this.mappings = mappings;
+  }
 
   @Override
   public void customise(OpenAPI api) {
