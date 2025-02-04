@@ -38,7 +38,7 @@ public class ProfilePictureController {
       @RequestParam("file") MultipartFile file,
       @AuthenticationPrincipal Jwt jwt
   ) {
-    var userId = (String) jwt.getClaims().get("pid");
+    var userId = (String) jwt.getClaims().get("id");
     var saved = profilePictureService.saveProfilePicture(userId, file);
 
     if (saved) {
