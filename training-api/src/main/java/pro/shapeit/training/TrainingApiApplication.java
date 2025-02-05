@@ -13,7 +13,8 @@ import pro.shapeit.training.catalog.exercise.CreateCatalogExerciseDto;
 @SpringBootApplication
 @OpenAPIDefinition
 @EnableJpaAuditing
-public class TrainingApiApplication {
+public class
+TrainingApiApplication {
   public static void main(String[] args) {
     SpringApplication.run(TrainingApiApplication.class, args);
   }
