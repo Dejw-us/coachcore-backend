@@ -32,6 +32,11 @@ public class TrainingUnitService {
         .orElseThrow(ResourceNotFoundException.supplier("Training unit does not exist"));
   }
 
+  public TrainingUnit findTrainingUnitByTrainingPlanLocalIdAndDayOfWeek(String planLocalId, DayOfWeek dayOfWeek) {
+    return trainingUnitRepository.findByTrainingPlan_LocalIdAndDayOfWeek(planLocalId, dayOfWeek)
+        .orElseThrow(ResourceNotFoundException.supplier("Training unit does not exist"));
+  }
+
   public TrainingUnit saveTrainingUnit(TrainingPlan plan, CreateTrainingUnitDto dto) {
     var dayOfWeek = getEnum(DayOfWeek.class, dto.dayOfWeek());
     if (trainingUnitRepository.existsByTrainingPlanAndDayOfWeek(plan, dayOfWeek)) {

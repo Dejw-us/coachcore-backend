@@ -27,7 +27,7 @@ public class AuthClientConfig {
         .clientId("shapeit")
         .clientSecret("secret")
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-        .redirectUri("https://oidcdebugger.com/debug")
+        .redirectUri("http://localhost:3000")
         .authorizationUri("http://localhost:9000/oauth2/authorize")
         .tokenUri("http://localhost:9000/oauth2/token")
         .scope("openid")

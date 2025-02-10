@@ -10,7 +10,10 @@ import pro.shapeit.dto.MessageDto;
 import pro.shapeit.exception.ResourceNotFoundException;
 import pro.shapeit.training.plan.TrainingPlanService;
 
+import java.time.DayOfWeek;
 import java.util.List;
+
+import static org.apache.commons.lang3.EnumUtils.getEnum;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,13 +25,35 @@ public class TrainingUnitController {
   private final TrainingUnitMapper trainingUnitMapper;
 
   @GetMapping
-  ResponseEntity<List<TrainingUnitDto>> getTrainingUnits(
-      @PathVariable String planId
-  ) throws BadRequestException {
+  ResponseEntity<?> getTrainingUnits(
+      @PathVariable String planId,
+      @RequestParam(required = false) String dayOfWeek,
+      @RequestParam(required = false) Boolean preview
+  ) {
+    if (dayOfWeek != null) {
+      var unit = trainingUnitService.findTrainingUnitByTrainingPlanLocalIdAndDayOfWeek(planId, getEnum(DayOfWeek.class, dayOfWeek));
+      var unitDto = trainingUnitMapper.map(unit, preview);
+
+      return ResponseEntity
+          .ok(unitDto);
+    }
+
     var units = trainingUnitService.findAllTrainingUnitsByTrainingPlanLocalId(planId);
-    var unitsDto = trainingUnitMapper.map(units);
+    var unitsDto = trainingUnitMapper.map(units, preview);
     return ResponseEntity
         .ok(unitsDto);
+  }
+
+  @GetMapping("/{unitId}")
+  ResponseEntity<TrainingUnitDto> getTrainingUnit(
+      @PathVariable String planId,
+      @PathVariable String unitId
+  ) {
+    var unit = trainingUnitService.findTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
+    var unitDto = trainingUnitMapper.map(unit);
+
+    return ResponseEntity
+        .ok(unitDto);
   }
 
   @PostMapping

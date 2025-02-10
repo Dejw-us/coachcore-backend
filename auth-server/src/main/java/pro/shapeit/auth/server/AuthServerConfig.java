@@ -26,14 +26,16 @@ import org.springframework.security.oauth2.server.authorization.settings.Authori
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+import org.springframework.web.cors.CorsConfigurationSource;
 import pro.shapeit.auth.security.RsaKeyProperties;
+import pro.shapeit.common.security.cors.CorsSources;
 import pro.shapeit.util.HttpUtils;
 
 import java.util.UUID;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-@Configuration(proxyBeanMethods = false)
+@Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class AuthServerConfig {
@@ -49,10 +51,15 @@ public class AuthServerConfig {
         .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
         .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
         .redirectUri("https://oidcdebugger.com/debug")
-        .redirectUri("http://localhost:5173")
+        .redirectUri("http://localhost:3000")
         .scope("openid")
         .build();
     return new InMemoryRegisteredClientRepository(client);
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    return CorsSources.enableReactClientCorsConfigurationSource();
   }
 
   @Bean
@@ -62,6 +69,7 @@ public class AuthServerConfig {
         .oidc(withDefaults());
 
     http.securityMatcher(authorizationServerConfigurer.getEndpointsMatcher());
+    http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
     http.with(authorizationServerConfigurer, withDefaults());
     http.authorizeHttpRequests(HttpUtils::anyAuthenticated);
     http.exceptionHandling(exceptions -> exceptions
@@ -77,6 +85,7 @@ public class AuthServerConfig {
   @Bean
   @Order(2)
   public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+    http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
     http.authorizeHttpRequests(auth -> {
       auth.requestMatchers("/account/register", "/account/login").permitAll();
       auth.requestMatchers(HttpMethod.GET, "/v1/users/public/**").permitAll();

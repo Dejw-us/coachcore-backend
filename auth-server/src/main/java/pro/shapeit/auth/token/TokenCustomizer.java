@@ -1,9 +1,9 @@
 package pro.shapeit.auth.token;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.stereotype.Component;
@@ -14,24 +14,21 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
-import static org.springframework.security.oauth2.server.authorization.OAuth2TokenType.ACCESS_TOKEN;
-
 @Component
+@Slf4j
 public class TokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> {
   @Override
   public void customize(JwtEncodingContext context) {
-    if (context.getTokenType().equals(ACCESS_TOKEN)) {
-      var claims = context.getClaims();
-      if (context.getAuthorizationGrantType().equals(AuthorizationGrantType.AUTHORIZATION_CODE)) {
-        var user = getAppUserFromContext(context);
-
-        claims.expiresAt(Instant.now().plusSeconds(3600L * 24L));
-        claims.claim("id", user.getLocalId());
-      }
-      if (context.getAuthorizationGrantType().equals(AuthorizationGrantType.CLIENT_CREDENTIALS)) {
-        claims.claim("id", UUID.randomUUID());
-      }
+    var uuid = UUID.randomUUID();
+    var claims = context.getClaims();
+    var user = getAppUserFromContext(context);
+    if (context.getTokenType().equals(OAuth2TokenType.ACCESS_TOKEN)) {
+      claims.expiresAt(Instant.now().plusSeconds(30L));
+      claims.claim("id", user.getLocalId());
+      log.info("id:{}, Added id claim", uuid);
     }
+    log.info("id:{}, token type: {}", uuid, context.getTokenType().getValue());
+    log.info("id:{}, grant: {}", uuid, context.getAuthorizationGrantType().getValue());
   }
 
   private AppUser getAppUserFromContext(JwtEncodingContext context) {

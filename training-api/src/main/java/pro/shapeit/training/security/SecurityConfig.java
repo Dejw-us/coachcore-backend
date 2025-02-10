@@ -12,7 +12,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import pro.shapeit.common.security.cors.CorsSources;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -25,16 +27,7 @@ public class SecurityConfig {
 
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
-    var config = new CorsConfiguration();
-
-    config.setAllowedOrigins(List.of("http://localhost:3000"));
-    config.setAllowedMethods(List.of("POST", "GET", "PATCH", "OPTIONS", "DELETE"));
-
-    var source = new UrlBasedCorsConfigurationSource();
-    
-    source.registerCorsConfiguration("/**", config);
-
-    return source;
+    return CorsSources.enableReactClientCorsConfigurationSource();
   }
 
   @Bean

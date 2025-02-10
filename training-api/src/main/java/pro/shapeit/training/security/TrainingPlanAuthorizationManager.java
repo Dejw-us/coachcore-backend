@@ -1,6 +1,8 @@
 package pro.shapeit.training.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
@@ -15,6 +17,7 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 public class TrainingPlanAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
   private final TrainingPlanService trainingPlanService;
+  private final AuditorAware<String> auditorAware;
 
   @Override
   public AuthorizationDecision check(
@@ -28,7 +31,7 @@ public class TrainingPlanAuthorizationManager implements AuthorizationManager<Re
       return new AuthorizationDecision(false);
     }
 
-    var userId = (String) jwt.getToken().getClaim("id");
+    var userId = auditorAware.getCurrentAuditor().orElseThrow(() -> new AuthenticationCredentialsNotFoundException("user id not found"));
     var isOwner = trainingPlanService.isTrainingPlanOwner(userId, planId);
 
     return new AuthorizationDecision(isOwner);

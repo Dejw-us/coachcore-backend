@@ -17,6 +17,8 @@ public interface TrainingUnitRepository extends JpaRepository<TrainingUnit, Long
 
   Optional<TrainingUnit> findByTrainingPlan_LocalIdAndLocalId(String planLocalId, String unitLocalId);
 
+  Optional<TrainingUnit> findByTrainingPlan_LocalIdAndDayOfWeek(String planLocalId, DayOfWeek dayOfWeek);
+
   boolean existsByTrainingPlan_LocalIdAndLocalId(
       String trainingPlanLocalId,
       String localId

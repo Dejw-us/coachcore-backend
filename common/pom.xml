@@ -21,6 +21,7 @@
     <module>exception-handler-common</module>
     <module>test-common</module>
     <module>security-test-common</module>
+      <module>security-common</module>
   </modules>
   <packaging>pom</packaging>
 </project>
