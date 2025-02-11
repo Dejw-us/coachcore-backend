@@ -25,9 +25,11 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.cors.CorsConfigurationSource;
 import pro.shapeit.auth.security.RsaKeyProperties;
+import pro.shapeit.auth.token.TokenCookieFilter;
 import pro.shapeit.common.security.cors.CorsSources;
 import pro.shapeit.util.HttpUtils;
 
@@ -42,7 +44,7 @@ public class AuthServerConfig {
   private final RsaKeyProperties rsaKeyProperties;
 
   @Bean
-  public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
+  RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
     var client = RegisteredClient.withId("shapeit")
         .clientId("shapeit")
         .clientSecret(passwordEncoder.encode("secret"))
@@ -58,13 +60,13 @@ public class AuthServerConfig {
   }
 
   @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
+  CorsConfigurationSource corsConfigurationSource() {
     return CorsSources.enableReactClientCorsConfigurationSource();
   }
 
   @Bean
   @Order(1)
-  public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
+  SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
     var authorizationServerConfigurer = OAuth2AuthorizationServerConfigurer.authorizationServer()
         .oidc(withDefaults());
 
@@ -74,17 +76,18 @@ public class AuthServerConfig {
     http.authorizeHttpRequests(HttpUtils::anyAuthenticated);
     http.exceptionHandling(exceptions -> exceptions
         .defaultAuthenticationEntryPointFor(
-            new LoginUrlAuthenticationEntryPoint("/account/login"),
+            new LoginUrlAuthenticationEntryPoint("http://localhost:8080/account/login"),
             new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
         )
     );
+    http.addFilterBefore(new TokenCookieFilter(), SecurityContextHolderAwareRequestFilter.class);
 
     return http.build();
   }
 
   @Bean
   @Order(2)
-  public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+  SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
     http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
     http.authorizeHttpRequests(auth -> {
       auth.requestMatchers("/account/register", "/account/login").permitAll();
@@ -92,14 +95,15 @@ public class AuthServerConfig {
       auth.anyRequest().authenticated();
     });
     http.formLogin(form -> {
-      form.loginPage("/account/login");
+      form.loginPage("http://localhost:8080/account/login");
     });
+    http.addFilterBefore(new TokenCookieFilter(), SecurityContextHolderAwareRequestFilter.class);
 
     return http.build();
   }
 
   @Bean
-  public JWKSource<SecurityContext> jwkSource() {
+  JWKSource<SecurityContext> jwkSource() {
     var rsaKey = new RSAKey.Builder(rsaKeyProperties.publicKey())
         .privateKey(rsaKeyProperties.privateKey())
         .keyID(UUID.randomUUID().toString())
@@ -109,12 +113,12 @@ public class AuthServerConfig {
   }
 
   @Bean
-  public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
+  JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
     return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
   }
 
   @Bean
-  public AuthorizationServerSettings authorizationServerSettings() {
+  AuthorizationServerSettings authorizationServerSettings() {
     var issuer = System.getenv("ISSUER");
     if (issuer == null || issuer.isBlank()) {
       issuer = "http://localhost:9000";
