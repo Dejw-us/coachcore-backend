@@ -11,28 +11,29 @@ import reactor.core.publisher.Mono;
 
 @Component
 @Slf4j
-public class CookieTokenGatewayFilter implements GatewayFilter {
-  @Value("${ACCESS_TOKEN_KEY:accessToken}")
+public class CookieAccessTokenGatewayFilter implements GatewayFilter {
+  @Value("${ACCESS_TOKEN_KEY:access_token}")
   private String accessTokenKey;
-
-  @Value("${REFRESH_TOKEN_KEY:refreshToken}")
-  private String refreshTokenKey;
 
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-    var accessToken = exchange.getRequest().getCookies().getFirst(accessTokenKey);
+    log.info("starting filter");
+    var cookies = exchange.getRequest().getCookies();
+    var accessTokenCookie = cookies.getFirst(accessTokenKey);
 
-    if (accessToken == null) {
+    if (accessTokenCookie == null) {
+      log.info("access token == null");
       return chain.filter(exchange);
     }
 
     var modifiedRequest = exchange.getRequest().mutate()
-        .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(accessToken.getValue()))
+        .header(HttpHeaders.AUTHORIZATION, "Bearer ".concat(accessTokenCookie.getValue()))
         .build();
     var modifiedExchange = exchange.mutate()
         .request(modifiedRequest)
         .build();
-    log.info("Token value: {}", accessToken.getValue());
+    log.info("Token value: {}", accessTokenCookie.getValue());
+
     return chain.filter(modifiedExchange);
   }
 }

@@ -12,10 +12,9 @@ public class CorsSources {
   public static CorsConfigurationSource enableReactClientCorsConfigurationSource() {
     var config = new CorsConfiguration();
 
-    config.setAllowedOrigins(List.of("*"));
-    config.addAllowedMethod("*");
-    config.addAllowedHeader("*");
-    config.addExposedHeader("Location");
+    config.setAllowedOrigins(List.of("http://localhost:3000"));
+    config.setAllowedMethods(List.of("POST", "GET", "PATCH", "DELETE", "OPTIONS"));
+    config.setAllowedHeaders(List.of("*"));
     config.setAllowCredentials(true);
 
     var source = new UrlBasedCorsConfigurationSource();

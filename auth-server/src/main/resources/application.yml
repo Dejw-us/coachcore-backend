@@ -13,6 +13,7 @@ logging:
     org:
       springframework:
         security: DEBUG
+        web: DEBUG
 server:
   port: 9000
 

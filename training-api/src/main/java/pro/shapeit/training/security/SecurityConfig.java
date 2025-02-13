@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -25,7 +26,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
   private final TrainingPlanAuthorizationManager trainingPlanAuthorizationManager;
 
-  @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     return CorsSources.enableReactClientCorsConfigurationSource();
   }
@@ -33,9 +33,6 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable);
-    http.cors(cors -> {
-      cors.configurationSource(corsConfigurationSource());
-    });
 
     http.authorizeHttpRequests(auth -> {
       auth.requestMatchers(HttpMethod.OPTIONS, "/v1/**").permitAll();
@@ -55,6 +52,8 @@ public class SecurityConfig {
     http.sessionManagement(session -> {
       session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     });
+
+    http.addFilterBefore(new JwtLoggingFilter(), BearerTokenAuthenticationFilter.class);
 
     return http.build();
   }

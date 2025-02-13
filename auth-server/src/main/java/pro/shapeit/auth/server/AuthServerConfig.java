@@ -6,25 +6,36 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2RefreshTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
+import org.springframework.security.oauth2.server.authorization.web.OAuth2ClientAuthenticationFilter;
+import org.springframework.security.oauth2.server.authorization.web.authentication.*;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.DelegatingAuthenticationConverter;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -33,10 +44,14 @@ import pro.shapeit.auth.token.TokenCookieFilter;
 import pro.shapeit.common.security.cors.CorsSources;
 import pro.shapeit.util.HttpUtils;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -60,23 +75,17 @@ public class AuthServerConfig {
   }
 
   @Bean
-  CorsConfigurationSource corsConfigurationSource() {
-    return CorsSources.enableReactClientCorsConfigurationSource();
-  }
-
-  @Bean
   @Order(1)
   SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
     var authorizationServerConfigurer = OAuth2AuthorizationServerConfigurer.authorizationServer()
         .oidc(withDefaults());
 
     http.securityMatcher(authorizationServerConfigurer.getEndpointsMatcher());
-    http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
     http.with(authorizationServerConfigurer, withDefaults());
     http.authorizeHttpRequests(HttpUtils::anyAuthenticated);
     http.exceptionHandling(exceptions -> exceptions
         .defaultAuthenticationEntryPointFor(
-            new LoginUrlAuthenticationEntryPoint("http://localhost:8080/account/login"),
+            new LoginUrlAuthenticationEntryPoint("/account/login"),
             new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
         )
     );
@@ -92,12 +101,13 @@ public class AuthServerConfig {
     http.authorizeHttpRequests(auth -> {
       auth.requestMatchers("/account/register", "/account/login").permitAll();
       auth.requestMatchers(HttpMethod.GET, "/v1/users/public/**").permitAll();
+      auth.requestMatchers(HttpMethod.GET, "/refresh-token").permitAll();
       auth.anyRequest().authenticated();
     });
     http.formLogin(form -> {
-      form.loginPage("http://localhost:8080/account/login");
+      form.loginPage("/account/login");
     });
-    http.addFilterBefore(new TokenCookieFilter(), SecurityContextHolderAwareRequestFilter.class);
+    http.addFilterBefore(new TokenCookieFilter(), SecurityContextHolderFilter.class);
 
     return http.build();
   }
