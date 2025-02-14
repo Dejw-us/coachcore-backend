@@ -38,7 +38,9 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pro.shapeit.auth.security.RsaKeyProperties;
 import pro.shapeit.auth.token.TokenCookieFilter;
 import pro.shapeit.common.security.cors.CorsSources;
@@ -83,7 +85,7 @@ public class AuthServerConfig {
     http.authorizeHttpRequests(HttpUtils::anyAuthenticated);
     http.exceptionHandling(exceptions -> exceptions
         .defaultAuthenticationEntryPointFor(
-            new LoginUrlAuthenticationEntryPoint("http://localhost:8080/account/login"),
+            new LoginUrlAuthenticationEntryPoint("/account/login"),
             new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
         )
     );
@@ -95,6 +97,19 @@ public class AuthServerConfig {
   @Bean
   @Order(2)
   SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+    http.cors(cors -> {
+      var config = new CorsConfiguration();
+
+      config.setAllowedOrigins(List.of("*"));
+      config.setAllowedMethods(List.of("POST", "GET", "PATCH", "DELETE", "OPTIONS"));
+      config.setAllowedHeaders(List.of("*"));
+
+      var source = new UrlBasedCorsConfigurationSource();
+
+      source.registerCorsConfiguration("/**", config);
+
+      cors.configurationSource(source);
+    });
     http.authorizeHttpRequests(auth -> {
       auth.requestMatchers("/account/register", "/account/login").permitAll();
       auth.requestMatchers(HttpMethod.GET, "/v1/users/public/**").permitAll();
@@ -102,7 +117,7 @@ public class AuthServerConfig {
       auth.anyRequest().authenticated();
     });
     http.formLogin(form -> {
-      form.loginPage("http://localhost:8080/account/login");
+      form.loginPage("/account/login");
     });
     http.addFilterBefore(new TokenCookieFilter(), SecurityContextHolderFilter.class);
 
