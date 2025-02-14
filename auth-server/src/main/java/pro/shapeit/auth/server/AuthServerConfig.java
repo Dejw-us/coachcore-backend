@@ -65,9 +65,7 @@ public class AuthServerConfig {
         .clientSecret(passwordEncoder.encode("secret"))
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-        .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
         .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-        .redirectUri("https://oidcdebugger.com/debug")
         .redirectUri("http://localhost:3000")
         .scope("openid")
         .build();
@@ -85,7 +83,7 @@ public class AuthServerConfig {
     http.authorizeHttpRequests(HttpUtils::anyAuthenticated);
     http.exceptionHandling(exceptions -> exceptions
         .defaultAuthenticationEntryPointFor(
-            new LoginUrlAuthenticationEntryPoint("/account/login"),
+            new LoginUrlAuthenticationEntryPoint("http://localhost:8080/account/login"),
             new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
         )
     );
@@ -97,7 +95,6 @@ public class AuthServerConfig {
   @Bean
   @Order(2)
   SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-    http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
     http.authorizeHttpRequests(auth -> {
       auth.requestMatchers("/account/register", "/account/login").permitAll();
       auth.requestMatchers(HttpMethod.GET, "/v1/users/public/**").permitAll();
@@ -105,7 +102,7 @@ public class AuthServerConfig {
       auth.anyRequest().authenticated();
     });
     http.formLogin(form -> {
-      form.loginPage("/account/login");
+      form.loginPage("http://localhost:8080/account/login");
     });
     http.addFilterBefore(new TokenCookieFilter(), SecurityContextHolderFilter.class);
 

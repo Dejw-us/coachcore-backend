@@ -24,6 +24,7 @@ public class GatewayConfig {
   private String authServerUri;
 
   private final CookieAccessTokenGatewayFilter cookieTokenGatewayFilter;
+  private final CookieRefreshTokenGatewayFilter cookieRefreshTokenGatewayFilter;
 
   @Bean
   RouteLocator routeLocator(RouteLocatorBuilder builder) {
@@ -31,6 +32,14 @@ public class GatewayConfig {
         .route("training-plans", configureTrainingApiRoute("/training-plans/**"))
         .route("catalog-exercises", configureTrainingApiRoute("/catalog-exercises/**"))
         .route("exercise-categories", configureTrainingApiRoute("/exercise-categories/**"))
+        .route("account", route -> route
+            .path("/account/**")
+            .uri(authServerUri))
+        .route("oauth2", route -> route
+            .path("/oauth2/**")
+            .filters(filters -> filters.filter(cookieRefreshTokenGatewayFilter))
+            .uri(authServerUri))
+        .route("users", configureApiRoute("/users/**", authServerUri))
         .build();
   }
 

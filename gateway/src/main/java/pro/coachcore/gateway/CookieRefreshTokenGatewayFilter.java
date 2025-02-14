@@ -23,6 +23,9 @@ public class CookieRefreshTokenGatewayFilter implements GatewayFilter {
 
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+    if (exchange.getRequest().getHeaders().getFirst("Cookie-Refresh-Token") == null) {
+      return chain.filter(exchange);
+    }
     return Optional.ofNullable(exchange.getRequest().getCookies().getFirst(refreshTokenKey))
         .map(HttpCookie::getValue)
         .map(refreshToken -> {
