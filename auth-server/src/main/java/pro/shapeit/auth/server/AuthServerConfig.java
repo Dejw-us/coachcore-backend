@@ -97,19 +97,6 @@ public class AuthServerConfig {
   @Bean
   @Order(2)
   SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-    http.cors(cors -> {
-      var config = new CorsConfiguration();
-
-      config.setAllowedOrigins(List.of("*"));
-      config.setAllowedMethods(List.of("POST", "GET", "PATCH", "DELETE", "OPTIONS"));
-      config.setAllowedHeaders(List.of("*"));
-
-      var source = new UrlBasedCorsConfigurationSource();
-
-      source.registerCorsConfiguration("/**", config);
-
-      cors.configurationSource(source);
-    });
     http.authorizeHttpRequests(auth -> {
       auth.requestMatchers("/account/register", "/account/login").permitAll();
       auth.requestMatchers(HttpMethod.GET, "/v1/users/public/**").permitAll();
