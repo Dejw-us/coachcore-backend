@@ -14,6 +14,9 @@
     </div>
 </nav>
 <div class="mx-auto col-6">
+    <div class="alert alert-success m-3" role="alert" th:if="${message}">
+        <p th:text="${message}"></p>
+    </div>
     <h1 class="text-center m-2">Subscriptions</h1>
     <table class="table">
         <thead>

@@ -15,4 +15,6 @@ public class Subscription {
   private String email;
 
   private String language;
+
+  private Long newslettersRead;
 }

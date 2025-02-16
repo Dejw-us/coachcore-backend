@@ -40,6 +40,7 @@
     <module>auth-client</module>
     <module>images-api</module>
     <module>gateway</module>
+      <module>newsletter</module>
   </modules>
 
   <dependencies>

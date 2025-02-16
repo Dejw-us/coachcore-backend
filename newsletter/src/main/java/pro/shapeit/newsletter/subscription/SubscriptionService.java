@@ -2,9 +2,8 @@ package pro.shapeit.newsletter.subscription;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import pro.shapeit.exception.ResourceAlreadyExistsException;
 import pro.shapeit.exception.ResourceNotFoundException;
 
 import java.util.List;
@@ -20,6 +19,12 @@ public class SubscriptionService {
 
   public List<Subscription> getSubscriptions() {
     return subscriptionRepository.findAll();
+  }
+
+  public List<Subscription> getSubscriptions(String lang) {
+    return getSubscriptions().stream()
+        .filter(subscription -> subscription.getLanguage().equals(lang))
+        .toList();
   }
 
   public UnsubscribeCode getOrGenerateUnsubscribeCode(Subscription subscription) {
@@ -41,9 +46,9 @@ public class SubscriptionService {
     unsubscribeCodeRepository.delete(unsubscribeCode);
   }
 
-  public void subscribe(CreateSubscriptionDto dto) throws BadRequestException {
+  public void subscribe(CreateSubscriptionDto dto) {
     if (isSubscribed(dto.email())) {
-      throw new BadRequestException("Already subscribed");
+      throw new ResourceAlreadyExistsException("Already subscribed");
     }
     var subscription = subscriptionMapper.map(dto);
     subscriptionRepository.save(subscription);

@@ -16,10 +16,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-  @Value("${ADMIN_USERNAME}")
+  @Value("${ADMIN_USERNAME:admin}")
   private String adminUsername;
 
-  @Value("${ADMIN_PASSWORD}")
+  @Value("${ADMIN_PASSWORD:admin}")
   private String adminPassword;
 
   @Bean
@@ -30,7 +30,7 @@ public class SecurityConfig {
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(csrf -> {
-      csrf.ignoringRequestMatchers("/newsletter/**");
+      csrf.ignoringRequestMatchers("/newsletter/subscribe");
     });
     http.authorizeHttpRequests(auth -> {
       auth.requestMatchers("/admin/**").hasAuthority("ADMIN");

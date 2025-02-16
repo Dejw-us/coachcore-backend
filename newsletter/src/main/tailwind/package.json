@@ -1,0 +1,13 @@
+{
+  "name": "newsletter-tailwind",
+  "private": true,
+  "scripts": {
+    "build": "tailwindcss -i ./main.css -o ../resources/static/main.css"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.0.6"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.0.6"
+  }
+}

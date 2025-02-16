@@ -75,6 +75,12 @@
             <artifactId>spring-boot-devtools</artifactId>
             <version>3.4.2</version>
         </dependency>
+        <dependency>
+            <groupId>pro.shapeit</groupId>
+            <artifactId>exception-handler-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>import</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

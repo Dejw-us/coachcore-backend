@@ -1,7 +1,6 @@
 package pro.shapeit.newsletter.subscription;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +21,7 @@ public class CancelSubscriptionController {
   @PostMapping
   String cancelSubscription(
       @RequestParam String code
-  ) throws BadRequestException {
+  ) {
     subscriptionService.unsubscribe(code);
     return "cancel-subscription-success";
   }
