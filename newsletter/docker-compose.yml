@@ -4,11 +4,17 @@ name: newsletter-service
 services:
   db:
     image: postgres:16.2
+    ports:
+      - 5433:5432
     environment:
       POSRGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: newsletter
   newsletter:
+    depends_on:
+      - db
+    ports:
+      - 8000:8000
     build: 
       dockerfile: Dockerfile
     environment:
@@ -17,4 +23,5 @@ services:
       DB_NAME: newsletter
       ADMIN_USERNAME: ${ADMIN_USERNAME}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
-      HOST: newsletter:8000
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
