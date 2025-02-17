@@ -8,12 +8,12 @@
     <version>3.4.1</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
-  <groupId>pro.shapeit</groupId>
+  <groupId>pro.coachcore</groupId>
   <artifactId>backend</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>api</name>
-  <description>Backend for shapeit apps</description>
+  <name>backend</name>
+  <description>Backend for coachcor apps</description>
   <url/>
   <licenses>
     <license/>

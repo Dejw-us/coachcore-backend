@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>pro.shapeit</groupId>
+    <groupId>pro.coachcore</groupId>
     <artifactId>common</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
@@ -22,7 +22,7 @@
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
     </dependency>
     <dependency>
-      <groupId>pro.shapeit</groupId>
+      <groupId>pro.coachcore</groupId>
       <artifactId>exception-common</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <scope>compile</scope>
