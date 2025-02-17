@@ -1,6 +1,8 @@
-package pro.shapeit.image.profile;
+package pro.coachcore.image.profile;
 
 import lombok.RequiredArgsConstructor;
+import pro.coachcore.dto.MessageDto;
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -10,7 +12,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pro.shapeit.dto.MessageDto;
 
 import java.net.MalformedURLException;
 

@@ -1,8 +1,9 @@
-package pro.shapeit.util;
+package pro.coachcore.util;
 
 import lombok.experimental.UtilityClass;
+import pro.coachcore.dto.MessageDto;
+
 import org.springframework.http.ResponseEntity;
-import pro.shapeit.dto.MessageDto;
 
 @UtilityClass
 public class ControllerUtils {

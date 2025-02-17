@@ -1,4 +1,4 @@
-package pro.shapeit.dto;
+package pro.coachcore.dto;
 
 public record MessageDto(String message) {
 }

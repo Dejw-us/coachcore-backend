@@ -1,4 +1,4 @@
-package pro.shapeit.auth.user;
+package pro.coachcore.auth.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

@@ -1,10 +1,11 @@
-package pro.shapeit.auth.user;
+package pro.coachcore.auth.user;
 
 import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import pro.coachcore.jpa.entity.IdentifiableEntity;
+
 import org.springframework.security.core.GrantedAuthority;
-import pro.shapeit.jpa.entity.IdentifiableEntity;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity

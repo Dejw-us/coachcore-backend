@@ -1,8 +1,8 @@
-package pro.shapeit.validation.validator;
+package pro.coachcore.validation.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import pro.shapeit.validation.annotation.ValidEnum;
+import pro.coachcore.validation.annotation.ValidEnum;
 
 import java.util.Arrays;
 import java.util.Set;

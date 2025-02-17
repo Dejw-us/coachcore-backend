@@ -1,4 +1,4 @@
-package pro.shapeit.swagger.customizer;
+package pro.coachcore.swagger.customizer;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;

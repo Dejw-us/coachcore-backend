@@ -1,4 +1,4 @@
-package pro.shapeit.auth.security;
+package pro.coachcore.auth.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

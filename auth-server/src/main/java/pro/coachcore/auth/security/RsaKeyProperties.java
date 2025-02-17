@@ -1,4 +1,4 @@
-package pro.shapeit.auth.security;
+package pro.coachcore.auth.security;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

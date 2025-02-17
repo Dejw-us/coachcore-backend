@@ -1,13 +1,14 @@
-package pro.shapeit.jpa.entity;
+package pro.coachcore.jpa.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import pro.coachcore.util.LocalIdUtils;
+
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import pro.shapeit.util.LocalIdUtils;
 
 import java.time.LocalDateTime;
 

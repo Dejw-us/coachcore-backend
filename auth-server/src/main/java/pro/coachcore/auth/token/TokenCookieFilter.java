@@ -1,4 +1,4 @@
-package pro.shapeit.auth.token;
+package pro.coachcore.auth.token;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,4 +1,4 @@
-package pro.shapeit.auth.user;
+package pro.coachcore.auth.user;
 
 public record PublicUserDto(
     String username,

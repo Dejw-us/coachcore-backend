@@ -1,4 +1,4 @@
-package pro.shapeit.image.security;
+package pro.coachcore.image.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

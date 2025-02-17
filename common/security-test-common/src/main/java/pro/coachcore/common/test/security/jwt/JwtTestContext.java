@@ -1,4 +1,4 @@
-package pro.shapeit.common.test.security.jwt;
+package pro.coachcore.common.test.security.jwt;
 
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 

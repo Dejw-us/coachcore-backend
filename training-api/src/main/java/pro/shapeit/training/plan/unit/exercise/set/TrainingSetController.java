@@ -1,14 +1,16 @@
 package pro.shapeit.training.plan.unit.exercise.set;
 
 import lombok.RequiredArgsConstructor;
+
+import static pro.coachcore.util.ControllerUtils.deleteResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pro.shapeit.dto.MessageDto;
-import pro.shapeit.exception.ResourceNotFoundException;
-import pro.shapeit.training.plan.unit.exercise.TrainingExerciseService;
 
-import static pro.shapeit.util.ControllerUtils.deleteResponse;
+import pro.coachcore.dto.MessageDto;
+import pro.coachcore.exception.ResourceNotFoundException;
+import pro.shapeit.training.plan.unit.exercise.TrainingExerciseService;
 
 @RestController
 @RequestMapping("/v1/training-plans/{planId}")

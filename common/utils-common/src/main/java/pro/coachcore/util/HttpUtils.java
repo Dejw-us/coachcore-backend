@@ -1,4 +1,4 @@
-package pro.shapeit.util;
+package pro.coachcore.util;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;

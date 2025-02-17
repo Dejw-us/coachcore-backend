@@ -113,7 +113,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>pro.shapeit.auth.AuthServerApplication</mainClass>
+              <mainClass>pro.coachcore.auth.AuthServerApplication</mainClass>
             </manifest>
           </archive>
         </configuration>

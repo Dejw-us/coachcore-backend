@@ -1,4 +1,4 @@
-package pro.shapeit.auth.token;
+package pro.coachcore.auth.token;
 
 import jakarta.servlet.http.Cookie;
 

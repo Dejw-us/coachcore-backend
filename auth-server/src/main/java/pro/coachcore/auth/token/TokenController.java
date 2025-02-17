@@ -1,4 +1,4 @@
-package pro.shapeit.auth.token;
+package pro.coachcore.auth.token;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

@@ -13,13 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import pro.shapeit.common.test.security.jwt.JwtTestContext;
+
+import pro.coachcore.common.test.security.jwt.JwtTestContext;
 import pro.shapeit.training.TestDtos;
 import pro.shapeit.training.jwt.JwtTestConfig;
-import pro.shapeit.training.plan.goal.TrainingGoalRepository;
-
-import java.util.List;
-
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;

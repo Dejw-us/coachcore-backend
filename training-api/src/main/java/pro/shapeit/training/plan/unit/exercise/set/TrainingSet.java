@@ -3,7 +3,7 @@ package pro.shapeit.training.plan.unit.exercise.set;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import pro.shapeit.jpa.entity.BaseEntity;
+import pro.coachcore.jpa.entity.BaseEntity;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity

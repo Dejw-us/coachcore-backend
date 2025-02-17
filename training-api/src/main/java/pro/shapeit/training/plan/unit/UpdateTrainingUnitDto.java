@@ -1,7 +1,7 @@
 package pro.shapeit.training.plan.unit;
 
 import jakarta.validation.constraints.Size;
-import pro.shapeit.validation.annotation.ValidEnum;
+import pro.coachcore.validation.annotation.ValidEnum;
 
 import java.time.DayOfWeek;
 

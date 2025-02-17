@@ -1,4 +1,4 @@
-package pro.shapeit.util;
+package pro.coachcore.util;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;

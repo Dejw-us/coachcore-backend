@@ -1,8 +1,8 @@
-package pro.shapeit.jpa.entity;
+package pro.coachcore.jpa.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import pro.shapeit.util.LocalIdUtils;
+import pro.coachcore.util.LocalIdUtils;
 
 @Getter
 @MappedSuperclass

@@ -6,8 +6,9 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pro.shapeit.dto.MessageDto;
-import pro.shapeit.exception.ResourceNotFoundException;
+
+import pro.coachcore.dto.MessageDto;
+import pro.coachcore.exception.ResourceNotFoundException;
 import pro.shapeit.training.plan.TrainingPlanService;
 
 import java.time.DayOfWeek;

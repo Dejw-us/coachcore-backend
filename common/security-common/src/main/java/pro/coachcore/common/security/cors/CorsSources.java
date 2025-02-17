@@ -1,4 +1,4 @@
-package pro.shapeit.common.security.cors;
+package pro.coachcore.common.security.cors;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.web.cors.CorsConfiguration;

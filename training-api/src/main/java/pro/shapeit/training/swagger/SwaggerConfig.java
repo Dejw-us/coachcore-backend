@@ -5,8 +5,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import pro.shapeit.swagger.customizer.AccessTokenApiCustomizer;
-import pro.shapeit.swagger.customizer.ResourceNotFoundOpenApiCustomizer;
+
+import pro.coachcore.swagger.customizer.AccessTokenApiCustomizer;
+import pro.coachcore.swagger.customizer.ResourceNotFoundOpenApiCustomizer;
 
 @Configuration
 public class SwaggerConfig {

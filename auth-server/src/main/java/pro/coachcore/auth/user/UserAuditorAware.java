@@ -1,4 +1,4 @@
-package pro.shapeit.auth.user;
+package pro.coachcore.auth.user;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.lang.NonNull;

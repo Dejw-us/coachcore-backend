@@ -70,7 +70,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>pro.shapeit.auth.AuthClientApplication</mainClass>
+              <mainClass>pro.coachcore.auth.AuthClientApplication</mainClass>
             </manifest>
           </archive>
         </configuration>

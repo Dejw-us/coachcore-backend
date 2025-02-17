@@ -1,4 +1,4 @@
-package pro.shapeit.image.profile;
+package pro.coachcore.image.profile;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

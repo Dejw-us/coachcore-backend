@@ -12,7 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import pro.shapeit.common.test.security.jwt.JwtTestContext;
+
+import pro.coachcore.common.test.security.jwt.JwtTestContext;
 import pro.shapeit.training.TestDtos;
 import pro.shapeit.training.catalog.category.ExerciseCategoryDto;
 import pro.shapeit.training.jwt.JwtTestConfig;

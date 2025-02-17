@@ -1,0 +1,20 @@
+version: '3.9'
+name: newsletter-service
+
+services:
+  db:
+    image: postgres:16.2
+    environment:
+      POSRGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: newsletter
+  newsletter:
+    build: 
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: newsletter
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      HOST: newsletter:8000

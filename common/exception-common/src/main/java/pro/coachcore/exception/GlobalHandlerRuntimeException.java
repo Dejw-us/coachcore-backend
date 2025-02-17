@@ -1,4 +1,4 @@
-package pro.shapeit.exception;
+package pro.coachcore.exception;
 
 import org.springframework.http.HttpStatus;
 

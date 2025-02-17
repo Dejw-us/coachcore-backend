@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>pro.shapeit</groupId>
+    <groupId>pro.coachcore</groupId>
     <artifactId>backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
@@ -11,12 +11,12 @@
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
-      <groupId>pro.shapeit</groupId>
+      <groupId>pro.coachcore</groupId>
       <artifactId>exception-common</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>pro.shapeit</groupId>
+      <groupId>pro.coachcore</groupId>
       <artifactId>utils-common</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
@@ -55,14 +55,8 @@
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
     </dependency>
     <dependency>
-      <groupId>pro.shapeit</groupId>
+      <groupId>pro.coachcore</groupId>
       <artifactId>swagger-common</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>pro.shapeit</groupId>
-      <artifactId>exception-handler-common</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
@@ -72,19 +66,19 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>pro.shapeit</groupId>
+      <groupId>pro.coachcore</groupId>
       <artifactId>jpa-common</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>pro.shapeit</groupId>
+      <groupId>pro.coachcore</groupId>
       <artifactId>validation-common</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>pro.shapeit</groupId>
+      <groupId>pro.coachcore</groupId>
       <artifactId>security-test-common</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <scope>test</scope>
@@ -106,7 +100,6 @@
             <exclude>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
-              <version>1.18.36</version>
             </exclude>
           </excludes>
         </configuration>

@@ -1,4 +1,4 @@
-package pro.shapeit.jpa.entity;
+package pro.coachcore.jpa.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

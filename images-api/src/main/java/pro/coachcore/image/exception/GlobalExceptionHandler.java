@@ -1,4 +1,4 @@
-package pro.shapeit.image.exception;
+package pro.coachcore.image.exception;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
@@ -6,8 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import pro.shapeit.dto.ErrorsDto;
-import pro.shapeit.exception.DefaultGlobalExceptionHandler;
+
+import pro.coachcore.dto.ErrorsDto;
+import pro.coachcore.exception.handler.DefaultGlobalExceptionHandler;
 
 import java.io.FileNotFoundException;
 

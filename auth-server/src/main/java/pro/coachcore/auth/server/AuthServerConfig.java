@@ -1,4 +1,4 @@
-package pro.shapeit.auth.server;
+package pro.coachcore.auth.server;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -41,10 +41,11 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import pro.shapeit.auth.security.RsaKeyProperties;
-import pro.shapeit.auth.token.TokenCookieFilter;
-import pro.shapeit.common.security.cors.CorsSources;
-import pro.shapeit.util.HttpUtils;
+
+import pro.coachcore.auth.security.RsaKeyProperties;
+import pro.coachcore.auth.token.TokenCookieFilter;
+import pro.coachcore.common.security.cors.CorsSources;
+import pro.coachcore.util.HttpUtils;
 
 import java.util.Arrays;
 import java.util.List;

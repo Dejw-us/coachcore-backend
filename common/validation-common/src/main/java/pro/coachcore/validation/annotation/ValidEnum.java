@@ -1,8 +1,8 @@
-package pro.shapeit.validation.annotation;
+package pro.coachcore.validation.annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import pro.shapeit.validation.validator.EnumValidator;
+import pro.coachcore.validation.validator.EnumValidator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

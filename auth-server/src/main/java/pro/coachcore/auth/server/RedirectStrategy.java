@@ -1,4 +1,4 @@
-package pro.shapeit.auth.server;
+package pro.coachcore.auth.server;
 
 import org.springframework.security.web.DefaultRedirectStrategy;
 

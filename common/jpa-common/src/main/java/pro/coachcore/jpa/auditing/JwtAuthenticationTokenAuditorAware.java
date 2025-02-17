@@ -1,4 +1,4 @@
-package pro.shapeit.jpa.auditing;
+package pro.coachcore.jpa.auditing;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;

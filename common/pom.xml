@@ -19,7 +19,6 @@
     <module>swagger-common</module>
     <module>validation-common</module>
     <module>exception-common</module>
-    <module>exception-handler-common</module>
     <module>security-test-common</module>
     <module>security-common</module>
   </modules>

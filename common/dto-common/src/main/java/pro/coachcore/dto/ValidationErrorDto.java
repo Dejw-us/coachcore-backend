@@ -1,4 +1,4 @@
-package pro.shapeit.dto;
+package pro.coachcore.dto;
 
 import java.util.List;
 

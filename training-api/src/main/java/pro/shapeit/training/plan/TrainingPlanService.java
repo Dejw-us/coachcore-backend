@@ -2,13 +2,14 @@ package pro.shapeit.training.plan;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pro.shapeit.exception.ResourceNotFoundException;
+
+import pro.coachcore.exception.ResourceNotFoundException;
 import pro.shapeit.training.plan.goal.TrainingGoal;
 import pro.shapeit.training.plan.goal.TrainingGoalRepository;
 
-import java.util.List;
+import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
 
-import static pro.shapeit.util.ServiceUtils.updateIfNotNull;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
