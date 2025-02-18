@@ -15,8 +15,7 @@ services:
       - db
     ports:
       - 8000:8000
-    build: 
-      dockerfile: Dockerfile
+    image: ghcr.io/coachcore/newsletter:0.0.1
     environment:
       DB_HOST: db
       DB_PORT: 5432

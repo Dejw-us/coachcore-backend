@@ -76,11 +76,6 @@
       <artifactId>spring-boot-devtools</artifactId>
       <version>3.4.2</version>
     </dependency>
-    <dependency>
-      <groupId>org.webjars.npm</groupId>
-      <artifactId>tailwindcss</artifactId>
-      <version>4.0.6</version>
-    </dependency>
   </dependencies>
   <build>
     <plugins>
