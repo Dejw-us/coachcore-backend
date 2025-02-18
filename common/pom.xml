@@ -11,7 +11,7 @@
 
   <artifactId>common</artifactId>
   <name>common</name>
-  <url>http://maven.apache.org</url>
+
   <modules>
     <module>jpa-common</module>
     <module>utils-common</module>

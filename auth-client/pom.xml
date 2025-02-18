@@ -26,7 +26,7 @@
       <artifactId>spring-boot-starter-oauth2-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>pro.shapeit</groupId>
+      <groupId>pro.coachcore</groupId>
       <artifactId>utils-common</artifactId>
       <version>0.0.1-SNAPSHOT</version>
       <scope>compile</scope>
