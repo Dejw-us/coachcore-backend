@@ -21,6 +21,7 @@
     <module>exception-common</module>
     <module>security-test-common</module>
     <module>security-common</module>
+    <module>jwt-common</module>
   </modules>
   <packaging>pom</packaging>
 </project>

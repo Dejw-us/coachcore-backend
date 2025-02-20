@@ -21,7 +21,7 @@ public record EmailData(
     helper.setFrom(from);
     helper.setTo(to.toArray(String[]::new));
     helper.setSubject(subject);
-    helper.setText(content);
+    helper.setText(content, true);
 
     return mime;
   }
