@@ -26,7 +26,7 @@ public class SubscriptionController {
   ResponseEntity<MessageDto> unsubscribe(
       @RequestParam String code
   ) {
-    subscriptionService.unsubscribe(code);
+    subscriptionService.unsubscribe(code); 
     return ResponseEntity
         .ok(new MessageDto("Unsubscribed"));
   }

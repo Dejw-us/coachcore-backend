@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import pro.coachcore.auth.security.RsaKeyProperties;
@@ -19,6 +20,7 @@ public class AuthServerApplication {
   }
 
   @Bean
+  @Order(1)
   public ApplicationRunner defaultRolesRunner(UserService userService) {
     return args -> {
       userService.saveDefaultRole("USER");

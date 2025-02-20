@@ -2,8 +2,10 @@ package pro.coachcore.auth.token;
 
 import lombok.extern.slf4j.Slf4j;
 import pro.coachcore.auth.user.AppUser;
+import pro.coachcore.auth.user.UserRole;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
@@ -13,23 +15,19 @@ import org.springframework.stereotype.Component;
 import java.security.Principal;
 import java.time.Instant;
 import java.util.Objects;
-import java.util.UUID;
 
 @Component
 @Slf4j
 public class TokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> {
   @Override
   public void customize(JwtEncodingContext context) {
-    var uuid = UUID.randomUUID();
     var claims = context.getClaims();
     var user = getAppUserFromContext(context);
     if (context.getTokenType().equals(OAuth2TokenType.ACCESS_TOKEN)) {
-      claims.expiresAt(Instant.now().plusSeconds(30L));
+      claims.expiresAt(Instant.now().plusSeconds(60L));
       claims.claim("id", user.getLocalId());
-      log.info("id:{}, Added id claim", uuid);
+      claims.claim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
     }
-    log.info("id:{}, token type: {}", uuid, context.getTokenType().getValue());
-    log.info("id:{}, grant: {}", uuid, context.getAuthorizationGrantType().getValue());
   }
 
   private AppUser getAppUserFromContext(JwtEncodingContext context) {

@@ -42,6 +42,7 @@
     <module>images-api</module>
     <module>gateway</module>
     <module>newsletter</module>
+    <module>email-service</module>
   </modules>
 
   <dependencies>

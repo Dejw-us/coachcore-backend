@@ -8,21 +8,6 @@ spring:
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
-  mail:
-    host: email-smtp.us-east-1.amazonaws.com
-    port: 587
-    username: ${SMTP_USERNAME}
-    password: ${SMTP_PASSWORD}
-    properties:
-      mail:
-        transport:
-          protocol: smtp
-        smtp:
-          port: 587
-          auth: true
-          starttls:
-            enabled: true
-            required: true
 logging:
   level:
     org:

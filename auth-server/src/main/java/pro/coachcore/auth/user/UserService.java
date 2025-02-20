@@ -1,6 +1,7 @@
 package pro.coachcore.auth.user;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import pro.coachcore.exception.ResourceNotFoundException;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.function.Supplier;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
   private final UserRepository appUserRepository;
@@ -42,6 +44,21 @@ public class UserService implements UserDetailsService {
   public UserRole findRole(String authority) throws ResourceNotFoundException {
     return userRoleRepository.findByAuthority(authority)
         .orElseThrow(ResourceNotFoundException.supplier("User role does not exist"));
+  }
+
+  public AppUser registerAdmin(String username, String password, String email) {
+    if (appUserRepository.existsByUsername(username)) {
+      log.info("Admin user already exists. Skipping creating default admin...");
+      return null;
+    }
+    var user = new AppUser();
+
+    user.setUsername(username);
+    user.setPassword(passwordEncoder.encode(password));
+    user.setEmail(email);
+    user.getRoles().add(findRole("ADMIN"));
+    
+    return appUserRepository.save(user);
   }
 
   public AppUser registerUser(

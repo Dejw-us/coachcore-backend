@@ -1,7 +1,9 @@
-package pro.coachcore.auth.user;
+package pro.coachcore.auth.user.account;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import pro.coachcore.auth.user.RegisterUserDto;
+import pro.coachcore.auth.user.UserService;
 import pro.coachcore.exception.ResourceNotFoundException;
 
 import org.springframework.stereotype.Controller;
