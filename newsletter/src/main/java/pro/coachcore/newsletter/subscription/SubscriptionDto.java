@@ -2,6 +2,7 @@ package pro.coachcore.newsletter.subscription;
 
 public record SubscriptionDto(
     String email,
-    String language
+    String language,
+    int newslettersRead
 ) {
 }

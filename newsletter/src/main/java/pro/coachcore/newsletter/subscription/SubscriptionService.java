@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import pro.coachcore.exception.ResourceAlreadyExistsException;
 import pro.coachcore.exception.ResourceNotFoundException;
 
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,10 +23,11 @@ public class SubscriptionService {
     return subscriptionRepository.findAll();
   }
 
-  public List<Subscription> getSubscriptions(String lang) {
-    return getSubscriptions().stream()
-        .filter(subscription -> subscription.getLanguage().equals(lang))
-        .toList();
+  public List<Subscription> getSubscriptions(@Nullable String lang) {
+    if (lang == null) {
+      return getSubscriptions();
+    }
+    return subscriptionRepository.findAllByLanguage(lang);
   }
 
   public UnsubscribeCode getOrGenerateUnsubscribeCode(Subscription subscription) {

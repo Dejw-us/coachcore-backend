@@ -12,5 +12,4 @@ public record CreateSubscriptionDto(
     @Pattern(regexp = "^(pl|en)$")
     String language
 ) {
-
 }

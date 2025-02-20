@@ -46,8 +46,8 @@ public class AuthServerConfig {
 
   @Bean
   RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
-    var client = RegisteredClient.withId("shapeit")
-        .clientId("shapeit")
+    var reactClient = RegisteredClient.withId("coachcore")
+        .clientId("coachcore")
         .clientSecret(passwordEncoder.encode("secret"))
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
@@ -55,7 +55,13 @@ public class AuthServerConfig {
         .redirectUri("http://localhost:3000")
         .scope("openid")
         .build();
-    return new InMemoryRegisteredClientRepository(client);
+    var mailClient = RegisteredClient.withId("mail-sender")
+        .clientId("coachcore-mail-sender")
+        .clientSecret(passwordEncoder.encode("secret"))
+        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+        .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+        .build();
+    return new InMemoryRegisteredClientRepository(reactClient, mailClient);
   }
 
   @Bean
