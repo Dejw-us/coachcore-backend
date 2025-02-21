@@ -17,16 +17,18 @@ public class JwtAuthConverter implements Converter<Jwt, JwtAuthenticationToken> 
   @Nullable
   public JwtAuthenticationToken convert(@Nullable Jwt jwt) {
     if (jwt == null) {
-      log.info("Jwt == null");
       return null;
     }
-    var roles = jwt.getClaimAsStringList("roles").stream()
+
+    var claim = jwt.getClaimAsStringList("roles");
+
+    if (claim == null) {
+      return null;
+    }
+    
+    var roles = claim.stream()
       .map(SimpleGrantedAuthority::new)
       .collect(Collectors.toList());
-
-    for (var role : roles) {
-      log.info("Role: {}", role.getAuthority());
-    }
 
     return new JwtAuthenticationToken(jwt, roles);
   }

@@ -43,23 +43,25 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 public class AuthServerConfig {
   private final RsaKeyProperties rsaKeyProperties;
+  private final OAuth2ClientsProperties clientsProperties;
 
   @Bean
   RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
-    var reactClient = RegisteredClient.withId("coachcore")
-        .clientId("coachcore")
-        .clientSecret(passwordEncoder.encode("secret"))
+    var reactClient = RegisteredClient.withId(clientsProperties.getWebAppClientId())
+        .clientId(clientsProperties.getWebAppClientId())
+        .clientSecret(passwordEncoder.encode(clientsProperties.getWebAppClientSecret()))
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
         .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
         .redirectUri("http://localhost:3000")
         .scope("openid")
         .build();
-    var mailClient = RegisteredClient.withId("mail-sender")
-        .clientId("coachcore-mail-sender")
-        .clientSecret(passwordEncoder.encode("secret"))
+    var mailClient = RegisteredClient.withId(clientsProperties.getMailClientId())
+        .clientId(clientsProperties.getMailClientId())
+        .clientSecret(passwordEncoder.encode(clientsProperties.getMailClientSecret()))
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
         .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+        .scope("mail.send")
         .build();
     return new InMemoryRegisteredClientRepository(reactClient, mailClient);
   }

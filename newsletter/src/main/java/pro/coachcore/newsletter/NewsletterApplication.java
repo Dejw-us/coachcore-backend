@@ -7,9 +7,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 import pro.coachcore.exception.handler.DefaultGlobalExceptionHandler;
+import pro.coachcore.newsletter.client.OAuth2MailClientProperties;
 
 @EnableMethodSecurity
-@EnableConfigurationProperties
+@EnableConfigurationProperties(OAuth2MailClientProperties.class)
 @Import(DefaultGlobalExceptionHandler.class)
 @SpringBootApplication
 public class NewsletterApplication {

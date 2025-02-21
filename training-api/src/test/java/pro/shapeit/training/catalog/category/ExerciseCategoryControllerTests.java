@@ -35,7 +35,7 @@ class ExerciseCategoryControllerTests {
 
   @Autowired
   private JwtTestContext jwtTestContext;
-
+  
   @Test
   void shouldGetExerciseCategories() throws Exception {
     mockMvc.perform(get("/v1/exercise-categories"))

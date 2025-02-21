@@ -9,10 +9,21 @@ spring:
     driver-class-name: org.postgresql.Driver
   security:
     oauth2:
+      client:
+        registration:
+          mail-client:
+            provider: coachcore
+            client-id: ${OAUTH2_MAIL_CLIENT_ID}
+            client-secret: ${OAUTH2_MAIL_CLIENT_SECRET}
+            authorization-grant-type: client_credentials
+            scope: mail.send
+        provider:
+          coachcore:
+            token-uri: ${AUTHORIZATION_SERVER_HOST}${TOKEN_URI}
       resourceserver:
         jwt:
-          issuer-uri: http://${AUTH_SERVER_HOST:localhost}:${AUTH_SERVER_PORT:9000}
-          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/oauth2/jwks
+          issuer-uri: ${AUTHORIZATION_SERVER_HOST}
+          jwk-set-uri: ${AUTHORIZATION_SERVER_HOST}${JWKS_SET_URI}
 logging:
   level:
     org:
