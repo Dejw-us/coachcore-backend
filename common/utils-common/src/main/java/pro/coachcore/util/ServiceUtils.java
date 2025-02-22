@@ -1,7 +1,6 @@
 package pro.coachcore.util;
 
 import lombok.experimental.UtilityClass;
-
 import java.util.function.Consumer;
 
 @UtilityClass

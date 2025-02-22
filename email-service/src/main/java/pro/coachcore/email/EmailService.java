@@ -15,7 +15,7 @@ import pro.coachcore.dto.SendEmailDto;
 @RequiredArgsConstructor
 @Slf4j
 public class EmailService {
-  @Value("${DEV_MODE:false}")
+  @Value("${dev-mode.enabled}")
   private Boolean devMode;
 
   private final JavaMailSender mailSender;
