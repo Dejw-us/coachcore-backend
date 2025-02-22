@@ -3,7 +3,7 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:shapeit-api}
+    url: jdbc:postgresql://${DB_HOST:localhost:5432}/${DB_NAME:shapeit-api}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
@@ -13,17 +13,17 @@ spring:
         registration:
           mail-client:
             provider: coachcore
-            client-id: ${OAUTH2_MAIL_CLIENT_ID}
-            client-secret: ${OAUTH2_MAIL_CLIENT_SECRET}
+            client-id: ${OAUTH2_MAIL_CLIENT_ID:coachcore-mail-sender}
+            client-secret: ${OAUTH2_MAIL_CLIENT_SECRET:secret}
             authorization-grant-type: client_credentials
             scope: mail.send
         provider:
           coachcore:
-            token-uri: ${AUTHORIZATION_SERVER_HOST}${TOKEN_URI}
+            token-uri: ${AUTHORIZATION_SERVER_HOST:http://localhost:9000}${TOKEN_URI:/oauth2/token}
       resourceserver:
         jwt:
-          issuer-uri: ${AUTHORIZATION_SERVER_HOST}
-          jwk-set-uri: ${AUTHORIZATION_SERVER_HOST}${JWKS_SET_URI}
+          issuer-uri: ${AUTHORIZATION_SERVER_HOST:http://localhost:9000}
+          jwk-set-uri: ${AUTHORIZATION_SERVER_HOST:http://localhost:9000}${JWKS_SET_URI:/oauth2/jwks}
 logging:
   level:
     org:

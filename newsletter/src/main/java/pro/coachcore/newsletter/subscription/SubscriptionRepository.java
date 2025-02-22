@@ -10,4 +10,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
   boolean existsByEmail(String email);
   void deleteByEmail(String email);
   List<Subscription> findAllByLanguage(String language);
+  boolean existsByCode(String code);
+  void deleteByCode(String code);
 }

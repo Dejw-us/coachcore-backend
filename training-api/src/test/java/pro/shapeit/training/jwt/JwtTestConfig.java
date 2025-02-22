@@ -8,7 +8,7 @@ import pro.coachcore.common.test.security.jwt.JwtTestContext;
 @TestConfiguration
 public class JwtTestConfig {
   @Bean
-  public JwtTestContext jwtTestContext() {
+  JwtTestContext jwtTestContext() {
     return JwtTestContext.create(2);
   }
 }

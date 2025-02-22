@@ -18,10 +18,10 @@ services:
     build: 
       dockerfile: Dockerfile
     environment:
-      DB_HOST: db
-      DB_PORT: 5432
+      DB_HOST: db:5432
       DB_NAME: newsletter
-      # ADMIN_USERNAME: ${ADMIN_USERNAME}
-      # ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       SMTP_USERNAME: ${SMTP_USERNAME}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
+      OAUTH2_MAIL_CLIENT_ID: ${OAUTH2_MAIL_CLIENT_ID}
+      OAUTH2_MAIL_CLIENT_SECRET: ${OAUTH2_MAIL_CLIENT_SECRET}
+      

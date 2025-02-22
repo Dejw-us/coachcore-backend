@@ -1,22 +1,20 @@
 package pro.coachcore.newsletter.subscription;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import pro.coachcore.exception.ResourceAlreadyExistsException;
-import pro.coachcore.exception.ResourceNotFoundException;
+import java.util.List;
 
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import pro.coachcore.exception.ResourceAlreadyExistsException;
+import pro.coachcore.exception.ResourceNotFoundException;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class SubscriptionService {
   private final SubscriptionRepository subscriptionRepository;
-  private final UnsubscribeCodeRepository unsubscribeCodeRepository;
   private final SubscriptionMapper subscriptionMapper;
 
   public List<Subscription> getSubscriptions() {
@@ -30,37 +28,21 @@ public class SubscriptionService {
     return subscriptionRepository.findAllByLanguage(lang);
   }
 
-  public UnsubscribeCode getOrGenerateUnsubscribeCode(Subscription subscription) {
-    return unsubscribeCodeRepository.findBySubscription_Id(subscription.getId())
-        .orElseGet(() -> generateUnsubscribeCode(subscription));
-  }
-
-  public UnsubscribeCode generateUnsubscribeCode(Subscription subscription) {
-    var code = new UnsubscribeCode();
-    code.setSubscription(subscription);
-    code.setCode(UUID.randomUUID().toString());
-    return unsubscribeCodeRepository.save(code);
-  }
-
   public void unsubscribe(String code) {
-    var unsubscribeCode = getUnsubscribeCode(code);
-    unsubscribeCodeRepository.delete(unsubscribeCode);
+    if (!subscriptionRepository.existsByCode(code)) {
+      throw new ResourceNotFoundException("Subscription with provided code does not exist");
+    }
+    subscriptionRepository.deleteByCode(code);
   }
 
-  public void subscribe(CreateSubscriptionDto dto) {
+  public Subscription subscribe(CreateSubscriptionDto dto) {
     if (isSubscribed(dto.email())) {
       throw new ResourceAlreadyExistsException("Already subscribed");
     }
-    var subscription = subscriptionMapper.map(dto);
-    subscriptionRepository.save(subscription);
+    return subscriptionRepository.save(subscriptionMapper.map(dto));
   }
 
   private boolean isSubscribed(String email) {
     return subscriptionRepository.existsByEmail(email);
-  }
-
-  private UnsubscribeCode getUnsubscribeCode(String code) {
-    return unsubscribeCodeRepository.findByCode(code)
-        .orElseThrow(ResourceNotFoundException.supplier("Code not found"));
   }
 }
