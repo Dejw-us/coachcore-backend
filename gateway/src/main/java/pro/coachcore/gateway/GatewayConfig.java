@@ -1,7 +1,8 @@
 package pro.coachcore.gateway;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import pro.coachcore.gateway.service.ServicesProperites;
+
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.*;
@@ -17,12 +18,7 @@ import java.util.function.Function;
 @Configuration
 @RequiredArgsConstructor
 public class GatewayConfig {
-  @Value("${TRAINING_API_URI:http://localhost:8082}")
-  private String trainingApiUri;
-
-  @Value("${AUTH_SERVER_URI:http://localhost:9000}")
-  private String authServerUri;
-
+  private final ServicesProperites servicesProperites;
   private final CookieAccessTokenGatewayFilter cookieTokenGatewayFilter;
   private final CookieRefreshTokenGatewayFilter cookieRefreshTokenGatewayFilter;
 
@@ -34,12 +30,12 @@ public class GatewayConfig {
         .route("exercise-categories", configureTrainingApiRoute("/exercise-categories/**"))
         .route("account", route -> route
             .path("/account/**")
-            .uri(authServerUri))
+            .uri(servicesProperites.oauth2ServerUrl()))
         .route("oauth2", route -> route
             .path("/oauth2/**")
             .filters(filters -> filters.filter(cookieRefreshTokenGatewayFilter))
-            .uri(authServerUri))
-        .route("users", configureApiRoute("/users/**", authServerUri))
+            .uri(servicesProperites.oauth2ServerUrl()))
+        .route("users", configureApiRoute("/users/**", servicesProperites.oauth2ServerUrl()))
         .build();
   }
 
@@ -60,7 +56,7 @@ public class GatewayConfig {
   }
 
   private Function<PredicateSpec, Buildable<Route>> configureTrainingApiRoute(String path) {
-    return configureApiRoute(path, trainingApiUri);
+    return configureApiRoute(path, servicesProperites.trainingServiceUrl());
   }
 
   private Function<PredicateSpec, Buildable<Route>> configureApiRoute(String path, String uri) {

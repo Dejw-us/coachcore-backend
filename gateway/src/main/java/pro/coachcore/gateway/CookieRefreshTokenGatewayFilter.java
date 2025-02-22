@@ -16,7 +16,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class CookieRefreshTokenGatewayFilter implements GatewayFilter {
-  @Value("${REFRESH_TOKEN_KEY:refresh_token}")
+  @Value("${token-key.refresh}")
   private String refreshTokenKey;
   
   private final ModifyRequestBodyGatewayFilterFactory modifyRequestBodyGatewayFilterFactory;
@@ -28,13 +28,12 @@ public class CookieRefreshTokenGatewayFilter implements GatewayFilter {
     }
 
     return Optional.ofNullable(exchange.getRequest().getCookies().getFirst(refreshTokenKey))
-        
         .map(HttpCookie::getValue)
         .map(refreshToken -> {
           var newBody = "grant_type=refresh_token&refresh_token=" + refreshToken;
           return modifyRequestBodyGatewayFilterFactory.apply(config -> config
               .setContentType(MediaType.APPLICATION_FORM_URLENCODED.toString())
-              .setRewriteFunction(String.class, String.class, (webExchange, body) -> Mono.just(newBody)))
+              .setRewriteFunction(String.class, String.class, (_, _) -> Mono.just(newBody)))
               .filter(exchange, chain);
         })
         .orElse(chain.filter(exchange));

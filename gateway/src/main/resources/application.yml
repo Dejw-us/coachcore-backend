@@ -4,4 +4,12 @@ spring:
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
-
+services:
+  oauth2-server-url: ${OAUTH2_SERVER_URL:http://localhost:9000}
+  training-service-url: ${TRAINING_SERVICE_URL:http://localhost:8082}
+  newsletter-service-url: ${NEWSLETTER_SERVICE_URL:http://localhost:8001}
+  email-service-url: ${EMAIL_SERVICE_URL:http://localhost:8080}
+  image-service-url: ${IMAGE_SERVICE_URL:http://localhost:8000}
+token-key:
+  access: access_token
+  refresh: refresh_token

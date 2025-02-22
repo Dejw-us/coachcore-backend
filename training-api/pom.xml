@@ -166,7 +166,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>pro.shapeit.training.TrainingApiApplication</mainClass>
+              <mainClass>pro.coachcore.training.TrainingApiApplication</mainClass>
             </manifest>
           </archive>
         </configuration>

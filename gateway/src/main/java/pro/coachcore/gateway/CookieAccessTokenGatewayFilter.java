@@ -12,17 +12,15 @@ import reactor.core.publisher.Mono;
 @Component
 @Slf4j
 public class CookieAccessTokenGatewayFilter implements GatewayFilter {
-  @Value("${ACCESS_TOKEN_KEY:access_token}")
+  @Value("${token-key.access}")
   private String accessTokenKey;
 
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-    log.info("starting filter");
     var cookies = exchange.getRequest().getCookies();
     var accessTokenCookie = cookies.getFirst(accessTokenKey);
 
     if (accessTokenCookie == null) {
-      log.info("access token == null");
       return chain.filter(exchange);
     }
 
@@ -32,7 +30,6 @@ public class CookieAccessTokenGatewayFilter implements GatewayFilter {
     var modifiedExchange = exchange.mutate()
         .request(modifiedRequest)
         .build();
-    log.info("Token value: {}", accessTokenCookie.getValue());
 
     return chain.filter(modifiedExchange);
   }

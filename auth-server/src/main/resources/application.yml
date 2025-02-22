@@ -22,7 +22,7 @@ rsa:
   private-key: classpath:certs/private.pem
 oauth2-clients:
   mail-client-id: ${OAUTH2_MAIL_CLIENT_ID}
-  mail-client-secret: ${OUATH2_MAIL_CLIENT_SECRET}
+  mail-client-secret: ${OAUTH2_MAIL_CLIENT_SECRET}
   web-app-client-id: ${OAUTH2_WEB_APP_CLIENT_ID}
   web-app-client-secret: ${OAUTH2_WEB_APP_CLIENT_SECRET}
 issuer: ${ISSUER:http://localhost:9000}
