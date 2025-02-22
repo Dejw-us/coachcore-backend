@@ -7,9 +7,9 @@ import pro.coachcore.jpa.entity.IdentifiableEntity;
 
 import org.springframework.security.core.GrantedAuthority;
 
-@EqualsAndHashCode(callSuper = true)
-@Entity
 @Data
+@Entity
+@EqualsAndHashCode(callSuper = true)
 public class UserRole extends IdentifiableEntity implements GrantedAuthority {
   private String authority;
 

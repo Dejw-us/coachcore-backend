@@ -2,28 +2,23 @@ package pro.coachcore.auth.token;
 
 import lombok.extern.slf4j.Slf4j;
 import pro.coachcore.auth.user.AppUser;
-import pro.coachcore.auth.user.UserRole;
-
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.stereotype.Component;
 
-import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.CLIENT_CREDENTIALS;
 
 import java.security.Principal;
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 
-@Component
 @Slf4j
+@Component
 public class TokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> {
   @Override
   public void customize(JwtEncodingContext context) {
@@ -37,7 +32,6 @@ public class TokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext
       }
     }
     if (context.getAuthorizationGrantType().equals(CLIENT_CREDENTIALS)) {
-      log.info("Client credentials");
       claims.claim("roles", List.of("MAIL_SENDER"));
     }
   }

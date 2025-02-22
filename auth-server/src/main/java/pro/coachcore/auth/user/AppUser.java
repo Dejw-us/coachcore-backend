@@ -17,9 +17,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
-@Entity
 @Data
+@Entity
+@EqualsAndHashCode(callSuper = true)
 @EntityListeners(AuditingEntityListener.class)
 public class AppUser extends IdentifiableEntity implements UserDetails {
   private String username;

@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.function.Supplier;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
   private final UserRepository appUserRepository;

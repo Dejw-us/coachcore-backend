@@ -10,13 +10,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Data;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
-import org.springframework.core.annotation.Order;
+
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
@@ -29,10 +27,9 @@ import java.util.Arrays;
 public class TokenCookieFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(
-      HttpServletRequest request,
-      HttpServletResponse response,
-      FilterChain filterChain
-  ) throws ServletException, IOException {
+      @NonNull HttpServletRequest request,
+      @NonNull HttpServletResponse response,
+      @NonNull FilterChain filterChain) throws ServletException, IOException {
     var responseWrapper = new ContentCachingResponseWrapper(response);
 
     if ("true".equals(request.getHeader("Cookie-Refresh-Token"))) {
@@ -70,8 +67,6 @@ public class TokenCookieFilter extends OncePerRequestFilter {
           .orElseThrow();
       body = "grant_type=" + URLEncoder.encode("refresh_token", StandardCharsets.UTF_8)
           + "&refresh_token=" + URLEncoder.encode(refreshToken, StandardCharsets.UTF_8);
-      log.info("body set to: {}", body);
-      log.info("request: {}", this);
     }
 
     @Override
@@ -118,8 +113,7 @@ public class TokenCookieFilter extends OncePerRequestFilter {
       String token_type,
       String expires_in,
       String id_token,
-      String scope
-  ) {
+      String scope) {
     void addCookies(HttpServletResponse response) {
       addCookie("access_token", access_token, 180, response);
       addCookie("refresh_token", refresh_token, 360, response);

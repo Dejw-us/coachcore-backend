@@ -1,4 +1,4 @@
-package pro.coachcore.auth.server;
+package pro.coachcore.auth.oauth2;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -7,6 +7,8 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -41,24 +43,27 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class AuthServerConfig {
+public class OAuth2ServerConfig {
   private final RsaKeyProperties rsaKeyProperties;
   private final OAuth2ClientsProperties clientsProperties;
 
+  @Value("${issuer}")
+  private String issuer;
+
   @Bean
   RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
-    var reactClient = RegisteredClient.withId(clientsProperties.getWebAppClientId())
-        .clientId(clientsProperties.getWebAppClientId())
-        .clientSecret(passwordEncoder.encode(clientsProperties.getWebAppClientSecret()))
+    var reactClient = RegisteredClient.withId(clientsProperties.webAppClientId())
+        .clientId(clientsProperties.webAppClientId())
+        .clientSecret(passwordEncoder.encode(clientsProperties.webAppClientSecret()))
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
         .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
         .redirectUri("http://localhost:3000")
         .scope("openid")
         .build();
-    var mailClient = RegisteredClient.withId(clientsProperties.getMailClientId())
-        .clientId(clientsProperties.getMailClientId())
-        .clientSecret(passwordEncoder.encode(clientsProperties.getMailClientSecret()))
+    var mailClient = RegisteredClient.withId(clientsProperties.mailClientId())
+        .clientId(clientsProperties.mailClientId())
+        .clientSecret(passwordEncoder.encode(clientsProperties.mailClientSecret()))
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
         .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
         .scope("mail.send")
@@ -120,10 +125,6 @@ public class AuthServerConfig {
 
   @Bean
   AuthorizationServerSettings authorizationServerSettings() {
-    var issuer = System.getenv("ISSUER");
-    if (issuer == null || issuer.isBlank()) {
-      issuer = "http://localhost:9000";
-    }
     return AuthorizationServerSettings.builder()
         .issuer(issuer)
         .build();

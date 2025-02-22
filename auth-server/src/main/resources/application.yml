@@ -4,7 +4,7 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:shapeit-api}
+    url: jdbc:postgresql://${DB_HOST:localhost:5432}/${DB_NAME:oauth2}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
@@ -20,3 +20,13 @@ server:
 rsa:
   public-key: classpath:certs/public.pem
   private-key: classpath:certs/private.pem
+oauth2-clients:
+  mail-client-id: ${OAUTH2_MAIL_CLIENT_ID}
+  mail-client-secret: ${OUATH2_MAIL_CLIENT_SECRET}
+  web-app-client-id: ${OAUTH2_WEB_APP_CLIENT_ID}
+  web-app-client-secret: ${OAUTH2_WEB_APP_CLIENT_SECRET}
+issuer: ${ISSUER:http://localhost:9000}
+admin:
+  username: ${ADMIN_USERNAME}
+  password: ${ADMIN_PASSWORD}
+  email: ${ADMIN_EMAIL}

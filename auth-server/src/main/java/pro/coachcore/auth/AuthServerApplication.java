@@ -8,12 +8,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+import pro.coachcore.auth.oauth2.OAuth2ClientsProperties;
 import pro.coachcore.auth.security.RsaKeyProperties;
 import pro.coachcore.auth.user.UserService;
+import pro.coachcore.auth.user.admin.AdminCredentialsProperties;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableConfigurationProperties(RsaKeyProperties.class)
+@EnableConfigurationProperties({ RsaKeyProperties.class, AdminCredentialsProperties.class,
+    OAuth2ClientsProperties.class })
 public class AuthServerApplication {
   public static void main(String[] args) {
     SpringApplication.run(AuthServerApplication.class, args);
@@ -21,7 +24,7 @@ public class AuthServerApplication {
 
   @Bean
   @Order(1)
-  public ApplicationRunner defaultRolesRunner(UserService userService) {
+  ApplicationRunner defaultRolesRunner(UserService userService) {
     return args -> {
       userService.saveDefaultRole("USER");
       userService.saveDefaultRole("ADMIN");
