@@ -24,3 +24,5 @@ spring:
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/oauth2/jwks
 dev-mode: 
   enabled: ${DEV_MODE_ENABLED:false}
+server:
+  port: 8083
