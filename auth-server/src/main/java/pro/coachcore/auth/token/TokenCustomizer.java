@@ -1,7 +1,7 @@
 package pro.coachcore.auth.token;
 
 import lombok.extern.slf4j.Slf4j;
-import pro.coachcore.auth.user.AppUser;
+import pro.coachcore.auth.user.User;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,9 +25,15 @@ public class TokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext
     var claims = context.getClaims();
     var user = getAppUserFromContext(context);
     if (user != null) {
+      log.info("user: {}", user);
+      log.info("user local id: {}", user.getLocalId());
       if (context.getTokenType().equals(OAuth2TokenType.ACCESS_TOKEN)) {
         claims.expiresAt(Instant.now().plusSeconds(60L));
-        claims.claim("id", user.getLocalId());
+        if (user.getLocalId() != null) {
+          claims.claim("id", user.getLocalId());
+        } else {
+          log.info("No local id");
+    }
         claims.claim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
       }
     }
@@ -36,14 +42,14 @@ public class TokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext
     }
   }
 
-  private @Nullable AppUser getAppUserFromContext(JwtEncodingContext context) {
+  private @Nullable User getAppUserFromContext(JwtEncodingContext context) {
     var auth = context.get(OAuth2Authorization.class);
     if (auth == null) {
       return null;
     }
     var token = (UsernamePasswordAuthenticationToken) auth.getAttribute(Principal.class.getName());
     if (token != null) {
-      return (AppUser) token.getPrincipal();
+      return (User) token.getPrincipal();
     }
     return null;
   }

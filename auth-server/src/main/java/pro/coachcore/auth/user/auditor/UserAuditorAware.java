@@ -1,10 +1,12 @@
-package pro.coachcore.auth.user;
+package pro.coachcore.auth.user.auditor;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import pro.coachcore.auth.user.User;
 
 import java.util.Optional;
 
@@ -21,7 +23,7 @@ public class UserAuditorAware implements AuditorAware<String> {
 
   private Optional<String> getUserLocalIdFromAuth(Authentication auth) {
     try {
-      return Optional.of(((AppUser) auth.getPrincipal()).getLocalId());
+      return Optional.of(((User) auth.getPrincipal()).getLocalId());
     } catch (ClassCastException ignore) {
       return Optional.empty();
     }

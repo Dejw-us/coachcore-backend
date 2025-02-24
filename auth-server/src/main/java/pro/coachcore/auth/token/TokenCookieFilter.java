@@ -31,13 +31,6 @@ public class TokenCookieFilter extends OncePerRequestFilter {
       @NonNull HttpServletResponse response,
       @NonNull FilterChain filterChain) throws ServletException, IOException {
     var responseWrapper = new ContentCachingResponseWrapper(response);
-
-    if ("true".equals(request.getHeader("Cookie-Refresh-Token"))) {
-      filterChain.doFilter(new RequestWrapper(request), responseWrapper);
-    } else {
-      filterChain.doFilter(request, responseWrapper);
-    }
-
     var body = new String(responseWrapper.getContentAsByteArray(), response.getCharacterEncoding());
 
     try {
@@ -51,60 +44,6 @@ public class TokenCookieFilter extends OncePerRequestFilter {
     }
 
     responseWrapper.copyBodyToResponse();
-  }
-
-  @ToString
-  private static class RequestWrapper extends HttpServletRequestWrapper {
-    private final String refreshToken;
-    private final String body;
-
-    public RequestWrapper(HttpServletRequest request) {
-      super(request);
-      refreshToken = Arrays.stream(request.getCookies())
-          .filter(cookie -> "refresh_token".equals(cookie.getName()))
-          .findFirst()
-          .map(Cookie::getValue)
-          .orElseThrow();
-      body = "grant_type=" + URLEncoder.encode("refresh_token", StandardCharsets.UTF_8)
-          + "&refresh_token=" + URLEncoder.encode(refreshToken, StandardCharsets.UTF_8);
-    }
-
-    @Override
-    public ServletInputStream getInputStream() throws IOException {
-      return new BufferedServletInputStream(new ByteArrayInputStream(body.getBytes()));
-    }
-
-    @Override
-    public BufferedReader getReader() throws IOException {
-      return new BufferedReader(new InputStreamReader(getInputStream()));
-    }
-  }
-
-  private static class BufferedServletInputStream extends ServletInputStream {
-    private final ByteArrayInputStream bais;
-
-    public BufferedServletInputStream(ByteArrayInputStream bais) {
-      this.bais = bais;
-    }
-
-    @Override
-    public boolean isFinished() {
-      return false;
-    }
-
-    @Override
-    public boolean isReady() {
-      return true;
-    }
-
-    @Override
-    public void setReadListener(ReadListener readListener) {
-    }
-
-    @Override
-    public int read() throws IOException {
-      return bais.read();
-    }
   }
 
   private record TokensData(

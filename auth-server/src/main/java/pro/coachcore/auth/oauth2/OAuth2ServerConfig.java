@@ -5,6 +5,10 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -28,6 +33,7 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
@@ -36,6 +42,7 @@ import pro.coachcore.auth.security.RsaKeyProperties;
 import pro.coachcore.auth.token.TokenCookieFilter;
 import pro.coachcore.util.HttpUtils;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -46,45 +53,26 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 public class OAuth2ServerConfig {
   private final RsaKeyProperties rsaKeyProperties;
-  private final OAuth2ClientsProperties clientsProperties;
 
   @Value("${issuer}")
   private String issuer;
-
-  @Bean
-  RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
-    var reactClient = RegisteredClient.withId(clientsProperties.webAppClientId())
-        .clientId(clientsProperties.webAppClientId())
-        .clientSecret(passwordEncoder.encode(clientsProperties.webAppClientSecret()))
-        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-        .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-        .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-        .redirectUri("http://localhost:3000")
-        .scope("openid")
-        .build();
-    var mailClient = RegisteredClient.withId(clientsProperties.mailClientId())
-        .clientId(clientsProperties.mailClientId())
-        .clientSecret(passwordEncoder.encode(clientsProperties.mailClientSecret()))
-        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-        .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-        .scope("mail.send")
-        .build();
-    return new InMemoryRegisteredClientRepository(reactClient, mailClient);
-  }
 
   @Bean
   @Order(1)
   SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
     var authorizationServerConfigurer = OAuth2AuthorizationServerConfigurer.authorizationServer()
         .oidc(withDefaults());
-    
+
     http.csrf(csrf -> csrf.disable());
     http.securityMatcher(authorizationServerConfigurer.getEndpointsMatcher());
     http.with(authorizationServerConfigurer, withDefaults());
+    http.oauth2Login(login -> {
+      login.successHandler(new SuccessHandler());
+    });
     http.authorizeHttpRequests(HttpUtils::anyAuthenticated);
     http.exceptionHandling(exceptions -> exceptions
         .defaultAuthenticationEntryPointFor(
-            new LoginUrlAuthenticationEntryPoint("http://localhost:8080/account/login"),
+            new LoginUrlAuthenticationEntryPoint("/account/login"),
             new MediaTypeRequestMatcher(MediaType.TEXT_HTML)));
     http.addFilterBefore(new TokenCookieFilter(), SecurityContextHolderAwareRequestFilter.class);
 
@@ -96,12 +84,13 @@ public class OAuth2ServerConfig {
   SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable);
     http.authorizeHttpRequests(auth -> {
+      auth.requestMatchers("/bcrypt").permitAll();
       auth.requestMatchers("/account/register", "/account/login").permitAll();
       auth.requestMatchers(HttpMethod.GET, "/v1/users/public/**").permitAll();
       auth.requestMatchers(HttpMethod.GET, "/refresh-token").permitAll();
       auth.anyRequest().authenticated();
     });
-    http.formLogin(form -> form.disable());
+    http.formLogin(form -> form.loginPage("/account/login"));
     http.addFilterBefore(new TokenCookieFilter(), SecurityContextHolderFilter.class);
 
     return http.build();
@@ -127,5 +116,13 @@ public class OAuth2ServerConfig {
     return AuthorizationServerSettings.builder()
         .issuer(issuer)
         .build();
+  }
+
+  private static class SuccessHandler implements AuthenticationSuccessHandler {
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+        Authentication authentication) throws IOException, ServletException {
+        log.info("Success");
+    }
   }
 }

@@ -15,8 +15,7 @@ public class UserController {
 
   @GetMapping("/public/{username}")
   ResponseEntity<PublicUserDto> getPublicAppUser(
-      @PathVariable String username
-  ) throws ResourceNotFoundException {
+      @PathVariable String username) throws ResourceNotFoundException {
     var user = userService.findUserByUsername(username);
     var publicUserDto = userMapper.mapToPublic(user);
 

@@ -1,4 +1,4 @@
-package pro.coachcore.auth.user;
+package pro.coachcore.auth.user.account;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

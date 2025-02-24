@@ -2,6 +2,9 @@ package pro.coachcore.auth.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import pro.coachcore.auth.user.account.RegisterUserDto;
+import pro.coachcore.auth.user.role.UserRole;
+import pro.coachcore.auth.user.role.UserRoleRepository;
 import pro.coachcore.exception.ResourceNotFoundException;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,12 +34,12 @@ public class UserService implements UserDetailsService {
     return userRoleRepository.save(role);
   }
 
-  public AppUser findUserByUsername(String username) throws ResourceNotFoundException {
+  public User findUserByUsername(String username) throws ResourceNotFoundException {
     return appUserRepository.findByUsername(username)
         .orElseThrow(USER_NOT_FOUND);
   }
 
-  public AppUser findUserByLocalId(String localId) throws ResourceNotFoundException {
+  public User findUserByLocalId(String localId) throws ResourceNotFoundException {
     return appUserRepository.findByLocalId(localId)
         .orElseThrow(USER_NOT_FOUND);
   }
@@ -46,12 +49,12 @@ public class UserService implements UserDetailsService {
         .orElseThrow(ResourceNotFoundException.supplier("User role does not exist"));
   }
 
-  public AppUser registerAdmin(String username, String password, String email) {
+  public User registerAdmin(String username, String password, String email) {
     if (appUserRepository.existsByUsername(username)) {
       log.info("Admin user already exists. Skipping creating default admin...");
       return null;
     }
-    var user = new AppUser();
+    var user = new User();
 
     user.setUsername(username);
     user.setPassword(passwordEncoder.encode(password));
@@ -61,7 +64,7 @@ public class UserService implements UserDetailsService {
     return appUserRepository.save(user);
   }
 
-  public AppUser registerUser(
+  public User registerUser(
       RegisterUserDto dto
   ) throws ResourceNotFoundException {
     if (!dto.getPassword().equals(dto.getConfirmPassword())) {
@@ -74,7 +77,7 @@ public class UserService implements UserDetailsService {
       throw new IllegalArgumentException("Email is already in use");
     }
 
-    var user = new AppUser();
+    var user = new User();
     user.setUsername(dto.getUsername());
     user.setEmail(dto.getEmail());
     user.setPassword(passwordEncoder.encode(dto.getPassword()));

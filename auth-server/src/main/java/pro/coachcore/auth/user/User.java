@@ -3,7 +3,12 @@ package pro.coachcore.auth.user;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import pro.coachcore.jpa.entity.IdentifiableEntity;
+import lombok.ToString;
+import pro.coachcore.auth.user.role.UserRole;
+import pro.coachcore.jpa.id.IdentifiableEntity;
+import pro.coachcore.jpa.id.LocalIdEntityListener;
+import pro.coachcore.jpa.id.LocalIdInitializer;
+import pro.coachcore.util.LocalIdUtils;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -18,10 +23,17 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-@Entity
-@EqualsAndHashCode(callSuper = true)
-@EntityListeners(AuditingEntityListener.class)
-public class AppUser extends IdentifiableEntity implements UserDetails {
+@Entity(name = "app_user")
+@ToString(callSuper = true)
+@EntityListeners({ AuditingEntityListener.class, LocalIdEntityListener.class })
+public class User implements UserDetails, IdentifiableEntity<String> {
+  @Id
+  @GeneratedValue
+  private Long id;
+
+  @Column(unique = true, nullable = false, updatable = false)
+  private String localId;
+
   private String username;
 
   private String password;
@@ -42,10 +54,7 @@ public class AppUser extends IdentifiableEntity implements UserDetails {
   private LocalDateTime updatedAt;
 
   @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(
-      inverseJoinColumns = @JoinColumn(name = "user_role_id"),
-      joinColumns = @JoinColumn(name = "user_id")
-  )
+  @JoinTable(inverseJoinColumns = @JoinColumn(name = "user_role_id"), joinColumns = @JoinColumn(name = "user_id"))
   private List<UserRole> roles = new ArrayList<>();
 
   @Override
