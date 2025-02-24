@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  oauth2-db:
+    image: postgres:16.2
+    ports:
+      - 5432:5432
+    environment:
+      POSRGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: oauth2

@@ -16,6 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -76,16 +77,15 @@ public class OAuth2ServerConfig {
   SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
     var authorizationServerConfigurer = OAuth2AuthorizationServerConfigurer.authorizationServer()
         .oidc(withDefaults());
-
+    
+    http.csrf(csrf -> csrf.disable());
     http.securityMatcher(authorizationServerConfigurer.getEndpointsMatcher());
     http.with(authorizationServerConfigurer, withDefaults());
     http.authorizeHttpRequests(HttpUtils::anyAuthenticated);
     http.exceptionHandling(exceptions -> exceptions
         .defaultAuthenticationEntryPointFor(
-            new LoginUrlAuthenticationEntryPoint("/account/login"),
-            new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-        )
-    );
+            new LoginUrlAuthenticationEntryPoint("http://localhost:8080/account/login"),
+            new MediaTypeRequestMatcher(MediaType.TEXT_HTML)));
     http.addFilterBefore(new TokenCookieFilter(), SecurityContextHolderAwareRequestFilter.class);
 
     return http.build();
@@ -94,15 +94,14 @@ public class OAuth2ServerConfig {
   @Bean
   @Order(2)
   SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable);
     http.authorizeHttpRequests(auth -> {
       auth.requestMatchers("/account/register", "/account/login").permitAll();
       auth.requestMatchers(HttpMethod.GET, "/v1/users/public/**").permitAll();
       auth.requestMatchers(HttpMethod.GET, "/refresh-token").permitAll();
       auth.anyRequest().authenticated();
     });
-    http.formLogin(form -> {
-      form.loginPage("/account/login");
-    });
+    http.formLogin(form -> form.disable());
     http.addFilterBefore(new TokenCookieFilter(), SecurityContextHolderFilter.class);
 
     return http.build();
