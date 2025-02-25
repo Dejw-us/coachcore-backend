@@ -25,14 +25,10 @@ public class TokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext
     var claims = context.getClaims();
     var user = getAppUserFromContext(context);
     if (user != null) {
-      log.info("user: {}", user);
-      log.info("user local id: {}", user.getLocalId());
       if (context.getTokenType().equals(OAuth2TokenType.ACCESS_TOKEN)) {
         claims.expiresAt(Instant.now().plusSeconds(60L));
         if (user.getLocalId() != null) {
           claims.claim("id", user.getLocalId());
-        } else {
-          log.info("No local id");
         }
         claims.claim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
       }

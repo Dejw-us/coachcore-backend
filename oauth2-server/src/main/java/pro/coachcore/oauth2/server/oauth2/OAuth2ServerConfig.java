@@ -41,6 +41,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 public class OAuth2ServerConfig {
   private final RsaKeyProperties rsaKeyProperties;
+  private final TokenCookieFilter tokenCookieFilter;
 
   @Value("${issuer}")
   private String issuer;
@@ -59,8 +60,6 @@ public class OAuth2ServerConfig {
         .defaultAuthenticationEntryPointFor(
             new LoginUrlAuthenticationEntryPoint("/account/login"),
             new MediaTypeRequestMatcher(MediaType.TEXT_HTML)));
-    http.addFilterBefore(new TokenCookieFilter(), SecurityContextHolderAwareRequestFilter.class);
-
     return http.build();
   }
 
@@ -75,7 +74,6 @@ public class OAuth2ServerConfig {
       auth.anyRequest().authenticated();
     });
     http.formLogin(form -> form.loginPage("/account/login"));
-    http.addFilterBefore(new TokenCookieFilter(), SecurityContextHolderFilter.class);
 
     return http.build();
   }
