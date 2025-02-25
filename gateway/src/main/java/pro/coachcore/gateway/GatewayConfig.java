@@ -25,17 +25,14 @@ public class GatewayConfig {
   @Bean
   RouteLocator routeLocator(RouteLocatorBuilder builder) {
     return builder.routes()
-        .route("training-plans", configureTrainingApiRoute("/training-plans/**"))
-        .route("catalog-exercises", configureTrainingApiRoute("/catalog-exercises/**"))
-        .route("exercise-categories", configureTrainingApiRoute("/exercise-categories/**"))
-        .route("account", route -> route
-            .path("/account/**")
-            .uri(servicesProperites.oauth2ServerUrl()))
-        .route("oauth2", route -> route
-            .path("/oauth2/**")
+        // .route("training-plans", configureTrainingApiRoute("/training-plans/**"))
+        // .route("catalog-exercises", configureTrainingApiRoute("/catalog-exercises/**"))
+        // .route("exercise-categories", configureTrainingApiRoute("/exercise-categories/**"))
+        .route("oauth2-refresh-token", route -> route
+            .path("/oauth2/token")
             .filters(filters -> filters.filter(cookieRefreshTokenGatewayFilter))
             .uri(servicesProperites.oauth2ServerUrl()))
-        .route("users", configureApiRoute("/users/**", servicesProperites.oauth2ServerUrl()))
+        // .route("users", configureApiRoute("/users/**", servicesProperites.oauth2ServerUrl()))
         .build();
   }
 
@@ -44,7 +41,7 @@ public class GatewayConfig {
     var config = new CorsConfiguration();
 
     config.setAllowedOrigins(List.of("http://localhost:3000"));
-    config.setAllowedMethods(List.of("POST", "GET", "PATCH", "DELETE", "OPTIONS"));
+    config.setAllowedMethods(List.of("*"));
     config.setAllowedHeaders(List.of("*"));
     config.setAllowCredentials(true);
 

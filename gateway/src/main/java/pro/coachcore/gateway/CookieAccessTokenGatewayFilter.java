@@ -1,7 +1,8 @@
 package pro.coachcore.gateway;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import pro.coachcore.oauth2.common.CookieTokensNames;
+
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.http.HttpHeaders;
@@ -12,13 +13,10 @@ import reactor.core.publisher.Mono;
 @Component
 @Slf4j
 public class CookieAccessTokenGatewayFilter implements GatewayFilter {
-  @Value("${token-key.access}")
-  private String accessTokenKey;
-
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
     var cookies = exchange.getRequest().getCookies();
-    var accessTokenCookie = cookies.getFirst(accessTokenKey);
+    var accessTokenCookie = cookies.getFirst(CookieTokensNames.ACCESS_TOKEN);
 
     if (accessTokenCookie == null) {
       return chain.filter(exchange);

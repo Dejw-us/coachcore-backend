@@ -1,6 +1,8 @@
 package pro.coachcore.gateway;
 
 import lombok.RequiredArgsConstructor;
+import pro.coachcore.oauth2.common.CookieTokensNames;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -16,22 +18,15 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class CookieRefreshTokenGatewayFilter implements GatewayFilter {
-  @Value("${token-key.refresh}")
-  private String refreshTokenKey;
-  
-  private final ModifyRequestBodyGatewayFilterFactory modifyRequestBodyGatewayFilterFactory;
+  private final ModifyRequestBodyGatewayFilterFactory factory;
 
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-    if (exchange.getRequest().getHeaders().getFirst("Cookie-Refresh-Token") == null) {
-      return chain.filter(exchange);
-    }
-
-    return Optional.ofNullable(exchange.getRequest().getCookies().getFirst(refreshTokenKey))
+    return Optional.ofNullable(exchange.getRequest().getCookies().getFirst(CookieTokensNames.REFRESH_TOKEN))
         .map(HttpCookie::getValue)
         .map(refreshToken -> {
-          var newBody = "grant_type=refresh_token&refresh_token=" + refreshToken;
-          return modifyRequestBodyGatewayFilterFactory.apply(config -> config
+          var newBody = "grant_type=refresh_token&refresh_token=".concat(refreshToken);
+          return factory.apply(config -> config
               .setContentType(MediaType.APPLICATION_FORM_URLENCODED.toString())
               .setRewriteFunction(String.class, String.class, (_, _) -> Mono.just(newBody)))
               .filter(exchange, chain);
