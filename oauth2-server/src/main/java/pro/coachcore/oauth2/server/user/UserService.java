@@ -2,6 +2,7 @@ package pro.coachcore.oauth2.server.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import pro.coachcore.oauth2.server.user.account.IllegalUserCredentialsException;
 import pro.coachcore.oauth2.server.user.account.RegisterUserDto;
 import pro.coachcore.oauth2.server.user.role.UserRole;
 import pro.coachcore.oauth2.server.user.role.UserRoleRepository;
@@ -67,16 +68,6 @@ public class UserService implements UserDetailsService {
   public User registerUser(
       RegisterUserDto dto
   ) throws ResourceNotFoundException {
-    if (!dto.getPassword().equals(dto.getConfirmPassword())) {
-      throw new IllegalArgumentException("Passwords do not match");
-    }
-    if (appUserRepository.existsByUsername(dto.getUsername())) {
-      throw new IllegalArgumentException("Username is already taken");
-    }
-    if (appUserRepository.existsByEmail(dto.getEmail())) {
-      throw new IllegalArgumentException("Email is already in use");
-    }
-
     var user = new User();
     user.setUsername(dto.getUsername());
     user.setEmail(dto.getEmail());
@@ -93,5 +84,13 @@ public class UserService implements UserDetailsService {
     } catch (ResourceNotFoundException exception) {
       throw new UsernameNotFoundException("User does no exist");
     }
+  }
+
+  public boolean isUsernameTaken(String username) {
+    return appUserRepository.existsByUsername(username);
+  }
+
+  public boolean isEmailTaken(String email) {
+    return appUserRepository.existsByEmail(email);
   }
 }

@@ -8,10 +8,10 @@ import pro.coachcore.exception.ResourceNotFoundException;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
 
 @Slf4j
 @Controller
@@ -32,7 +32,13 @@ public class UserAccountController {
   }
 
   @PostMapping("/account/register")
-  String postRegister(@Valid @ModelAttribute("registerUser") RegisterUserDto dto) throws ResourceNotFoundException {
+  String postRegister(
+      @Valid @ModelAttribute("registerUser") RegisterUserDto dto,
+      Errors errors,
+      Model model) throws ResourceNotFoundException {
+    if (errors.hasErrors()) {
+      return "account/register";
+    }
     userService.registerUser(dto);
     return "redirect:/account/login";
   }

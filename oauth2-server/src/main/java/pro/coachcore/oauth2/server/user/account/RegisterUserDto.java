@@ -6,11 +6,14 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
+@PasswordsMatch
 public final class RegisterUserDto {
+  @UniqueUsername
   @NotBlank(message = "Username is required")
   @Size(min = 3, max = 30, message = "Username must be between 3 and 30 characters")
   private String username;
 
+  @UniqueEmail
   @NotBlank(message = "Email is required")
   @Email(message = "Invalid email")
   private String email;

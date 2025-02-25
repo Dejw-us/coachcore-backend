@@ -8,6 +8,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import pro.coachcore.oauth2.common.CookieTokensNames;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -59,8 +60,8 @@ public class TokenCookieFilter extends OncePerRequestFilter {
       String id_token,
       String scope) {
     void addCookies(HttpServletResponse response) {
-      addCookie("access_token", access_token, 180, response);
-      addCookie("refresh_token", refresh_token, 360, response);
+      addCookie(CookieTokensNames.ACCESS_TOKEN, access_token, 180, response);
+      addCookie(CookieTokensNames.REFRESH_TOKEN, refresh_token, 360, response);
     }
 
     void addCookie(String name, @Nullable String value, int maxAge, HttpServletResponse response) {
