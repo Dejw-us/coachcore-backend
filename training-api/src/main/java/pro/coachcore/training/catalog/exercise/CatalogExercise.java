@@ -2,14 +2,19 @@ package pro.coachcore.training.catalog.exercise;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import pro.coachcore.jpa.entity.BaseEntity;
+import pro.coachcore.jpa.id.IdentifiableEntity;
 import pro.coachcore.training.catalog.category.ExerciseCategory;
 
-@EqualsAndHashCode(callSuper = true)
-@Entity
 @Data
-public class CatalogExercise extends BaseEntity {
+@Entity
+public class CatalogExercise implements IdentifiableEntity<String> {
+  @Id
+  @GeneratedValue
+  private Long id;
+
+  @Column(unique = true, nullable = false, updatable = false)
+  private String localId;
+
   @Column(nullable = false)
   private String name;
 

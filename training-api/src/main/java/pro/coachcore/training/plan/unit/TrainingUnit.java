@@ -3,7 +3,6 @@ package pro.coachcore.training.plan.unit;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import pro.coachcore.jpa.entity.BaseEntity;
 import pro.coachcore.training.plan.TrainingPlan;
 import pro.coachcore.training.plan.exercise.TrainingExercise;
 
@@ -11,10 +10,16 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
-@Entity
 @Data
-public class TrainingUnit extends BaseEntity {
+@Entity
+public class TrainingUnit{
+  @Id
+  @GeneratedValue
+  private Long id;
+
+  @Column(unique = true, nullable = false, updatable = false)
+  private String localId;
+  
   private String name;
 
   private String notes;

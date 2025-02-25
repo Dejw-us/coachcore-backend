@@ -4,8 +4,6 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import pro.coachcore.training.plan.goal.TrainingGoal;
-import pro.coachcore.training.plan.goal.TrainingGoalDto;
 import pro.coachcore.training.plan.goal.TrainingGoalMapper;
 import java.util.List;
 

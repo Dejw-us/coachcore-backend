@@ -2,13 +2,17 @@ package pro.coachcore.training.plan.set;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import pro.coachcore.jpa.entity.BaseEntity;
 
-@EqualsAndHashCode(callSuper = true)
-@Entity
 @Data
-public class TrainingSet extends BaseEntity {
+@Entity
+public class TrainingSet {
+  @Id
+  @GeneratedValue
+  private Long id;
+
+  @Column(unique = true, nullable = false, updatable = false)
+  private String localId;
+
   private Integer reps;
 
   private Double restSeconds;

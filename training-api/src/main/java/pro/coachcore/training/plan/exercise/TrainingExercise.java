@@ -2,17 +2,22 @@ package pro.coachcore.training.plan.exercise;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import pro.coachcore.jpa.entity.BaseEntity;
 import pro.coachcore.training.catalog.exercise.CatalogExercise;
 import pro.coachcore.training.plan.set.TrainingSet;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 @Entity
-@EqualsAndHashCode(callSuper = true)
-public class TrainingExercise extends BaseEntity {
+public class TrainingExercise {
+  @Id
+  @GeneratedValue
+  private Long id;
+
+  @Column(unique = true, nullable = false, updatable = false)
+  private String localId;
+
   @ManyToOne(fetch = FetchType.LAZY)
   private CatalogExercise catalogExercise;
 
@@ -24,9 +29,7 @@ public class TrainingExercise extends BaseEntity {
       joinColumns = @JoinColumn(name = "training_exercise_id")
   )
   private List<TrainingSet> sets = new ArrayList<>();
-
   
-
   public CatalogExercise getCatalogExercise() {
     return catalogExercise;
   }
