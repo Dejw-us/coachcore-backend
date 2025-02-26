@@ -15,7 +15,7 @@ spring:
           coachcore-web-app:
             registration:
               client-id: ${OAUTH2_WEB_APP_CLIENT_ID:coachcore-web-app}
-              client-secret: ${OAUTH2_WEB_APP_CLIENT_SECRET}
+              client-secret: ${OAUTH2_WEB_APP_CLIENT_SECRET:$2a$10$vLW8gLjoVpksEJf70SGPAOUd1H.ppsIgFTQbU63HVyXDaAcvcZuMe}
               client-authentication-methods:
                 - "client_secret_basic" 
               authorization-grant-types:
@@ -28,7 +28,7 @@ spring:
           coachcore-mail-sender:
             registration:
               client-id: ${OAUTH2_MAIL_CLIENT_ID:coachcore-mail-sender}
-              client-secret: ${OAUTH2_MAIL_CLIENT_SECRET}
+              client-secret: ${OAUTH2_MAIL_CLIENT_SECRET:$2a$10$D7XrC01tCS4fp2Odv8cnWeGbKlIJbLVb4Pb/bU0K9VTMIPWz2yHC.}
               client-authentication-methods:
                 - "client_secret_basic"
               authorization-grant-types:
@@ -40,8 +40,8 @@ logging:
   level:
     org:
       springframework:
-        security: DEBUG
-        web: DEBUG
+        security: ${LOGGING_LEVEL:INFO}
+        web: ${LOGGING_LEVEL:INFO}
 server:
   port: 9000
 
@@ -50,6 +50,5 @@ rsa:
   private-key: classpath:certs/private.pem
 issuer: ${ISSUER:http://localhost:9000}
 admin:
-  username: ${ADMIN_USERNAME}
-  password: ${ADMIN_PASSWORD}
-  email: ${ADMIN_EMAIL}
+  username: ${ADMIN_USERNAME:admin}
+  password: ${ADMIN_PASSWORD:admin}

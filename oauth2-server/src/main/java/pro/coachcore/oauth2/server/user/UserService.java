@@ -50,7 +50,7 @@ public class UserService implements UserDetailsService {
         .orElseThrow(ResourceNotFoundException.supplier("User role does not exist"));
   }
 
-  public User registerAdmin(String username, String password, String email) {
+  public User registerAdmin(String username, String password) {
     if (appUserRepository.existsByUsername(username)) {
       log.info("Admin user already exists. Skipping creating default admin...");
       return null;
@@ -59,7 +59,6 @@ public class UserService implements UserDetailsService {
 
     user.setUsername(username);
     user.setPassword(passwordEncoder.encode(password));
-    user.setEmail(email);
     user.getRoles().add(findRole("ADMIN"));
     
     return appUserRepository.save(user);

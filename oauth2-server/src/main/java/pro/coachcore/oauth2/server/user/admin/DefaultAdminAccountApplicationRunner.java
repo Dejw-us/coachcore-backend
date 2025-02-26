@@ -21,8 +21,7 @@ class DefaultAdminAccountApplicationRunner implements ApplicationRunner {
   public void run(ApplicationArguments args) throws Exception {
     var admin = userService.registerAdmin(
         adminCredentials.username(),
-        adminCredentials.password(),
-        adminCredentials.email());
+        adminCredentials.password());
 
     if (admin == null) {
       log.info("Failed to create default admin");

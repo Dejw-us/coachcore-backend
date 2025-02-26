@@ -24,11 +24,8 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
-import org.springframework.security.web.context.SecurityContextHolderFilter;
-import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import pro.coachcore.oauth2.server.security.RsaKeyProperties;
-import pro.coachcore.oauth2.server.token.TokenCookieFilter;
 import pro.coachcore.util.HttpUtils;
 
 import java.util.UUID;
@@ -41,7 +38,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 public class OAuth2ServerConfig {
   private final RsaKeyProperties rsaKeyProperties;
-  private final TokenCookieFilter tokenCookieFilter;
 
   @Value("${issuer}")
   private String issuer;
