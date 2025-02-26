@@ -50,8 +50,13 @@ def create_docker_file(app_name, port):
         if (len(tag) < 1):
           print("Version tag must be at least one character.")
           continue
-        image_name = f"{app_name}:{tag}"
-        subprocess.run(["docker", "build", "-t", image_name, "-f", docker_file_name, app_dir])
+        image_name = f"coachcore/{app_name}:{tag}"
+        if input("tag with ghcr.io? yes/no: ").lower() == "yes":
+          subprocess.run(["docker", "build", "-t", f"ghcr.io/{image_name}", "-f", docker_file_name, app_dir])
+          if input("Dou you want to push image to ghcr.io? yes/no: ").lower() == "yes":
+            subprocess.run(["docker", "push", f"ghcr.io/{image_name}"])
+        else:
+          subprocess.run(["docker", "build", "-t", image_name, "-f", docker_file_name, app_dir])
         print(f"Created docker image {image_name}")
         break
   

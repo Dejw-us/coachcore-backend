@@ -42,6 +42,8 @@ logging:
       springframework:
         security: ${LOGGING_LEVEL:INFO}
         web: ${LOGGING_LEVEL:INFO}
+    pro:
+     coachcore: ${LOGGING_LEVEL:INFO}
 server:
   port: 9000
 
