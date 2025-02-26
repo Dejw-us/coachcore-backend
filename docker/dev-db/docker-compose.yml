@@ -9,3 +9,11 @@ services:
       POSRGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: oauth2
+  newsletter-db:
+    image: postgres:16.2
+    ports:
+      - 5433:5432
+    environment:
+      POSRGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: newsletter

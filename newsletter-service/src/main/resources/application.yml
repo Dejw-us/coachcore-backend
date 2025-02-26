@@ -14,7 +14,7 @@ spring:
           mail-client:
             provider: coachcore
             client-id: ${OAUTH2_MAIL_CLIENT_ID:coachcore-mail-sender}
-            client-secret: ${OAUTH2_MAIL_CLIENT_SECRET:secret}
+            client-secret: ${OAUTH2_MAIL_CLIENT_SECRET:mail-sender-secret}
             authorization-grant-type: client_credentials
             scope: mail.send
         provider:
@@ -28,9 +28,10 @@ logging:
   level:
     org:
       springframework:
-        security: DEBUG
-oauth2-mail-client:
-  client-id: ${OAUTH2_MAIL_CLIENT_ID}
-  client-secret: ${OAUTH2_MAIL_CLIENT_SECRET}
+        security: ${LOGGING_LEVEL:INFO}
+    pro:
+      coachcore: ${LOGGING_LEVEL:INFO}
 server:
   port: 8001
+email-service:
+  url: ${EMAIL_SERVICE_URL:http://localhost:8083}

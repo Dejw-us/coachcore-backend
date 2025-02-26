@@ -30,8 +30,8 @@ public class EmailService {
       mailSender.send(email);
 
       return new EmailResult(EmailStatus.SENT_ALL, dto.to().size());
-    } catch (Exception ignore) {
-      log.info("exception type: {}", ignore.getClass().getName());
+    } catch (Exception exception) {
+      log.debug("Failed to send email: {}", exception.getMessage());
       return new EmailResult(EmailStatus.FAILED, 0);
     }
   }

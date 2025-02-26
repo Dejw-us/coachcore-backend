@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pro.coachcore.exception.ResourceAlreadyExistsException;
@@ -28,6 +29,7 @@ public class SubscriptionService {
     return subscriptionRepository.findAllByLanguage(lang);
   }
 
+  @Transactional
   public void unsubscribe(String code) {
     if (!subscriptionRepository.existsByCode(code)) {
       throw new ResourceNotFoundException("Subscription with provided code does not exist");

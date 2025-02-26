@@ -22,7 +22,13 @@ spring:
         jwt:
           issuer-uri: http://${AUTH_SERVER_HOST:localhost}:${AUTH_SERVER_PORT:9000}
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/oauth2/jwks
-dev-mode: 
+dev-mode:
   enabled: ${DEV_MODE_ENABLED:false}
+logging:
+  level:
+    org:
+      springframework: ${LOGGING_LEVEL:INFO}
+    pro:
+     coachcore: ${LOGGING_LEVEL:INFO}
 server:
   port: 8083

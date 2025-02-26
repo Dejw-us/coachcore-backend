@@ -1,5 +1,6 @@
 package pro.coachcore.newsletter.client;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
@@ -13,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @RequiredArgsConstructor
 public class WebClientConfig {
+  @Value("${email-service.url}")
+  private String emailServiceUrl;
+
   @Bean
   WebClient webClient(OAuth2AuthorizedClientManager manager) {
     var oauth2Client = new ServletOAuth2AuthorizedClientExchangeFilterFunction(manager);
@@ -20,7 +24,7 @@ public class WebClientConfig {
     oauth2Client.setDefaultClientRegistrationId("mail-client");
 
     return WebClient.builder()
-        .baseUrl("http://localhost:8080")
+        .baseUrl(emailServiceUrl)
         .apply(oauth2Client.oauth2Configuration())
         .build();
   }

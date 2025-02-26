@@ -30,7 +30,7 @@ public class SecurityConfig {
         .jwt(jwt -> jwt
             .jwtAuthenticationConverter(new JwtAuthConverter())));
     http.authorizeHttpRequests(auth -> {
-      auth.requestMatchers("/admin/**").hasAuthority("ADMIN");
+      auth.requestMatchers("/newsletter/send").hasAnyAuthority("ADMIN", "NEWSLETTER_SENDER");
       auth.anyRequest().permitAll();
     });
     http.formLogin(Customizer.withDefaults());

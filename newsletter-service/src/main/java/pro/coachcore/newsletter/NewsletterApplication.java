@@ -2,15 +2,12 @@ package pro.coachcore.newsletter;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 import pro.coachcore.exception.handler.DefaultGlobalExceptionHandler;
-import pro.coachcore.newsletter.client.OAuth2MailClientProperties;
 
 @EnableMethodSecurity
-@EnableConfigurationProperties(OAuth2MailClientProperties.class)
 @Import(DefaultGlobalExceptionHandler.class)
 @SpringBootApplication
 public class NewsletterApplication {

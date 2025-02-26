@@ -3,7 +3,12 @@ spring:
     name: gateway
 logging:
   level:
-    org.springframework.cloud.gateway: DEBUG
+    org:
+      springframework:
+        cloud:
+          gateway: ${LOGGING_LEVEL:INFO}
+    pro:
+      coachcore: ${LOGGING_LEVEL:INFO}
 services:
   oauth2-server-url: ${OAUTH2_SERVER_URL:http://localhost:9000}
   training-service-url: ${TRAINING_SERVICE_URL:http://localhost:8082}
