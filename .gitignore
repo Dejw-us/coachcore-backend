@@ -14,7 +14,8 @@ target
 .sts4-cache
 .env
 .vscode
-./oauth2-server/src/main/resources/certs/
+./oauth2-server/src/main/resources/certs/private.pem
+./oauth2-server/src/main/resources/certs/public.pem
 ### IntelliJ IDEA ###
 .idea
 *.iws
