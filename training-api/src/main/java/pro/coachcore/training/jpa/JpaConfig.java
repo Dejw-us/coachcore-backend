@@ -9,7 +9,7 @@ import pro.coachcore.jpa.auditing.JwtAuthenticationTokenAuditorAware;
 @Configuration
 public class JpaConfig {
   @Bean
-  public AuditorAware<String> auditorAware() {
+  AuditorAware<String> auditorAware() {
     return new JwtAuthenticationTokenAuditorAware();
   }
 }

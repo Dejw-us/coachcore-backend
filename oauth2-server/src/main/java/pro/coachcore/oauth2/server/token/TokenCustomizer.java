@@ -36,6 +36,7 @@ public class TokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext
     if (context.getAuthorizationGrantType().equals(CLIENT_CREDENTIALS)) {
       claims.claim("roles", List.of("MAIL_SENDER"));
     }
+    log.debug("Claims: {}", claims);
   }
 
   private @Nullable User getAppUserFromContext(JwtEncodingContext context) {
