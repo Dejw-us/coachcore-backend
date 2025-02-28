@@ -21,18 +21,15 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
   private final TrainingPlanAuthorizationManager trainingPlanAuthorizationManager;
 
-  public CorsConfigurationSource corsConfigurationSource() {
-    return CorsSources.enableReactClientCorsConfigurationSource();
-  }
-
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable);
 
     http.authorizeHttpRequests(auth -> {
       auth.requestMatchers(HttpMethod.OPTIONS, "/v1/**").permitAll();
       auth.requestMatchers(HttpMethod.POST, "/v1/training-plans").authenticated();
 
+      auth.requestMatchers("/v1/training-plans/me").authenticated();
       auth.requestMatchers("/home").permitAll();
       auth.requestMatchers("/v1/training-plans/{planId}/**").access(trainingPlanAuthorizationManager);
       auth.requestMatchers("/v1/catalog-exercises").permitAll();

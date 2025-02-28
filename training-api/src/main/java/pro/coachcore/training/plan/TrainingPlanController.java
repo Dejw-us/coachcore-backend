@@ -2,28 +2,33 @@ package pro.coachcore.training.plan;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import pro.coachcore.dto.MessageDto;
 import pro.coachcore.exception.ResourceNotFoundException;
-import pro.coachcore.training.plan.exercise.TrainingExerciseMapper;
-import pro.coachcore.training.plan.set.TrainingSetMapper;
-
-import static pro.coachcore.util.ControllerUtils.deleteResponse;
-
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/v1/training-plans")
 @RequiredArgsConstructor
 class TrainingPlanController {
   private final TrainingPlanService trainingPlanService;
-
   private final TrainingPlanMapper trainingPlanMapper;
-  private final TrainingExerciseMapper trainingExerciseMapper;
-  private final TrainingSetMapper trainingSetMapper;
+
+  @GetMapping("/me")
+  public ResponseEntity<List<TrainingPlanDto>> getUserTrainingPlans(
+      @AuthenticationPrincipal Jwt jwt) {
+    var plans = trainingPlanMapper.map(trainingPlanService.findAllUserTrainingPlans(jwt));
+
+    return ResponseEntity
+        .ok(plans);
+  }
 
   @GetMapping
   ResponseEntity<List<TrainingPlanDto>> getTrainingPlans() {
@@ -36,8 +41,7 @@ class TrainingPlanController {
 
   @GetMapping("/{planId}")
   ResponseEntity<TrainingPlanDto> getTrainingPlan(
-      @PathVariable String planId
-  ) throws ResourceNotFoundException {
+      @PathVariable String planId) throws ResourceNotFoundException {
     var plan = trainingPlanService.findTrainingPlanByLocalId(planId);
     var planDto = trainingPlanMapper.map(plan);
 
@@ -47,8 +51,7 @@ class TrainingPlanController {
 
   @PostMapping
   ResponseEntity<TrainingPlanDto> postTrainingPlan(
-      @RequestBody @Valid CreateTrainingPlanDto dto
-  ) {
+      @RequestBody @Valid CreateTrainingPlanDto dto) {
     var savedPlan = trainingPlanService.saveTrainingPlan(dto);
     var savedPlanDto = trainingPlanMapper.map(savedPlan);
 
@@ -60,8 +63,7 @@ class TrainingPlanController {
   @PatchMapping("/{planId}")
   ResponseEntity<TrainingPlanDto> patchTrainingPlan(
       @PathVariable String planId,
-      @RequestBody @Valid UpdateTrainingPlanDto dto
-  ) throws ResourceNotFoundException {
+      @RequestBody @Valid UpdateTrainingPlanDto dto) throws ResourceNotFoundException {
     var plan = trainingPlanService.findTrainingPlanByLocalId(planId);
     var updatedPlan = trainingPlanService.updateTrainingPlan(plan, dto);
     var updatedPlanDto = trainingPlanMapper.map(updatedPlan);
@@ -72,8 +74,7 @@ class TrainingPlanController {
 
   @DeleteMapping("/{planId}")
   ResponseEntity<MessageDto> deleteTrainingPlan(
-      @PathVariable String planId
-  ) {
+      @PathVariable String planId) {
     trainingPlanService.deleteTrainingPlanByLocalId(planId);
 
     return ResponseEntity

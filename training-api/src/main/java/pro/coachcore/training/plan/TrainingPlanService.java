@@ -1,6 +1,9 @@
 package pro.coachcore.training.plan;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import pro.coachcore.exception.ResourceNotFoundException;
@@ -19,6 +22,11 @@ public class TrainingPlanService {
 
   public List<TrainingPlan> findAllTrainingPlans() {
     return trainingPlanRepository.findAll();
+  }
+
+  public List<TrainingPlan> findAllUserTrainingPlans(Jwt jwt) {
+    var userId = (String) jwt.getClaim("id");
+    return trainingPlanRepository.findAllByCreatedBy(userId);
   }
 
   public TrainingPlan findTrainingPlanByLocalId(String localId) {
