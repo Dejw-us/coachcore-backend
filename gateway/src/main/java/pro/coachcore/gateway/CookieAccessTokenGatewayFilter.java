@@ -21,7 +21,7 @@ public class CookieAccessTokenGatewayFilter implements GatewayFilter {
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
     var cookies = exchange.getRequest().getCookies();
     var accessTokenCookie = cookies.getFirst(CookieTokensNames.ACCESS_TOKEN);
-
+    log.debug("Filtering: {}", exchange.getRequest().getPath().value());
     if (accessTokenCookie == null) {
       log.debug("No access token cookie found");
       return chain.filter(exchange);

@@ -1,5 +1,15 @@
 version: 'version'
 services:
+  gateway:
+    image: ghcr.io/coachcore/gateway:0.0.2
+    ports:
+      - 8080:8080
+    environment:
+      OAUTH2_SERVER_URL: oauth2-server:9000
+      TRAINING_SERVICE_URL: training-service:8082
+    depends_on:
+      - oauth2-server
+      - training-service
   training-db:
     image: postgres:16.2
     ports:
@@ -10,8 +20,6 @@ services:
       POSTGRES_DB: training
   training-service:
     image: ghcr.io/coachcore/training-api:0.0.1
-    ports:
-      - 8082:8082
     environment:
       DB_HOST: training-db:5432
       AUTH_SERVER_HOST: oauth2-server:9000

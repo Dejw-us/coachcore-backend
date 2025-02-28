@@ -1,6 +1,7 @@
 package pro.coachcore.gateway;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import pro.coachcore.oauth2.common.CookieTokensNames;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class CookieRefreshTokenGatewayFilter implements GatewayFilter {
@@ -25,6 +27,7 @@ public class CookieRefreshTokenGatewayFilter implements GatewayFilter {
     return Optional.ofNullable(exchange.getRequest().getCookies().getFirst(CookieTokensNames.REFRESH_TOKEN))
         .map(HttpCookie::getValue)
         .map(refreshToken -> {
+          log.debug("Setting new body on request: {}", exchange.getRequest().getPath().value());
           var newBody = "grant_type=refresh_token&refresh_token=".concat(refreshToken);
           return factory.apply(config -> config
               .setContentType(MediaType.APPLICATION_FORM_URLENCODED.toString())
