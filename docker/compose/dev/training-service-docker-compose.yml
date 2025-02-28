@@ -1,0 +1,39 @@
+version: 'version'
+services:
+  training-db:
+    image: postgres:16.2
+    ports:
+      - 5434:5432
+    environment:
+      POSRGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: training
+  training-service:
+    image: ghcr.io/coachcore/training-api:0.0.1
+    ports:
+      - 8082:8082
+    environment:
+      DB_HOST: training-db:5432
+      AUTH_SERVER_HOST: oauth2-server:9000
+    depends_on:
+      - training-db
+      - oauth2-server
+  oauth2-db:
+    image: postgres:16.2
+    ports:
+      - 5433:5432
+    environment:
+      POSRGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: oauth2
+  oauth2-server:
+    image: ghcr.io/coachcore/oauth2-server:0.0.4
+    ports:
+      - 9000:9000
+    environment:
+      DB_HOST: oauth2-db:5432
+      DB_NAME: oauth2
+      ISSUER: http://oauth2-server
+      OAUTH2_WEB_APP_CLIENT_SECRET: $$2a$$10$$vLW8gLjoVpksEJf70SGPAOUd1H.ppsIgFTQbU63HVyXDaAcvcZuMe
+    depends_on:
+      - oauth2-db
