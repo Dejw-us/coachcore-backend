@@ -1,31 +1,62 @@
 package pro.coachcore.training.plan.set;
 
+import java.time.LocalDate;
+
+import org.springframework.boot.context.properties.bind.Name;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import jakarta.persistence.*;
 import lombok.Data;
+import pro.coachcore.jpa.id.IdentifiableEntity;
+import pro.coachcore.jpa.id.LocalIdEntityListener;
 
 @Data
-@Entity
-public class TrainingSet {
+@Entity(name = "training_set")
+@EntityListeners({ LocalIdEntityListener.class, AuditingEntityListener.class })
+public class TrainingSet implements IdentifiableEntity<String> {
   @Id
-  @GeneratedValue
+  @Column(name = "id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(unique = true, nullable = false, updatable = false)
+  @Column(unique = true, nullable = false, updatable = false, name = "local_id")
   private String localId;
 
+  @Column(name = "reps")
   private Integer reps;
 
+  @Column(name = "rest_seconds")
   private Double restSeconds;
 
+  @Column(name = "intensity")
   private Double intensity;
 
+  @Column(name = "intensity_type")
   private IntensityType intensityType;
 
+  @Column(name = "rate")
   private String rate;
 
+  @Column(name = "weight")
   private Double weight;
 
+  @Column(name = "weight_type")
   private WeightType weightType;
+
+  @CreatedDate
+  @Column(name = "created_at")
+  private LocalDate createdAt;
+
+  @LastModifiedDate
+  @Column(name = "updated_at")
+  private LocalDate updatedAt;
+
+  @CreatedBy
+  @Column(name = "created_by")
+  private String createdBy;
 
   public enum WeightType {
     KG,
