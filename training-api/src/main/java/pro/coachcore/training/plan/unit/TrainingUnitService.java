@@ -54,7 +54,7 @@ public class TrainingUnitService {
 
   public TrainingUnit updateTrainingUnit(TrainingUnit unit, UpdateTrainingUnitDto dto, String planLocalId) {
     var dayOfWeek = getEnum(DayOfWeek.class, dto.dayOfWeek());
-    if (trainingUnitRepository.existsInTrainingPlanByDayOfWeek(dayOfWeek, planLocalId)) {
+    if (trainingUnitRepository.existsByTrainingPlan_LocalIdAndDayOfWeek(planLocalId, dayOfWeek)) {
       throw new ResourceAlreadyExistsException(format("Training unit for %s already exists", dayOfWeek));
     }
     updateIfNotNull(dayOfWeek, unit::setDayOfWeek);

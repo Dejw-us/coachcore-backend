@@ -28,7 +28,7 @@ public class TrainingExercise implements IdentifiableEntity<String> {
   @Column(unique = true, nullable = false, updatable = false, name = "local_id")
   private String localId;
 
-  @Column(name = "catalog_exercise_id")
+  @JoinColumn(name = "catalog_exercise_id")
   @ManyToOne(fetch = FetchType.LAZY)
   private CatalogExercise catalogExercise;
 

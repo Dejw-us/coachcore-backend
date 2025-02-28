@@ -64,7 +64,7 @@ class TrainingUnitServiceTests {
     var dto = new UpdateTrainingUnitDto("MONDAY", "Notes", "Name");
     var planId = UUID.randomUUID().toString();
 
-    when(trainingUnitRepository.existsInTrainingPlanByDayOfWeek(DayOfWeek.MONDAY, planId)).thenReturn(true);
+    when(trainingUnitRepository.existsByTrainingPlan_LocalIdAndDayOfWeek(planId, DayOfWeek.MONDAY)).thenReturn(true);
 
     assertThrows(
         ResourceAlreadyExistsException.class,

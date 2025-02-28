@@ -29,8 +29,8 @@ public class CatalogExercise implements IdentifiableEntity<String> {
   @Column(nullable = false, name = "name")
   private String name;
 
-  @Column(name = "category_id")
   @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "category_id")
   private ExerciseCategory category;
 
   @CreatedDate
