@@ -26,13 +26,20 @@ public class GatewayConfig {
   RouteLocator routeLocator(RouteLocatorBuilder builder) {
     return builder.routes()
         // .route("training-plans", configureTrainingApiRoute("/training-plans/**"))
-        // .route("catalog-exercises", configureTrainingApiRoute("/catalog-exercises/**"))
-        // .route("exercise-categories", configureTrainingApiRoute("/exercise-categories/**"))
+        // .route("catalog-exercises",
+        // configureTrainingApiRoute("/catalog-exercises/**"))
+        // .route("exercise-categories",
+        // configureTrainingApiRoute("/exercise-categories/**"))
         .route("oauth2-refresh-token", route -> route
             .path("/oauth2/token")
             .filters(filters -> filters.filter(cookieRefreshTokenGatewayFilter))
             .uri(servicesProperites.oauth2ServerUrl()))
-        // .route("users", configureApiRoute("/users/**", servicesProperites.oauth2ServerUrl()))
+        .route("newsletter-service", route -> route
+            .path("/newsletter/**")
+            .filters(cookieTokenGatewayFilter.asFunctionFilter())
+            .uri(servicesProperites.newsletterServiceUrl()))
+        // .route("users", configureApiRoute("/users/**",
+        // servicesProperites.oauth2ServerUrl()))
         .build();
   }
 

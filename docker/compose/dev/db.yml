@@ -17,3 +17,11 @@ services:
       POSRGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: newsletter
+  training-db:
+    image: postgres:16.2
+    ports:
+      - 5433:5432
+    environment:
+      POSRGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: newsletter
