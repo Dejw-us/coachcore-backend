@@ -32,6 +32,9 @@ public class TokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext
         }
         claims.claim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
       }
+      if (context.getTokenType().equals(OAuth2TokenType.REFRESH_TOKEN)) {
+        claims.expiresAt(Instant.now().plusSeconds(24 * 3600));
+      }
     }
     if (context.getAuthorizationGrantType().equals(CLIENT_CREDENTIALS)) {
       claims.claim("roles", List.of("MAIL_SENDER"));

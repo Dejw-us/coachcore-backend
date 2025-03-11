@@ -43,18 +43,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class OAuth2ServerConfig {
   private final RsaKeyProperties rsaKeyProperties;
 
-  @Value("${OAUTH2_WEB_APP_CLIENT_SECRET}")
-  private String secret;
-  
-  @Bean
-  ApplicationRunner runner(PasswordEncoder passwordEncoder) {
-    return args -> {
-      log.debug("Equals: {}", "$2a$10$vLW8gLjoVpksEJf70SGPAOUd1H.ppsIgFTQbU63HVyXDaAcvcZuMe".equals(secret));
-      log.debug("Client secret: {}", secret);
-      log.debug("Matches: {}", passwordEncoder.matches("web-app-secret", secret));
-    };
-  }
-
   @Value("${issuer}")
   private String issuer;
 
@@ -86,6 +74,12 @@ public class OAuth2ServerConfig {
       auth.anyRequest().authenticated();
     });
     http.formLogin(form -> form.loginPage("/account/login"));
+    http.logout(logout -> logout
+        .logoutUrl("/logout")
+        .logoutSuccessUrl("http://localhost:3000")
+        .invalidateHttpSession(true)
+        .clearAuthentication(true)
+        .deleteCookies("JSESSIONID", "refresh_token", "access_token", "id_token"));
 
     return http.build();
   }

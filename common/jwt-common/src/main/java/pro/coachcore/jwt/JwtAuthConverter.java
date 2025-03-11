@@ -25,10 +25,10 @@ public class JwtAuthConverter implements Converter<Jwt, JwtAuthenticationToken> 
     if (claim == null) {
       return null;
     }
-    
+
     var roles = claim.stream()
-      .map(SimpleGrantedAuthority::new)
-      .collect(Collectors.toList());
+        .map(SimpleGrantedAuthority::new)
+        .collect(Collectors.toList());
 
     return new JwtAuthenticationToken(jwt, roles);
   }

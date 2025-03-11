@@ -9,6 +9,5 @@ public record TrainingPlanDto(
     String createdBy,
     String name,
     String description,
-    List<TrainingGoalDto> goals
-) {
+    List<TrainingGoalDto> goals) {
 }

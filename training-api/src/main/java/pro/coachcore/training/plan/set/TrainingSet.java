@@ -12,6 +12,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import pro.coachcore.jpa.id.IdentifiableEntity;
 import pro.coachcore.jpa.id.LocalIdEntityListener;
+import pro.coachcore.training.plan.exercise.TrainingExercise;
 
 @Data
 @Entity(name = "training_set")
@@ -21,6 +22,10 @@ public class TrainingSet implements IdentifiableEntity<String> {
   @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "training_exercise_id")
+  private TrainingExercise exercise;
 
   @Column(unique = true, nullable = false, updatable = false, name = "local_id")
   private String localId;
