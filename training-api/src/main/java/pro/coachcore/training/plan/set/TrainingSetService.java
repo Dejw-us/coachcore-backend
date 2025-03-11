@@ -2,6 +2,7 @@ package pro.coachcore.training.plan.set;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import pro.coachcore.exception.ResourceNotFoundException;
 import pro.coachcore.training.plan.exercise.TrainingExercise;
@@ -22,7 +23,9 @@ public class TrainingSetService {
   }
 
   public TrainingSet saveTrainingSet(TrainingExercise exercise) {
-    var savedSet = trainingSetRepository.save(new TrainingSet());
+    var set = new TrainingSet();
+    set.setExercise(exercise);
+    var savedSet = trainingSetRepository.save(set);
     exercise.getSets().add(savedSet);
     trainingExerciseRepository.save(exercise);
     return savedSet;
@@ -40,6 +43,7 @@ public class TrainingSetService {
     return trainingSetRepository.save(set);
   }
 
+  @Transactional
   public void deleteTrainingSetByLocalId(String localId) {
     if (!trainingSetRepository.existsByLocalId(localId)) {
       throw new ResourceNotFoundException("Training set does not exist");

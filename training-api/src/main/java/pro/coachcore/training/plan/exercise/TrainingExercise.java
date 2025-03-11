@@ -47,7 +47,6 @@ public class TrainingExercise implements IdentifiableEntity<String> {
   @Column(name = "created_by")
   private String createdBy;
 
-  @OneToMany(fetch = FetchType.LAZY)
-  @JoinTable(inverseJoinColumns = @JoinColumn(name = "training_set_id"), joinColumns = @JoinColumn(name = "training_exercise_id"))
+  @OneToMany(mappedBy = "exercise", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<TrainingSet> sets = new ArrayList<>();
 }

@@ -55,7 +55,7 @@ public class TrainingUnit implements IdentifiableEntity<String> {
   @JoinColumn(name = "training_plan_id")
   private TrainingPlan trainingPlan;
 
-  @OneToMany(fetch = FetchType.LAZY)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinTable(inverseJoinColumns = @JoinColumn(name = "training_exercise_id"), joinColumns = @JoinColumn(name = "training_unit_id"))
   private List<TrainingExercise> exercises = new ArrayList<>();
 }

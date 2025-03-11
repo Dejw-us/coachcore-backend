@@ -8,7 +8,7 @@ services:
     environment:
       POSRGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: oauth2
+      POSTGRES_DB: 
   newsletter-db:
     image: postgres:16.2
     ports:

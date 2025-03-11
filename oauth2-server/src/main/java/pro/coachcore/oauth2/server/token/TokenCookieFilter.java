@@ -60,20 +60,22 @@ public class TokenCookieFilter extends OncePerRequestFilter {
       String id_token,
       String scope) {
     void addCookies(HttpServletResponse response) {
-      addCookie(CookieTokensNames.ACCESS_TOKEN, access_token, 180, response);
-      addCookie(CookieTokensNames.REFRESH_TOKEN, refresh_token, 360, response);
+      addCookie(CookieTokensNames.ACCESS_TOKEN, access_token, 180, true, response);
+      addCookie(CookieTokensNames.REFRESH_TOKEN, refresh_token, 24 * 3600, true, response);
+      addCookie(CookieTokensNames.ID_TOKEN, id_token, 360, false, response);
     }
 
-    void addCookie(String name, @Nullable String value, int maxAge, HttpServletResponse response) {
+    void addCookie(String name, @Nullable String value, int maxAge, boolean http, HttpServletResponse response) {
       if (value == null) {
         return;
       }
       var cookie = new Cookie(name, value);
-      cookie.setHttpOnly(true);
+      cookie.setHttpOnly(http);
       cookie.setPath("/");
+      cookie.setSecure(true);
       cookie.setMaxAge(maxAge);
       response.addCookie(cookie);
-      log.info("Added cookie with name {}", name);
+      log.debug("Added cookie with name {}", name);
     }
   }
 }
