@@ -31,7 +31,7 @@ public class TrainingPlanService {
 
   public TrainingPlan findTrainingPlanByLocalId(String localId) {
     return trainingPlanRepository.findByLocalId(localId)
-        .orElseThrow(ResourceNotFoundException.supplier("Training pro.shapeit.plan does not exist"));
+        .orElseThrow(ResourceNotFoundException.supplier("Training plan does not exist"));
   }
 
   public TrainingPlan saveTrainingPlan(CreateTrainingPlanDto dto) {

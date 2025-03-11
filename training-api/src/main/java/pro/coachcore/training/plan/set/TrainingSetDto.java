@@ -1,6 +1,5 @@
 package pro.coachcore.training.plan.set;
 
-
 public record TrainingSetDto(
     String id,
     Integer reps,
@@ -9,6 +8,5 @@ public record TrainingSetDto(
     String rate,
     Double restSeconds,
     Double weight,
-    TrainingSet.WeightType weightType
-) {
+    TrainingSet.WeightType weightType) {
 }

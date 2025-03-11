@@ -21,13 +21,13 @@ public interface TrainingUnitRepository extends JpaRepository<TrainingUnit, Long
 
   boolean existsByTrainingPlan_LocalIdAndLocalId(
       String trainingPlanLocalId,
-      String localId
-  );
+      String localId);
+
+  boolean existsByLocalId(String localId);
 
   void deleteByTrainingPlan_LocalIdAndLocalId(
       String trainingPlanLocalId,
-      String localId
-  );
+      String localId);
 
   boolean existsByTrainingPlanAndDayOfWeek(TrainingPlan trainingPlan, DayOfWeek dayOfWeek);
 

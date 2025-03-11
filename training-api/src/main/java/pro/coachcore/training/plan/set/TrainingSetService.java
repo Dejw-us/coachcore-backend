@@ -25,8 +25,8 @@ public class TrainingSetService {
   public TrainingSet saveTrainingSet(TrainingExercise exercise) {
     var set = new TrainingSet();
     set.setExercise(exercise);
+    set.setExercise(exercise);
     var savedSet = trainingSetRepository.save(set);
-    exercise.getSets().add(savedSet);
     trainingExerciseRepository.save(exercise);
     return savedSet;
   }
