@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 
 import static pro.coachcore.util.ControllerUtils.deleteResponse;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +23,19 @@ public class TrainingSetController {
 
   private final TrainingSetMapper trainingSetMapper;
 
+  @GetMapping("/exercises/{exerciseId}/sets")
+  ResponseEntity<List<TrainingSetDto>> getSets(
+      @PathVariable String exerciseId) {
+    var sets = trainingSetService.findAllByTrainingExerciseLocalId(exerciseId);
+
+    return ResponseEntity
+        .ok(trainingSetMapper.map(sets));
+  }
+
   @PostMapping("/exercises/{exerciseId}/sets")
   ResponseEntity<TrainingSetDto> postTrainingSet(
       @PathVariable String planId,
-      @PathVariable String exerciseId
-  ) throws ResourceNotFoundException {
+      @PathVariable String exerciseId) throws ResourceNotFoundException {
     var exercise = trainingExerciseService.findTrainingExerciseByLocalId(exerciseId);
     var savedSet = trainingSetService.saveTrainingSet(exercise);
     var savedSetDto = trainingSetMapper.map(savedSet);
@@ -39,8 +49,7 @@ public class TrainingSetController {
   ResponseEntity<TrainingSetDto> patchTrainingSet(
       @PathVariable String planId,
       @PathVariable String setId,
-      @RequestBody UpdateTrainingSetDto dto
-  ) throws ResourceNotFoundException {
+      @RequestBody UpdateTrainingSetDto dto) throws ResourceNotFoundException {
     var set = trainingSetService.findTrainingSetByLocalId(setId);
     var updatedSet = trainingSetService.updateTrainingSet(set, dto);
     var updatedSetDto = trainingSetMapper.map(updatedSet);
@@ -52,8 +61,7 @@ public class TrainingSetController {
   @DeleteMapping("/sets/{setId}")
   ResponseEntity<MessageDto> deleteTrainingSet(
       @PathVariable String planId,
-      @PathVariable String setId
-  ) {
+      @PathVariable String setId) {
     trainingSetService.deleteTrainingSetByLocalId(setId);
 
     return ResponseEntity

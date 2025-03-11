@@ -36,7 +36,7 @@ public class TrainingExerciseService {
   public TrainingExercise saveTrainingExercise(TrainingUnit unit, CatalogExercise catalogExercise) {
     var exercise = new TrainingExercise();
     exercise.setCatalogExercise(catalogExercise);
-    exercise.setUnit(unit);
+    exercise.setTrainingUnit(unit);
     var savedExercise = trainingExerciseRepository.save(exercise);
     trainingUnitRepository.save(unit);
     return savedExercise;

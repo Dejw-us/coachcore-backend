@@ -11,6 +11,8 @@ import pro.coachcore.training.plan.exercise.TrainingExerciseRepository;
 import static org.apache.commons.lang3.EnumUtils.getEnum;
 import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class TrainingSetService {
@@ -22,10 +24,17 @@ public class TrainingSetService {
         .orElseThrow(ResourceNotFoundException.supplier("Training set does not exist"));
   }
 
+  public List<TrainingSet> findAllByTrainingExerciseLocalId(String localId) {
+    if (!trainingExerciseRepository.existsByLocalId(localId)) {
+      throw new ResourceNotFoundException("Training exercise does not exist");
+    }
+    return trainingSetRepository.findAllByTrainingExercise_LocalId(localId);
+  }
+
   public TrainingSet saveTrainingSet(TrainingExercise exercise) {
     var set = new TrainingSet();
-    set.setExercise(exercise);
-    set.setExercise(exercise);
+    set.setTrainingExercise(exercise);
+    set.setTrainingExercise(exercise);
     var savedSet = trainingSetRepository.save(set);
     trainingExerciseRepository.save(exercise);
     return savedSet;

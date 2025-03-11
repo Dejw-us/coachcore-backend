@@ -24,7 +24,7 @@ public class TrainingSet implements IdentifiableEntity<String> {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "training_exercise_id")
-  private TrainingExercise exercise;
+  private TrainingExercise trainingExercise;
 
   @Column(unique = true, nullable = false, updatable = false, name = "local_id")
   private String localId;

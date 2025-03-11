@@ -31,7 +31,7 @@ public class TrainingExercise implements IdentifiableEntity<String> {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "training_unit_id")
-  private TrainingUnit unit;
+  private TrainingUnit trainingUnit;
 
   @Column(name = "notes")
   private String notes;

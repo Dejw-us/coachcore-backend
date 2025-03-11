@@ -34,10 +34,6 @@ public class TrainingPlan implements IdentifiableEntity<String> {
   @Column(name = "description")
   private String description;
 
-  @OneToMany(fetch = FetchType.LAZY)
-  @JoinTable(inverseJoinColumns = @JoinColumn(name = "training_plan_owner_id"), joinColumns = @JoinColumn(name = "training_plan_id"))
-  private List<TrainingPlanOwner> owners;
-
   @CreatedBy
   @Column(name = "created_by")
   private String createdBy;
