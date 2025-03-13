@@ -62,6 +62,9 @@ public class TrainingSet implements IdentifiableEntity<String> {
   @Column(name = "created_by")
   private String createdBy;
 
+  @Column(name = "index")
+  private Long index;
+
   public enum WeightType {
     KG,
     LBS

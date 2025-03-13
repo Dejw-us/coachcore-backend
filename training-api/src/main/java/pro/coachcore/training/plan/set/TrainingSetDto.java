@@ -8,5 +8,6 @@ public record TrainingSetDto(
     String rate,
     Double restSeconds,
     Double weight,
-    TrainingSet.WeightType weightType) {
+    TrainingSet.WeightType weightType,
+    Long index) {
 }

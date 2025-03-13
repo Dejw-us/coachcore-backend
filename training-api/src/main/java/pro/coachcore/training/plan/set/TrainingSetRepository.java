@@ -15,4 +15,6 @@ public interface TrainingSetRepository extends JpaRepository<TrainingSet, Long> 
   void deleteByLocalId(String localId);
 
   Optional<TrainingSet> findByLocalId(String localId);
+
+  long countByTrainingExercise_LocalId(String localId);
 }

@@ -33,7 +33,8 @@ public class TrainingSetService {
 
   public TrainingSet saveTrainingSet(TrainingExercise exercise) {
     var set = new TrainingSet();
-    set.setTrainingExercise(exercise);
+    var index = trainingSetRepository.countByTrainingExercise_LocalId(exercise.getLocalId());
+    set.setIndex(index + 1L);
     set.setTrainingExercise(exercise);
     var savedSet = trainingSetRepository.save(set);
     trainingExerciseRepository.save(exercise);

@@ -1,4 +1,4 @@
-version: 'version'
+version: "version"
 services:
   gateway:
     image: ghcr.io/coachcore/gateway:0.0.3
@@ -20,7 +20,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: training
   training-service:
-    image: ghcr.io/coachcore/training-api:0.0.3
+    image: ghcr.io/coachcore/training-api:1.0.0
     environment:
       DB_HOST: training-db:5432
       AUTH_SERVER_HOST: http://oauth2-server:9000
