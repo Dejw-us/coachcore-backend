@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import pro.coachcore.dto.DeletedObjectDto;
 import pro.coachcore.dto.MessageDto;
 import pro.coachcore.exception.ResourceNotFoundException;
 import pro.coachcore.training.catalog.exercise.CatalogExerciseService;
@@ -24,12 +27,20 @@ public class TrainingExerciseController {
 
   private final TrainingExerciseMapper trainingExerciseMapper;
 
+  @GetMapping("/units/{unitId}/exercises")
+  ResponseEntity<List<TrainingExerciseDto>> getTrainingExercises(
+      @PathVariable String unitId) {
+    var exercises = trainingExerciseService.findAllByUnitLocalId(unitId);
+
+    return ResponseEntity
+        .ok(trainingExerciseMapper.map(exercises));
+  }
+
   @PostMapping("/units/{unitId}/exercises")
   ResponseEntity<TrainingExerciseDto> postTrainingExercise(
       @PathVariable String planId,
       @PathVariable String unitId,
-      @RequestParam String catalogExerciseId
-  ) throws ResourceNotFoundException {
+      @RequestParam String catalogExerciseId) throws ResourceNotFoundException {
     var unit = trainingUnitService.findTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
     var catalogExercise = catalogExerciseService.findCatalogExerciseByLocalId(catalogExerciseId);
     var savedExercise = trainingExerciseService.saveTrainingExercise(unit, catalogExercise);
@@ -45,10 +56,10 @@ public class TrainingExerciseController {
       @PathVariable String planId,
       @PathVariable String exerciseId,
       @RequestBody UpdateTrainingExerciseDto dto,
-      @RequestParam(required = false) String catalogExerciseId
-  ) throws ResourceNotFoundException {
+      @RequestParam(required = false) String catalogExerciseId) throws ResourceNotFoundException {
     var exercise = trainingExerciseService.findTrainingExerciseByLocalId(exerciseId);
-    var catalogExercise = catalogExerciseId == null ? null : catalogExerciseService.findCatalogExerciseByLocalId(catalogExerciseId);
+    var catalogExercise = catalogExerciseId == null ? null
+        : catalogExerciseService.findCatalogExerciseByLocalId(catalogExerciseId);
     var updatedExercise = trainingExerciseService.updateTrainingExercise(exercise, catalogExercise, dto);
     log.info("saved: {}", updatedExercise);
     var updatedExerciseDto = trainingExerciseMapper.map(updatedExercise);
@@ -59,13 +70,12 @@ public class TrainingExerciseController {
   }
 
   @DeleteMapping("/exercises/{exerciseId}")
-  ResponseEntity<MessageDto> deleteTrainingExercise(
+  ResponseEntity<DeletedObjectDto> deleteTrainingExercise(
       @PathVariable String planId,
-      @PathVariable String exerciseId
-  ) {
-    trainingExerciseService.deleteTrainingExerciseByLocalId(exerciseId);
+      @PathVariable String exerciseId) {
+    var deletedExerciseId = trainingExerciseService.deleteTrainingExerciseByLocalId(exerciseId);
 
     return ResponseEntity
-        .ok(new MessageDto("Training exercise has been deleted"));
+        .ok(new DeletedObjectDto(deletedExerciseId));
   }
 }

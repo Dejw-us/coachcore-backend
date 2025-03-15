@@ -5,13 +5,8 @@ import lombok.Data;
 import pro.coachcore.jpa.id.IdentifiableEntity;
 import pro.coachcore.jpa.id.LocalIdEntityListener;
 import pro.coachcore.training.plan.TrainingPlan;
-import pro.coachcore.training.plan.exercise.TrainingExercise;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -54,8 +49,4 @@ public class TrainingUnit implements IdentifiableEntity<String> {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "training_plan_id")
   private TrainingPlan trainingPlan;
-
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinTable(inverseJoinColumns = @JoinColumn(name = "training_exercise_id"), joinColumns = @JoinColumn(name = "training_unit_id"))
-  private List<TrainingExercise> exercises = new ArrayList<>();
 }

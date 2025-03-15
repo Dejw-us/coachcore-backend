@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import pro.coachcore.dto.DeletedObjectDto;
 import pro.coachcore.dto.MessageDto;
 import pro.coachcore.exception.ResourceNotFoundException;
 import pro.coachcore.training.plan.TrainingPlanService;
@@ -29,10 +30,10 @@ public class TrainingUnitController {
   ResponseEntity<?> getTrainingUnits(
       @PathVariable String planId,
       @RequestParam(required = false) String dayOfWeek,
-      @RequestParam(required = false) Boolean preview
-  ) {
+      @RequestParam(required = false) Boolean preview) {
     if (dayOfWeek != null) {
-      var unit = trainingUnitService.findTrainingUnitByTrainingPlanLocalIdAndDayOfWeek(planId, getEnum(DayOfWeek.class, dayOfWeek));
+      var unit = trainingUnitService.findTrainingUnitByTrainingPlanLocalIdAndDayOfWeek(planId,
+          getEnum(DayOfWeek.class, dayOfWeek));
       var unitDto = trainingUnitMapper.map(unit, preview);
 
       return ResponseEntity
@@ -48,8 +49,7 @@ public class TrainingUnitController {
   @GetMapping("/{unitId}")
   ResponseEntity<TrainingUnitDto> getTrainingUnit(
       @PathVariable String planId,
-      @PathVariable String unitId
-  ) {
+      @PathVariable String unitId) {
     var unit = trainingUnitService.findTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
     var unitDto = trainingUnitMapper.map(unit);
 
@@ -60,8 +60,7 @@ public class TrainingUnitController {
   @PostMapping
   ResponseEntity<TrainingUnitDto> postTrainingUnit(
       @PathVariable String planId,
-      @RequestBody @Valid CreateTrainingUnitDto dto
-  ) throws ResourceNotFoundException, BadRequestException {
+      @RequestBody @Valid CreateTrainingUnitDto dto) throws ResourceNotFoundException, BadRequestException {
     var plan = trainingPlanService.findTrainingPlanByLocalId(planId);
     var savedUnit = trainingUnitService.saveTrainingUnit(plan, dto);
     var savedUnitDto = trainingUnitMapper.map(savedUnit);
@@ -75,8 +74,7 @@ public class TrainingUnitController {
   ResponseEntity<TrainingUnitDto> patchTrainingUnit(
       @PathVariable String planId,
       @PathVariable String unitId,
-      @RequestBody @Valid UpdateTrainingUnitDto dto
-  ) throws ResourceNotFoundException {
+      @RequestBody @Valid UpdateTrainingUnitDto dto) throws ResourceNotFoundException {
     var unit = trainingUnitService.findTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
     var updatedUnit = trainingUnitService.updateTrainingUnit(unit, dto, planId);
     var updatedUnitDto = trainingUnitMapper.map(updatedUnit);
@@ -86,13 +84,12 @@ public class TrainingUnitController {
   }
 
   @DeleteMapping("/{unitId}")
-  ResponseEntity<MessageDto> deleteTrainingUnit(
+  ResponseEntity<DeletedObjectDto> deleteTrainingUnit(
       @PathVariable String planId,
-      @PathVariable String unitId
-  ) {
+      @PathVariable String unitId) {
     trainingUnitService.deleteTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
 
     return ResponseEntity
-        .ok(new MessageDto("Training unit has been deleted"));
+        .ok(new DeletedObjectDto(unitId));
   }
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import pro.coachcore.jpa.id.IdentifiableEntity;
 import pro.coachcore.jpa.id.LocalIdEntityListener;
 import pro.coachcore.training.plan.goal.TrainingGoal;
+import pro.coachcore.training.plan.owner.TrainingPlanOwner;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

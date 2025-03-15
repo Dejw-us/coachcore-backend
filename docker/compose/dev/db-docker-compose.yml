@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   oauth2-db:
@@ -8,7 +8,7 @@ services:
     environment:
       POSRGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: 
+      POSTGRES_DB:
   newsletter-db:
     image: postgres:16.2
     ports:

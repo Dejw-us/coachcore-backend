@@ -2,7 +2,6 @@ package pro.coachcore.training.plan.set;
 
 import java.time.LocalDate;
 
-import org.springframework.boot.context.properties.bind.Name;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -25,7 +24,7 @@ public class TrainingSet implements IdentifiableEntity<String> {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "training_exercise_id")
-  private TrainingExercise exercise;
+  private TrainingExercise trainingExercise;
 
   @Column(unique = true, nullable = false, updatable = false, name = "local_id")
   private String localId;
@@ -62,6 +61,9 @@ public class TrainingSet implements IdentifiableEntity<String> {
   @CreatedBy
   @Column(name = "created_by")
   private String createdBy;
+
+  @Column(name = "index")
+  private Long index;
 
   public enum WeightType {
     KG,

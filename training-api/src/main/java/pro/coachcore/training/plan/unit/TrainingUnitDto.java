@@ -9,7 +9,5 @@ public record TrainingUnitDto(
     String id,
     String name,
     String notes,
-    DayOfWeek dayOfWeek,
-    List<TrainingExerciseDto> exercises
-) {
+    DayOfWeek dayOfWeek) {
 }

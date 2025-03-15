@@ -11,6 +11,8 @@ import pro.coachcore.training.plan.exercise.TrainingExerciseRepository;
 import static org.apache.commons.lang3.EnumUtils.getEnum;
 import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class TrainingSetService {
@@ -22,11 +24,19 @@ public class TrainingSetService {
         .orElseThrow(ResourceNotFoundException.supplier("Training set does not exist"));
   }
 
+  public List<TrainingSet> findAllByTrainingExerciseLocalId(String localId) {
+    if (!trainingExerciseRepository.existsByLocalId(localId)) {
+      throw new ResourceNotFoundException("Training exercise does not exist");
+    }
+    return trainingSetRepository.findAllByTrainingExercise_LocalId(localId);
+  }
+
   public TrainingSet saveTrainingSet(TrainingExercise exercise) {
     var set = new TrainingSet();
-    set.setExercise(exercise);
+    var index = trainingSetRepository.countByTrainingExercise_LocalId(exercise.getLocalId());
+    set.setIndex(index + 1L);
+    set.setTrainingExercise(exercise);
     var savedSet = trainingSetRepository.save(set);
-    exercise.getSets().add(savedSet);
     trainingExerciseRepository.save(exercise);
     return savedSet;
   }
@@ -44,10 +54,11 @@ public class TrainingSetService {
   }
 
   @Transactional
-  public void deleteTrainingSetByLocalId(String localId) {
+  public String deleteTrainingSetByLocalId(String localId) {
     if (!trainingSetRepository.existsByLocalId(localId)) {
       throw new ResourceNotFoundException("Training set does not exist");
     }
     trainingSetRepository.deleteByLocalId(localId);
+    return localId;
   }
 }
