@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import pro.coachcore.dto.DeletedObjectDto;
 import pro.coachcore.dto.MessageDto;
 import pro.coachcore.exception.ResourceNotFoundException;
 import java.util.List;
@@ -73,11 +74,11 @@ class TrainingPlanController {
   }
 
   @DeleteMapping("/{planId}")
-  ResponseEntity<MessageDto> deleteTrainingPlan(
+  ResponseEntity<DeletedObjectDto> deleteTrainingPlan(
       @PathVariable String planId) {
     trainingPlanService.deleteTrainingPlanByLocalId(planId);
 
     return ResponseEntity
-        .ok(new MessageDto("Training plan has been deleted"));
+        .ok(new DeletedObjectDto(planId));
   }
 }

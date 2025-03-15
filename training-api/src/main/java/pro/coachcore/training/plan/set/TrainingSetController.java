@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import pro.coachcore.dto.DeletedObjectDto;
 import pro.coachcore.dto.MessageDto;
 import pro.coachcore.exception.ResourceNotFoundException;
 import pro.coachcore.training.plan.exercise.TrainingExerciseService;
@@ -59,12 +60,12 @@ public class TrainingSetController {
   }
 
   @DeleteMapping("/sets/{setId}")
-  ResponseEntity<MessageDto> deleteTrainingSet(
+  ResponseEntity<DeletedObjectDto> deleteTrainingSet(
       @PathVariable String planId,
       @PathVariable String setId) {
-    trainingSetService.deleteTrainingSetByLocalId(setId);
+    var deletedSetId = trainingSetService.deleteTrainingSetByLocalId(setId);
 
     return ResponseEntity
-        .ok(new MessageDto("Training set has been deleted"));
+        .ok(new DeletedObjectDto(deletedSetId));
   }
 }

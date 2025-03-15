@@ -53,10 +53,11 @@ public class TrainingExerciseService {
     return trainingExerciseRepository.save(exercise);
   }
 
-  public void deleteTrainingExerciseByLocalId(String localId) {
+  public String deleteTrainingExerciseByLocalId(String localId) {
     if (!trainingExerciseRepository.existsByLocalId(localId)) {
       throw new ResourceNotFoundException("Training exercise does not exist");
     }
     trainingExerciseRepository.deleteByLocalId(localId);
+    return localId;
   }
 }

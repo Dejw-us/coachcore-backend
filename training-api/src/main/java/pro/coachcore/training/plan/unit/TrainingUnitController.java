@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import pro.coachcore.dto.DeletedObjectDto;
 import pro.coachcore.dto.MessageDto;
 import pro.coachcore.exception.ResourceNotFoundException;
 import pro.coachcore.training.plan.TrainingPlanService;
@@ -83,12 +84,12 @@ public class TrainingUnitController {
   }
 
   @DeleteMapping("/{unitId}")
-  ResponseEntity<MessageDto> deleteTrainingUnit(
+  ResponseEntity<DeletedObjectDto> deleteTrainingUnit(
       @PathVariable String planId,
       @PathVariable String unitId) {
     trainingUnitService.deleteTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
 
     return ResponseEntity
-        .ok(new MessageDto("Training unit has been deleted"));
+        .ok(new DeletedObjectDto(unitId));
   }
 }

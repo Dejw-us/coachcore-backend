@@ -54,10 +54,11 @@ public class TrainingSetService {
   }
 
   @Transactional
-  public void deleteTrainingSetByLocalId(String localId) {
+  public String deleteTrainingSetByLocalId(String localId) {
     if (!trainingSetRepository.existsByLocalId(localId)) {
       throw new ResourceNotFoundException("Training set does not exist");
     }
     trainingSetRepository.deleteByLocalId(localId);
+    return localId;
   }
 }
