@@ -37,7 +37,9 @@ public class TrainingExerciseService {
   }
 
   public TrainingExercise saveTrainingExercise(TrainingUnit unit, CatalogExercise catalogExercise) {
+    var index = trainingExerciseRepository.countByTrainingUnit_LocalId(unit.getLocalId());
     var exercise = new TrainingExercise();
+    exercise.setIndex(index + 1L);
     exercise.setCatalogExercise(catalogExercise);
     exercise.setTrainingUnit(unit);
     var savedExercise = trainingExerciseRepository.save(exercise);
@@ -49,10 +51,10 @@ public class TrainingExerciseService {
       TrainingExercise exercise,
       CatalogExercise catalogExercise,
       UpdateTrainingExerciseDto dto) {
-    log.debug("dto: {}", dto);
     updateIfNotNull(catalogExercise, exercise::setCatalogExercise);
     updateIfNotNull(dto.notes(), exercise::setNotes);
-    log.debug("after update: {}", exercise);
+    updateIfNotNull(dto.intensityType(), exercise::setIntensityType);
+    updateIfNotNull(dto.weightType(), exercise::setWeightType);
     return trainingExerciseRepository.save(exercise);
   }
 

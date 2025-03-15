@@ -44,11 +44,9 @@ public class TrainingSetService {
   public TrainingSet updateTrainingSet(TrainingSet set, UpdateTrainingSetDto dto) {
     updateIfNotNull(dto.intensity(), set::setIntensity);
     updateIfNotNull(dto.rate(), set::setRate);
-    updateIfNotNull(getEnum(TrainingSet.IntensityType.class, dto.intensityType()), set::setIntensityType);
     updateIfNotNull(dto.reps(), set::setReps);
     updateIfNotNull(dto.restSeconds(), set::setRestSeconds);
     updateIfNotNull(dto.weight(), set::setWeight);
-    updateIfNotNull(getEnum(TrainingSet.WeightType.class, dto.weightType()), set::setWeightType);
 
     return trainingSetRepository.save(set);
   }

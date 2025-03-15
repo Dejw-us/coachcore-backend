@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface TrainingExerciseRepository extends JpaRepository<TrainingExercise, Long> {
   boolean existsByLocalId(String localId);
 
+  long countByTrainingUnit_LocalId(String localId);
+
   void deleteByLocalId(String localId);
 
   Optional<TrainingExercise> findByLocalId(String localId);

@@ -55,9 +55,9 @@ class TrainingSetControllerTests {
       var requestBody = objectMapper.writeValueAsString(TestDtos.CREATE_PLAN_DTO);
 
       var result = mockMvc.perform(post("/v1/training-plans")
-              .with(jwtTestContext.getJwtPostProcessor(1))
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(requestBody))
+          .with(jwtTestContext.getJwtPostProcessor(1))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(requestBody))
           .andExpect(status().isCreated())
           .andReturn();
 
@@ -66,9 +66,9 @@ class TrainingSetControllerTests {
       createdPlanId = plan.id();
 
       result = mockMvc.perform(post("/v1/training-plans/" + createdPlanId + "/units")
-              .with(jwtTestContext.getJwtPostProcessor(1))
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(TestDtos.CREATE_UNIT_DTO)))
+          .with(jwtTestContext.getJwtPostProcessor(1))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(TestDtos.CREATE_UNIT_DTO)))
           .andExpect(status().isCreated())
           .andReturn();
 
@@ -80,15 +80,18 @@ class TrainingSetControllerTests {
       var exercises = objectMapper.readValue(result.getResponse().getContentAsString(), CatalogExerciseDto[].class);
       var catalogExerciseId = exercises[0].id();
 
-      result = mockMvc.perform(post("/v1/training-plans/{planId}/units/{unitId}/exercises", createdPlanId, createdUnitId)
+      result = mockMvc
+          .perform(post("/v1/training-plans/{planId}/units/{unitId}/exercises", createdPlanId, createdUnitId)
               .with(jwtTestContext.getJwtPostProcessor(1))
               .param("catalogExerciseId", catalogExerciseId))
           .andExpect(status().isCreated())
           .andReturn();
 
-      createdExerciseId = objectMapper.readValue(result.getResponse().getContentAsString(), TrainingExerciseDto.class).id();
+      createdExerciseId = objectMapper.readValue(result.getResponse().getContentAsString(), TrainingExerciseDto.class)
+          .id();
 
-      result = mockMvc.perform(post("/v1/training-plans/{planId}/exercises/{exerciseId}/sets", createdPlanId, createdExerciseId)
+      result = mockMvc
+          .perform(post("/v1/training-plans/{planId}/exercises/{exerciseId}/sets", createdPlanId, createdExerciseId)
               .with(jwtTestContext.getJwtPostProcessor(1)))
           .andExpect(status().isCreated())
           .andReturn();
@@ -100,23 +103,21 @@ class TrainingSetControllerTests {
   @Test
   void shouldPatchTrainingSet() throws Exception {
     mockMvc.perform(patch("/v1/training-plans/{planId}/sets/{setId}", createdPlanId, createdSetId)
-            .with(jwtTestContext.getJwtPostProcessor(1))
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(TestDtos.UPDATE_SET_DTO)))
+        .with(jwtTestContext.getJwtPostProcessor(1))
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(TestDtos.UPDATE_SET_DTO)))
         .andExpect(jsonPath("$.reps", is(TestDtos.UPDATE_SET_DTO.reps())))
         .andExpect(jsonPath("$.intensity", is(TestDtos.UPDATE_SET_DTO.intensity())))
-        .andExpect(jsonPath("$.intensityType", is(TestDtos.UPDATE_SET_DTO.intensityType())))
         .andExpect(jsonPath("$.rate", is(TestDtos.UPDATE_SET_DTO.rate())))
         .andExpect(jsonPath("$.restSeconds", is(TestDtos.UPDATE_SET_DTO.restSeconds())))
         .andExpect(jsonPath("$.weight", is(TestDtos.UPDATE_SET_DTO.weight())))
-        .andExpect(jsonPath("$.weightType", is(TestDtos.UPDATE_SET_DTO.weightType())))
         .andExpect(status().isOk());
   }
 
   @Test
   void shouldDeleteTrainingSet() throws Exception {
     mockMvc.perform(delete("/v1/training-plans/{planId}/sets/{setId}", createdPlanId, createdSetId)
-            .with(jwtTestContext.getJwtPostProcessor(1)))
+        .with(jwtTestContext.getJwtPostProcessor(1)))
         .andExpect(status().isOk());
   }
 }

@@ -9,5 +9,6 @@ public record TrainingExerciseDto(
     CatalogExerciseDto catalogExercise,
     String notes,
     IntensityType intensityType,
-    WeightType weightType) {
+    WeightType weightType,
+    Long index) {
 }

@@ -7,6 +7,8 @@ import pro.coachcore.exception.ResourceAlreadyExistsException;
 import pro.coachcore.exception.ResourceNotFoundException;
 import pro.coachcore.training.plan.TrainingPlan;
 import pro.coachcore.training.plan.TrainingPlanRepository;
+import pro.coachcore.training.plan.parameter.ParameterDisplay;
+import pro.coachcore.training.plan.parameter.ParameterDisplayRepository;
 
 import java.time.DayOfWeek;
 import java.util.List;
@@ -20,6 +22,7 @@ import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
 public class TrainingUnitService {
   private final TrainingUnitRepository trainingUnitRepository;
   private final TrainingPlanRepository trainingPlanRepository;
+  private final ParameterDisplayRepository parameterDisplayRepository;
 
   public List<TrainingUnit> findAllTrainingUnitsByTrainingPlanLocalId(String planLocalId) {
     if (!trainingPlanRepository.existsByLocalId(planLocalId)) {
@@ -40,16 +43,25 @@ public class TrainingUnitService {
 
   public TrainingUnit saveTrainingUnit(TrainingPlan plan, CreateTrainingUnitDto dto) {
     var dayOfWeek = getEnum(DayOfWeek.class, dto.dayOfWeek());
+
     if (trainingUnitRepository.existsByTrainingPlanAndDayOfWeek(plan, dayOfWeek)) {
       throw new ResourceAlreadyExistsException(format("Training unit for %s already exists", dayOfWeek));
     }
+
     var unit = new TrainingUnit();
+
     unit.setName(dto.name());
     unit.setNotes(dto.notes());
     unit.setDayOfWeek(dayOfWeek);
     unit.setTrainingPlan(plan);
 
-    return trainingUnitRepository.save(unit);
+    var display = new ParameterDisplay();
+    var savedUnit = trainingUnitRepository.save(unit);
+
+    display.setTrainingUnit(savedUnit);
+    parameterDisplayRepository.save(display);
+
+    return savedUnit;
   }
 
   public TrainingUnit updateTrainingUnit(TrainingUnit unit, UpdateTrainingUnitDto dto, String planLocalId) {

@@ -5,7 +5,6 @@ import lombok.Data;
 import pro.coachcore.jpa.id.IdentifiableEntity;
 import pro.coachcore.jpa.id.LocalIdEntityListener;
 import pro.coachcore.training.catalog.exercise.CatalogExercise;
-import pro.coachcore.training.plan.set.TrainingSet.IntensityType;
 import pro.coachcore.training.plan.unit.TrainingUnit;
 
 import java.time.LocalDate;
@@ -22,6 +21,9 @@ public class TrainingExercise implements IdentifiableEntity<String> {
   @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @Column(name = "index")
+  private Long index;
 
   @Column(unique = true, nullable = false, updatable = false, name = "local_id")
   private String localId;

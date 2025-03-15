@@ -57,13 +57,12 @@ public class TrainingExerciseController {
       @PathVariable String exerciseId,
       @RequestBody UpdateTrainingExerciseDto dto,
       @RequestParam(required = false) String catalogExerciseId) throws ResourceNotFoundException {
+    log.debug("Dto: {}", dto);
     var exercise = trainingExerciseService.findTrainingExerciseByLocalId(exerciseId);
     var catalogExercise = catalogExerciseId == null ? null
         : catalogExerciseService.findCatalogExerciseByLocalId(catalogExerciseId);
     var updatedExercise = trainingExerciseService.updateTrainingExercise(exercise, catalogExercise, dto);
-    log.info("saved: {}", updatedExercise);
     var updatedExerciseDto = trainingExerciseMapper.map(updatedExercise);
-    log.info("mapped: {}", updatedExerciseDto);
 
     return ResponseEntity
         .ok(updatedExerciseDto);

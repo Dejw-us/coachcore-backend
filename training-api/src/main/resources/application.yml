@@ -18,5 +18,7 @@ logging:
     org:
       springframework:
         security: DEBUG
+    pro:
+      coachcore: DEBUG
 server:
   port: 8082
