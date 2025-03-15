@@ -5,6 +5,7 @@ import lombok.Data;
 import pro.coachcore.jpa.id.IdentifiableEntity;
 import pro.coachcore.jpa.id.LocalIdEntityListener;
 import pro.coachcore.training.catalog.exercise.CatalogExercise;
+import pro.coachcore.training.plan.set.TrainingSet.IntensityType;
 import pro.coachcore.training.plan.unit.TrainingUnit;
 
 import java.time.LocalDate;
@@ -24,6 +25,14 @@ public class TrainingExercise implements IdentifiableEntity<String> {
 
   @Column(unique = true, nullable = false, updatable = false, name = "local_id")
   private String localId;
+
+  @Column(name = "intensity_type")
+  @Enumerated(value = EnumType.STRING)
+  private IntensityType intensityType = IntensityType.RPE;
+
+  @Column(name = "weight_type")
+  @Enumerated(value = EnumType.STRING)
+  private WeightType weightType = WeightType.KG;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "catalog_exercise_id")
@@ -47,4 +56,12 @@ public class TrainingExercise implements IdentifiableEntity<String> {
   @CreatedBy
   @Column(name = "created_by")
   private String createdBy;
+
+  public enum IntensityType {
+    RPE, RIR
+  }
+
+  public enum WeightType {
+    KG, LBS
+  }
 }

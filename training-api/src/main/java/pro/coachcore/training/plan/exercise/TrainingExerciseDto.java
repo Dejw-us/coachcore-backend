@@ -1,12 +1,13 @@
 package pro.coachcore.training.plan.exercise;
 
-import java.util.List;
-
 import pro.coachcore.training.catalog.exercise.CatalogExerciseDto;
-import pro.coachcore.training.plan.set.TrainingSetDto;
+import pro.coachcore.training.plan.exercise.TrainingExercise.IntensityType;
+import pro.coachcore.training.plan.exercise.TrainingExercise.WeightType;
 
 public record TrainingExerciseDto(
     String id,
     CatalogExerciseDto catalogExercise,
-    String notes) {
+    String notes,
+    IntensityType intensityType,
+    WeightType weightType) {
 }

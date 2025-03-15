@@ -38,17 +38,11 @@ public class TrainingSet implements IdentifiableEntity<String> {
   @Column(name = "intensity")
   private Double intensity;
 
-  @Column(name = "intensity_type")
-  private IntensityType intensityType;
-
   @Column(name = "rate")
   private String rate;
 
   @Column(name = "weight")
   private Double weight;
-
-  @Column(name = "weight_type")
-  private WeightType weightType;
 
   @CreatedDate
   @Column(name = "created_at")
@@ -64,14 +58,4 @@ public class TrainingSet implements IdentifiableEntity<String> {
 
   @Column(name = "index")
   private Long index;
-
-  public enum WeightType {
-    KG,
-    LBS
-  }
-
-  public enum IntensityType {
-    RIR,
-    RPE
-  }
 }
