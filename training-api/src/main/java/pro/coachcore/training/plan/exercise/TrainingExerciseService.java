@@ -8,9 +8,11 @@ import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import pro.coachcore.exception.ResourceNotFoundException;
 import pro.coachcore.training.catalog.exercise.CatalogExercise;
+import pro.coachcore.training.plan.set.TrainingSetRepository;
 import pro.coachcore.training.plan.unit.TrainingUnit;
 import pro.coachcore.training.plan.unit.TrainingUnitRepository;
 
@@ -20,6 +22,7 @@ import pro.coachcore.training.plan.unit.TrainingUnitRepository;
 public class TrainingExerciseService {
   private final TrainingExerciseRepository trainingExerciseRepository;
   private final TrainingUnitRepository trainingUnitRepository;
+  private final TrainingSetRepository setRepository;
 
   public List<TrainingExercise> findAllByUnitLocalId(String localId) {
     if (!trainingUnitRepository.existsByLocalId(localId)) {
@@ -53,10 +56,12 @@ public class TrainingExerciseService {
     return trainingExerciseRepository.save(exercise);
   }
 
+  @Transactional
   public String deleteTrainingExerciseByLocalId(String localId) {
     if (!trainingExerciseRepository.existsByLocalId(localId)) {
       throw new ResourceNotFoundException("Training exercise does not exist");
     }
+    setRepository.deleteAllByTrainingExercise_LocalId(localId);
     trainingExerciseRepository.deleteByLocalId(localId);
     return localId;
   }
