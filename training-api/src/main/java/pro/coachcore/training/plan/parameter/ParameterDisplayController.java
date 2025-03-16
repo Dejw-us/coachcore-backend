@@ -1,6 +1,7 @@
 package pro.coachcore.training.plan.parameter;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,5 +25,13 @@ public class ParameterDisplayController {
 
     return ResponseEntity
         .ok(parameterDisplayMapper.map(updatedDisplay));
+  }
+
+  @GetMapping
+  ResponseEntity<ParameterDisplayDto> getParameterDisplay(@PathVariable String unitId) {
+    var display = parameterDisplayService.findByUnit(unitId);
+
+    return ResponseEntity
+        .ok(parameterDisplayMapper.map(display));
   }
 }
