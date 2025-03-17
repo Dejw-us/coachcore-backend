@@ -80,9 +80,9 @@ class TrainingPlanController {
   @DeleteMapping("/{planId}")
   ResponseEntity<DeletedObjectDto> deleteTrainingPlan(
       @PathVariable String planId) {
-    trainingPlanService.deleteTrainingPlanByLocalId(planId);
+    var deletedPlan = trainingPlanService.deleteTrainingPlanByLocalId(planId);
 
     return ResponseEntity
-        .ok(new DeletedObjectDto(planId));
+        .ok(deletedPlan);
   }
 }

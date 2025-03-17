@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import pro.coachcore.dto.DeletedObjectDto;
 import pro.coachcore.exception.ResourceNotFoundException;
 import pro.coachcore.training.plan.goal.TrainingGoal;
 import pro.coachcore.training.plan.goal.TrainingGoalRepository;
@@ -61,18 +62,15 @@ public class TrainingPlanService {
   }
 
   @Transactional
-  public void deleteTrainingPlanByLocalId(String planLocalId) {
+  public DeletedObjectDto deleteTrainingPlanByLocalId(String planLocalId) {
     if (!trainingPlanRepository.existsByLocalId(planLocalId)) {
       throw new ResourceNotFoundException("Training plan does not exist");
     }
 
     var plan = findTrainingPlanByLocalId(planLocalId);
-
-    plan.getUnits().forEach(unit -> log.debug("unit id: {}", unit.getId()));
-
-    log.debug("Plan: {}", plan);
-
     trainingPlanRepository.delete(plan);
+
+    return new DeletedObjectDto(planLocalId);
   }
 
   public boolean isTrainingPlanOwner(String userId, String planId) {

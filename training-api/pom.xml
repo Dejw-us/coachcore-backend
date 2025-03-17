@@ -7,9 +7,12 @@
     <artifactId>backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
+
   <artifactId>training-api</artifactId>
   <name>training-api</name>
   <url>http://maven.apache.org</url>
+  <version>1.4.0</version>
+
   <dependencies>
     <dependency>
       <groupId>org.mapstruct</groupId>
