@@ -4,20 +4,26 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import pro.coachcore.exception.ResourceNotFoundException;
+import pro.coachcore.training.plan.unit.TrainingUnit;
+import pro.coachcore.training.plan.unit.TrainingUnitRepository;
 
 @Service
 @RequiredArgsConstructor
 public class ParameterDisplayService {
-  private final ParameterDisplayRepository parameterDisplayRepository;
+  private final TrainingUnitRepository unitRepository;
 
   public ParameterDisplay updateParameterDisplay(String unitLocalId, UpdateParameterDisplayDto dto) {
-    var display = findByUnit(unitLocalId);
-    display.updateDisplay(dto.updater(), dto.display());
-    return parameterDisplayRepository.save(display);
+    var unit = unitRepository.findByLocalId(unitLocalId)
+        .orElseThrow(ResourceNotFoundException.supplier("Training unit does not exist"));
+
+    unit.getParameterDisplay().updateDisplay(dto.updater(), dto.display());
+    var savedUnit = unitRepository.save(unit);
+    return savedUnit.getParameterDisplay();
   }
 
   public ParameterDisplay findByUnit(String unitLocalId) {
-    return parameterDisplayRepository.findByTrainingUnit_LocalId(unitLocalId)
-        .orElseThrow(ResourceNotFoundException.supplier("Parameter display does not exist"));
+    return unitRepository.findByLocalId(unitLocalId)
+        .map(TrainingUnit::getParameterDisplay)
+        .orElseThrow(ResourceNotFoundException.supplier("Training unit does not exist"));
   }
 }

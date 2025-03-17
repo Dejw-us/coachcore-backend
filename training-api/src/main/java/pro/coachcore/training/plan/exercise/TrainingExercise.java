@@ -5,9 +5,13 @@ import lombok.Data;
 import pro.coachcore.jpa.id.IdentifiableEntity;
 import pro.coachcore.jpa.id.LocalIdEntityListener;
 import pro.coachcore.training.catalog.exercise.CatalogExercise;
+import pro.coachcore.training.plan.set.TrainingSet;
 import pro.coachcore.training.plan.unit.TrainingUnit;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -58,6 +62,9 @@ public class TrainingExercise implements IdentifiableEntity<String> {
   @CreatedBy
   @Column(name = "created_by")
   private String createdBy;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "trainingExercise", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<TrainingSet> trainingSets = new ArrayList<>();
 
   public enum IntensityType {
     RPE, RIR

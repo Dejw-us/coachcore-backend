@@ -2,6 +2,7 @@ package pro.coachcore.training.plan;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import pro.coachcore.exception.ResourceNotFoundException;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1/training-plans")
 @RequiredArgsConstructor
@@ -45,6 +47,8 @@ class TrainingPlanController {
       @PathVariable String planId) throws ResourceNotFoundException {
     var plan = trainingPlanService.findTrainingPlanByLocalId(planId);
     var planDto = trainingPlanMapper.map(plan);
+
+    log.debug("get plan: {}", plan);
 
     return ResponseEntity
         .ok(planDto);

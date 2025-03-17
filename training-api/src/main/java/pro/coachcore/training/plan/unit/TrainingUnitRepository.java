@@ -15,6 +15,8 @@ import java.util.Optional;
 public interface TrainingUnitRepository extends JpaRepository<TrainingUnit, Long> {
   List<TrainingUnit> findAllByTrainingPlan_LocalId(String localId);
 
+  void deleteAllByTrainingPlan_LocalId(String planLocalId);
+
   Optional<TrainingUnit> findByTrainingPlan_LocalIdAndLocalId(String planLocalId, String unitLocalId);
 
   Optional<TrainingUnit> findByTrainingPlan_LocalIdAndDayOfWeek(String planLocalId, DayOfWeek dayOfWeek);
@@ -24,6 +26,8 @@ public interface TrainingUnitRepository extends JpaRepository<TrainingUnit, Long
       String localId);
 
   boolean existsByLocalId(String localId);
+
+  Optional<TrainingUnit> findByLocalId(String localId);
 
   void deleteByTrainingPlan_LocalIdAndLocalId(
       String trainingPlanLocalId,

@@ -8,12 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import pro.coachcore.dto.DeletedObjectDto;
-import pro.coachcore.dto.MessageDto;
 import pro.coachcore.exception.ResourceNotFoundException;
 import pro.coachcore.training.plan.TrainingPlanService;
 
 import java.time.DayOfWeek;
-import java.util.List;
 
 import static org.apache.commons.lang3.EnumUtils.getEnum;
 

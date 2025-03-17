@@ -2,11 +2,19 @@ package pro.coachcore.training.plan.unit;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import pro.coachcore.jpa.id.IdentifiableEntity;
 import pro.coachcore.jpa.id.LocalIdEntityListener;
 import pro.coachcore.training.plan.TrainingPlan;
+import pro.coachcore.training.plan.exercise.TrainingExercise;
+import pro.coachcore.training.plan.parameter.ParameterDisplay;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.annotations.Cascade;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -46,7 +54,15 @@ public class TrainingUnit implements IdentifiableEntity<String> {
   @Column(name = "created_by")
   private String createdBy;
 
+  @ToString.Exclude
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "training_plan_id")
   private TrainingPlan trainingPlan;
+
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "parameter_display_id")
+  private ParameterDisplay parameterDisplay;
+
+  @OneToMany(mappedBy = "trainingUnit", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<TrainingExercise> exercises = new ArrayList<>();
 }

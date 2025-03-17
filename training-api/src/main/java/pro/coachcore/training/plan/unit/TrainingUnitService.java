@@ -2,13 +2,13 @@ package pro.coachcore.training.plan.unit;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import pro.coachcore.exception.ResourceAlreadyExistsException;
 import pro.coachcore.exception.ResourceNotFoundException;
 import pro.coachcore.training.plan.TrainingPlan;
 import pro.coachcore.training.plan.TrainingPlanRepository;
 import pro.coachcore.training.plan.parameter.ParameterDisplay;
-import pro.coachcore.training.plan.parameter.ParameterDisplayRepository;
 
 import java.time.DayOfWeek;
 import java.util.List;
@@ -22,7 +22,6 @@ import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
 public class TrainingUnitService {
   private final TrainingUnitRepository trainingUnitRepository;
   private final TrainingPlanRepository trainingPlanRepository;
-  private final ParameterDisplayRepository parameterDisplayRepository;
 
   public List<TrainingUnit> findAllTrainingUnitsByTrainingPlanLocalId(String planLocalId) {
     if (!trainingPlanRepository.existsByLocalId(planLocalId)) {
@@ -54,12 +53,9 @@ public class TrainingUnitService {
     unit.setNotes(dto.notes());
     unit.setDayOfWeek(dayOfWeek);
     unit.setTrainingPlan(plan);
+    unit.setParameterDisplay(new ParameterDisplay());
 
-    var display = new ParameterDisplay();
     var savedUnit = trainingUnitRepository.save(unit);
-
-    display.setTrainingUnit(savedUnit);
-    parameterDisplayRepository.save(display);
 
     return savedUnit;
   }
@@ -76,6 +72,7 @@ public class TrainingUnitService {
     return trainingUnitRepository.save(unit);
   }
 
+  @Transactional
   public void deleteTrainingUnitByTrainingPlanLocalIdAndLocalId(String planLocalId, String unitLocalId) {
     if (!trainingUnitRepository.existsByTrainingPlan_LocalIdAndLocalId(planLocalId, unitLocalId)) {
       throw new ResourceNotFoundException("Training unit does not exist");

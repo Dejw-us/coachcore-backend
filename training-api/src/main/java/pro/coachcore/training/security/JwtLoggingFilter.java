@@ -13,7 +13,8 @@ import java.io.IOException;
 @Slf4j
 public class JwtLoggingFilter extends OncePerRequestFilter {
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
     var auth = request.getHeader(HttpHeaders.AUTHORIZATION);
 
     if (auth != null) {

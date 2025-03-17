@@ -6,6 +6,7 @@ import pro.coachcore.jpa.id.IdentifiableEntity;
 import pro.coachcore.jpa.id.LocalIdEntityListener;
 import pro.coachcore.training.plan.goal.TrainingGoal;
 import pro.coachcore.training.plan.owner.TrainingPlanOwner;
+import pro.coachcore.training.plan.unit.TrainingUnit;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -49,4 +50,7 @@ public class TrainingPlan implements IdentifiableEntity<String> {
   @OneToMany(fetch = FetchType.LAZY)
   @JoinTable(inverseJoinColumns = @JoinColumn(name = "training_goal_id"), joinColumns = @JoinColumn(name = "training_plan_id"))
   private List<TrainingGoal> goals = new ArrayList<>();
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "trainingPlan", cascade = CascadeType.ALL)
+  private List<TrainingUnit> units = new ArrayList<>();
 }
