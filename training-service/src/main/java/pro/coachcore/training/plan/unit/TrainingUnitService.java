@@ -16,6 +16,10 @@ import pro.coachcore.training.plan.TrainingPlan;
 import pro.coachcore.training.plan.TrainingPlanRepository;
 import pro.coachcore.training.plan.parameter.ParameterDisplay;
 
+/**
+ * Service class responsible for handling operations related to training units within a training
+ * plan. Provides methods to retrieve, create, update, and delete training units.
+ */
 @Service
 @RequiredArgsConstructor
 public class TrainingUnitService {
@@ -23,28 +27,59 @@ public class TrainingUnitService {
   private final TrainingPlanRepository trainingPlanRepository;
   private final MessageService messageService;
 
-  public List<TrainingUnit> findAllTrainingUnitsByTrainingPlanLocalId(String planLocalId) {
+  /**
+   * Retrieves all training units for a given training plan.
+   *
+   * @param planLocalId the local ID of the training plan.
+   * @return a list of training units for the specified plan.
+   * @throws ResourceNotFoundException if the training plan is not found.
+   */
+  public List<TrainingUnit> getAllUnits(String planLocalId) {
     if (!trainingPlanRepository.existsByLocalId(planLocalId)) {
       throw new ResourceNotFoundException(messageService.getMessage("training.plan.not-found"));
     }
     return trainingUnitRepository.findAllByTrainingPlan_LocalId(planLocalId);
   }
 
-  public TrainingUnit findTrainingUnitByTrainingPlanLocalIdAndLocalId(String planLocalId,
-      String unitLocalId) {
+  /**
+   * Retrieves a specific training unit by its local ID and the local ID of the training plan.
+   *
+   * @param planLocalId the local ID of the training plan.
+   * @param unitLocalId the local ID of the training unit.
+   * @return the training unit with the specified local ID.
+   * @throws ResourceNotFoundException if the training unit is not found.
+   */
+  public TrainingUnit getUnit(String planLocalId, String unitLocalId) {
     return trainingUnitRepository.findByTrainingPlan_LocalIdAndLocalId(planLocalId, unitLocalId)
         .orElseThrow(ResourceNotFoundException
             .supplier(messageService.getMessage("training.unit.not-found")));
   }
 
-  public TrainingUnit findTrainingUnitByTrainingPlanLocalIdAndDayOfWeek(String planLocalId,
-      DayOfWeek dayOfWeek) {
+  /**
+   * Retrieves a specific training unit by the day of the week and the local ID of the training
+   * plan.
+   *
+   * @param planLocalId the local ID of the training plan.
+   * @param dayOfWeek the day of the week for the training unit.
+   * @return the training unit for the specified day of the week.
+   * @throws ResourceNotFoundException if the training unit is not found.
+   */
+  public TrainingUnit getUnit(String planLocalId, DayOfWeek dayOfWeek) {
     return trainingUnitRepository.findByTrainingPlan_LocalIdAndDayOfWeek(planLocalId, dayOfWeek)
         .orElseThrow(ResourceNotFoundException
             .supplier(messageService.getMessage("training.unit.not-found")));
   }
 
-  public TrainingUnit saveTrainingUnit(TrainingPlan plan, CreateTrainingUnitDto dto) {
+  /**
+   * Saves a new training unit for a given training plan.
+   *
+   * @param plan the training plan to which the training unit will be added.
+   * @param dto the DTO containing the details of the training unit.
+   * @return the saved training unit.
+   * @throws ResourceAlreadyExistsException if a training unit already exists for the specified day
+   *         of the week.
+   */
+  public TrainingUnit saveUnit(TrainingPlan plan, CreateTrainingUnitDto dto) {
     var dayOfWeek = getEnum(DayOfWeek.class, dto.dayOfWeek());
 
     if (trainingUnitRepository.existsByTrainingPlanAndDayOfWeek(plan, dayOfWeek)) {
@@ -64,8 +99,17 @@ public class TrainingUnitService {
     return savedUnit;
   }
 
-  public TrainingUnit updateTrainingUnit(TrainingUnit unit, UpdateTrainingUnitDto dto,
-      String planLocalId) {
+  /**
+   * Updates an existing training unit.
+   *
+   * @param unit the training unit to be updated.
+   * @param dto the DTO containing the updates for the training unit.
+   * @param planLocalId the local ID of the training plan the unit belongs to.
+   * @return the updated training unit.
+   * @throws ResourceAlreadyExistsException if a training unit already exists for the specified day
+   *         of the week.
+   */
+  public TrainingUnit updateUnit(TrainingUnit unit, UpdateTrainingUnitDto dto, String planLocalId) {
     var dayOfWeek = getEnum(DayOfWeek.class, dto.dayOfWeek());
     if (trainingUnitRepository.existsByTrainingPlan_LocalIdAndDayOfWeek(planLocalId, dayOfWeek)) {
       throw new ResourceAlreadyExistsException(getExistsByDayOfWeekMessage(dayOfWeek));
@@ -77,17 +121,31 @@ public class TrainingUnitService {
     return trainingUnitRepository.save(unit);
   }
 
+  /**
+   * Deletes a specific training unit from a training plan.
+   *
+   * @param planLocalId the local ID of the training plan.
+   * @param unitLocalId the local ID of the training unit to be deleted.
+   * @throws ResourceNotFoundException if the training unit is not found.
+   */
   @Transactional
-  public void deleteTrainingUnitByTrainingPlanLocalIdAndLocalId(String planLocalId,
-      String unitLocalId) {
+  public void deleteUnit(String planLocalId, String unitLocalId) {
     if (!trainingUnitRepository.existsByTrainingPlan_LocalIdAndLocalId(planLocalId, unitLocalId)) {
       throw new ResourceNotFoundException(messageService.getMessage("training.unit.not-found"));
     }
     trainingUnitRepository.deleteByTrainingPlan_LocalIdAndLocalId(planLocalId, unitLocalId);
   }
 
+  /**
+   * Generates a message indicating that a training unit already exists for the given day of the
+   * week.
+   *
+   * @param dayOfWeek the day of the week for which the unit already exists.
+   * @return a localized message indicating the existence of the unit.
+   */
   private String getExistsByDayOfWeekMessage(DayOfWeek dayOfWeek) {
     return messageService.getMessage("training.unit.exists.day-of-week",
         dayOfWeek.getDisplayName(TextStyle.FULL, LocaleContextHolder.getLocale()));
   }
 }
+

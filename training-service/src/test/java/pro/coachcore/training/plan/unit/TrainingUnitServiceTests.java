@@ -1,26 +1,18 @@
 package pro.coachcore.training.plan.unit;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+import java.time.DayOfWeek;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import pro.coachcore.exception.ResourceAlreadyExistsException;
 import pro.coachcore.exception.ResourceNotFoundException;
 import pro.coachcore.training.plan.TrainingPlan;
 import pro.coachcore.training.plan.TrainingPlanRepository;
-import pro.coachcore.training.plan.unit.CreateTrainingUnitDto;
-import pro.coachcore.training.plan.unit.TrainingUnit;
-import pro.coachcore.training.plan.unit.TrainingUnitRepository;
-import pro.coachcore.training.plan.unit.TrainingUnitService;
-import pro.coachcore.training.plan.unit.UpdateTrainingUnitDto;
-
-import java.time.DayOfWeek;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TrainingUnitServiceTests {
@@ -39,10 +31,7 @@ class TrainingUnitServiceTests {
 
     when(trainingPlanRepository.existsByLocalId(planId)).thenReturn(false);
 
-    assertThrows(
-        ResourceNotFoundException.class,
-        () -> trainingUnitService.findAllTrainingUnitsByTrainingPlanLocalId(planId)
-    );
+    assertThrows(ResourceNotFoundException.class, () -> trainingUnitService.getAllUnits(planId));
   }
 
   @Test
@@ -50,12 +39,11 @@ class TrainingUnitServiceTests {
     var dto = new CreateTrainingUnitDto("MONDAY", "some notes", "name");
     var plan = new TrainingPlan();
 
-    when(trainingUnitRepository.existsByTrainingPlanAndDayOfWeek(plan, DayOfWeek.MONDAY)).thenReturn(true);
+    when(trainingUnitRepository.existsByTrainingPlanAndDayOfWeek(plan, DayOfWeek.MONDAY))
+        .thenReturn(true);
 
-    assertThrows(
-        ResourceAlreadyExistsException.class,
-        () -> trainingUnitService.saveTrainingUnit(plan, dto)
-    );
+    assertThrows(ResourceAlreadyExistsException.class,
+        () -> trainingUnitService.saveUnit(plan, dto));
   }
 
   @Test
@@ -64,12 +52,11 @@ class TrainingUnitServiceTests {
     var dto = new UpdateTrainingUnitDto("MONDAY", "Notes", "Name");
     var planId = UUID.randomUUID().toString();
 
-    when(trainingUnitRepository.existsByTrainingPlan_LocalIdAndDayOfWeek(planId, DayOfWeek.MONDAY)).thenReturn(true);
+    when(trainingUnitRepository.existsByTrainingPlan_LocalIdAndDayOfWeek(planId, DayOfWeek.MONDAY))
+        .thenReturn(true);
 
-    assertThrows(
-        ResourceAlreadyExistsException.class,
-        () -> trainingUnitService.updateTrainingUnit(unit, dto, planId)
-    );
+    assertThrows(ResourceAlreadyExistsException.class,
+        () -> trainingUnitService.updateUnit(unit, dto, planId));
   }
 
   @Test
@@ -77,11 +64,10 @@ class TrainingUnitServiceTests {
     var planId = UUID.randomUUID().toString();
     var unitId = UUID.randomUUID().toString();
 
-    when(trainingUnitRepository.existsByTrainingPlan_LocalIdAndLocalId(planId, unitId)).thenReturn(false);
+    when(trainingUnitRepository.existsByTrainingPlan_LocalIdAndLocalId(planId, unitId))
+        .thenReturn(false);
 
-    assertThrows(
-        ResourceNotFoundException.class,
-        () -> trainingUnitService.deleteTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId)
-    );
+    assertThrows(ResourceNotFoundException.class,
+        () -> trainingUnitService.deleteUnit(planId, unitId));
   }
 }

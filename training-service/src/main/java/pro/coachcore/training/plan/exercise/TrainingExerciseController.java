@@ -41,7 +41,7 @@ public class TrainingExerciseController {
   ResponseEntity<TrainingExerciseDto> postTrainingExercise(@PathVariable String planId,
       @PathVariable String unitId, @RequestParam String catalogExerciseId)
       throws ResourceNotFoundException {
-    var unit = trainingUnitService.findTrainingUnitByTrainingPlanLocalIdAndLocalId(planId, unitId);
+    var unit = trainingUnitService.getUnit(planId, unitId);
     var catalogExercise = catalogExerciseService.findCatalogExerciseByLocalId(catalogExerciseId);
     var savedExercise = trainingExerciseService.saveTrainingExercise(unit, catalogExercise);
     var savedExerciseDto = trainingExerciseMapper.map(savedExercise);

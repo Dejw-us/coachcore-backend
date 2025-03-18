@@ -27,14 +27,14 @@ class TrainingPlanController {
 
   @GetMapping("/me")
   public ResponseEntity<List<TrainingPlanDto>> getUserTrainingPlans() {
-    var plans = trainingPlanMapper.map(trainingPlanService.findAllUserTrainingPlans());
+    var plans = trainingPlanMapper.map(trainingPlanService.getUserPlans());
 
     return ResponseEntity.ok(plans);
   }
 
   @GetMapping
   ResponseEntity<List<TrainingPlanDto>> getTrainingPlans() {
-    var plans = trainingPlanService.findAllTrainingPlans();
+    var plans = trainingPlanService.getAllPlans();
     var plansDto = trainingPlanMapper.map(plans);
 
     return ResponseEntity.ok(plansDto);
@@ -43,7 +43,7 @@ class TrainingPlanController {
   @GetMapping("/{planId}")
   ResponseEntity<TrainingPlanDto> getTrainingPlan(@PathVariable String planId)
       throws ResourceNotFoundException {
-    var plan = trainingPlanService.findTrainingPlanByLocalId(planId);
+    var plan = trainingPlanService.getPlan(planId);
     var planDto = trainingPlanMapper.map(plan);
 
     log.debug("get plan: {}", plan);
@@ -53,7 +53,7 @@ class TrainingPlanController {
 
   @PostMapping
   ResponseEntity<TrainingPlanDto> postTrainingPlan(@RequestBody @Valid CreateTrainingPlanDto dto) {
-    var savedPlan = trainingPlanService.saveTrainingPlan(dto);
+    var savedPlan = trainingPlanService.savePlan(dto);
     var savedPlanDto = trainingPlanMapper.map(savedPlan);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(savedPlanDto);
@@ -62,8 +62,8 @@ class TrainingPlanController {
   @PatchMapping("/{planId}")
   ResponseEntity<TrainingPlanDto> patchTrainingPlan(@PathVariable String planId,
       @RequestBody @Valid UpdateTrainingPlanDto dto) throws ResourceNotFoundException {
-    var plan = trainingPlanService.findTrainingPlanByLocalId(planId);
-    var updatedPlan = trainingPlanService.updateTrainingPlan(plan, dto);
+    var plan = trainingPlanService.getPlan(planId);
+    var updatedPlan = trainingPlanService.updatePlan(plan, dto);
     var updatedPlanDto = trainingPlanMapper.map(updatedPlan);
 
     return ResponseEntity.ok(updatedPlanDto);
@@ -71,7 +71,7 @@ class TrainingPlanController {
 
   @DeleteMapping("/{planId}")
   ResponseEntity<DeletedObjectDto> deleteTrainingPlan(@PathVariable String planId) {
-    var deletedPlan = trainingPlanService.deleteTrainingPlanByLocalId(planId);
+    var deletedPlan = trainingPlanService.deletePlan(planId);
 
     return ResponseEntity.ok(deletedPlan);
   }
