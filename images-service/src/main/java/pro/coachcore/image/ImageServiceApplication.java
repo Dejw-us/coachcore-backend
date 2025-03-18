@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ImageApiApplication {
+public class ImageServiceApplication {
   public static void main(String[] args) {
-    SpringApplication.run(ImageApiApplication.class, args);
+    SpringApplication.run(ImageServiceApplication.class, args);
   }
 }
