@@ -1,16 +1,16 @@
 package pro.coachcore.image.profile;
 
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ProfilePictureService {
-  private static final String STORAGE_PATH = "app-data/images/profile-pictures/";
+  private static final String STORAGE_PATH = "app-data/images/profile-pictures/"; // TODO add config
+                                                                                  // value
 
   public ProfilePictureService() {
     var path = Paths.get(STORAGE_PATH);
@@ -18,7 +18,6 @@ public class ProfilePictureService {
     try {
       if (!Files.exists(path)) {
         Files.createDirectories(path);
-        System.out.println("created file");
       }
     } catch (IOException exception) {
       throw new RuntimeException(exception);
