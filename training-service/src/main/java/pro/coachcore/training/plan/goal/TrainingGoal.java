@@ -1,12 +1,10 @@
 package pro.coachcore.training.plan.goal;
 
 import java.time.LocalDate;
-
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -21,7 +19,7 @@ import pro.coachcore.jpa.id.LocalIdEntityListener;
 @Data
 @NoArgsConstructor
 @Entity(name = "training_goal")
-@EntityListeners({ LocalIdEntityListener.class, AuditingEntityListener.class })
+@EntityListeners({LocalIdEntityListener.class, AuditingEntityListener.class})
 public class TrainingGoal implements IdentifiableEntity<String> {
   @Id
   @Column(name = "id")

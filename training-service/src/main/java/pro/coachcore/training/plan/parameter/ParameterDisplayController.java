@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -18,20 +17,17 @@ public class ParameterDisplayController {
   private final ParameterDisplayMapper parameterDisplayMapper;
 
   @PatchMapping
-  ResponseEntity<ParameterDisplayDto> patchParamaterDisplay(
-      @PathVariable String unitId,
+  ResponseEntity<ParameterDisplayDto> patchParamaterDisplay(@PathVariable String unitId,
       @RequestBody UpdateParameterDisplayDto dto) {
     var updatedDisplay = parameterDisplayService.updateParameterDisplay(unitId, dto);
 
-    return ResponseEntity
-        .ok(parameterDisplayMapper.map(updatedDisplay));
+    return ResponseEntity.ok(parameterDisplayMapper.map(updatedDisplay));
   }
 
   @GetMapping
   ResponseEntity<ParameterDisplayDto> getParameterDisplay(@PathVariable String unitId) {
     var display = parameterDisplayService.findByUnit(unitId);
 
-    return ResponseEntity
-        .ok(parameterDisplayMapper.map(display));
+    return ResponseEntity.ok(parameterDisplayMapper.map(display));
   }
 }

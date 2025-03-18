@@ -2,9 +2,6 @@ package pro.coachcore.training.plan.owner;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.hibernate.annotations.CollectionId;
-
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
