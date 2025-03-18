@@ -1,10 +1,12 @@
 package pro.coachcore.oauth2.server.user;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import pro.coachcore.exception.ResourceNotFoundException;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,12 +16,11 @@ public class UserController {
   private final UserMapper userMapper;
 
   @GetMapping("/public/{username}")
-  ResponseEntity<PublicUserDto> getPublicAppUser(
-      @PathVariable String username) throws ResourceNotFoundException {
-    var user = userService.findUserByUsername(username);
+  ResponseEntity<PublicUserDto> getPublicAppUser(@PathVariable String username)
+      throws ResourceNotFoundException {
+    var user = userService.getUser(username);
     var publicUserDto = userMapper.mapToPublic(user);
 
-    return ResponseEntity
-        .ok(publicUserDto);
+    return ResponseEntity.ok(publicUserDto);
   }
 }

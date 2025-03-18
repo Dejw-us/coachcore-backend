@@ -1,10 +1,10 @@
 package pro.coachcore.oauth2.server.user.role;
 
+import org.springframework.security.core.GrantedAuthority;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
 
 @Data
 @Entity

@@ -4,7 +4,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pro.coachcore.oauth2.server.user.UserService;
@@ -19,12 +18,6 @@ class DefaultAdminAccountApplicationRunner implements ApplicationRunner {
 
   @Override
   public void run(ApplicationArguments args) throws Exception {
-    var admin = userService.registerAdmin(
-        adminCredentials.username(),
-        adminCredentials.password());
-
-    if (admin == null) {
-      log.info("Failed to create default admin");
-    }
+    userService.registerAdmin(adminCredentials.username(), adminCredentials.password());
   }
 }
