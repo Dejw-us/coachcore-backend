@@ -47,7 +47,7 @@
     <module>common</module>
     <module>training-service</module>
     <module>oauth2-server</module>
-    <module>images-api</module>
+    <module>images-service</module>
     <module>gateway</module>
     <module>email-service</module>
     <module>newsletter-service</module>
