@@ -12,14 +12,13 @@ import pro.coachcore.swagger.customizer.ResourceNotFoundOpenApiCustomizer;
 @Configuration
 public class SwaggerConfig {
   @Bean
-  public OpenApiCustomizer accessTokenCustomizer() {
+  OpenApiCustomizer accessTokenCustomizer() {
     return new AccessTokenApiCustomizer();
   }
 
   @Bean
-  public OpenApiCustomizer resourceNotFoundCustomizer(
-      @Qualifier("requestMappingHandlerMapping") RequestMappingHandlerMapping mappings
-  ) {
+  OpenApiCustomizer resourceNotFoundCustomizer(
+      @Qualifier("requestMappingHandlerMapping") RequestMappingHandlerMapping mappings) {
     return new ResourceNotFoundOpenApiCustomizer(mappings);
   }
 }

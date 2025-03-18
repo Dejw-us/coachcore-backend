@@ -1,8 +1,6 @@
 package pro.coachcore.training.security;
 
 import lombok.RequiredArgsConstructor;
-import pro.coachcore.common.security.cors.CorsSources;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,7 +10,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfigurationSource;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -30,7 +27,6 @@ public class SecurityConfig {
       auth.requestMatchers(HttpMethod.POST, "/v1/training-plans").authenticated();
 
       auth.requestMatchers("/v1/training-plans/me").authenticated();
-      auth.requestMatchers("/home").permitAll();
       auth.requestMatchers("/v1/training-plans/{planId}/**")
           .access(trainingPlanAuthorizationManager);
       auth.requestMatchers("/v1/catalog-exercises").permitAll();

@@ -1,15 +1,12 @@
 package pro.coachcore.training.plan.unit;
 
+import static java.lang.Boolean.TRUE;
+import java.util.List;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
 import pro.coachcore.training.plan.exercise.TrainingExerciseMapper;
 import pro.coachcore.training.plan.set.TrainingSetMapper;
-
-import java.util.List;
-
-import static java.lang.Boolean.TRUE;
 
 @Mapper(uses = {TrainingSetMapper.class, TrainingExerciseMapper.class}, componentModel = "spring",
     injectionStrategy = InjectionStrategy.CONSTRUCTOR)

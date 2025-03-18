@@ -1,22 +1,20 @@
 package pro.coachcore.training.plan;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.oauth2.jwt.Jwt;
+import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
+import java.util.List;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import pro.coachcore.dto.DeletedObjectDto;
 import pro.coachcore.exception.ResourceNotFoundException;
 import pro.coachcore.lang.message.MessageService;
 import pro.coachcore.training.plan.goal.TrainingGoal;
 import pro.coachcore.training.plan.goal.TrainingGoalRepository;
 import pro.coachcore.training.plan.owner.TrainingPlanOwner;
-import pro.coachcore.training.plan.owner.TrainingPlanOwnerRepository;
 import pro.coachcore.training.plan.owner.TrainingPlanOwner.Permission;
-import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
-
-import java.util.List;
+import pro.coachcore.training.plan.owner.TrainingPlanOwnerRepository;
 
 @Slf4j
 @Service
@@ -25,15 +23,16 @@ public class TrainingPlanService {
   private final TrainingPlanRepository trainingPlanRepository;
   private final TrainingGoalRepository trainingGoalRepository;
   private final TrainingPlanOwnerRepository trainingPlanOwnerRepository;
+  private final AuditorAware<String> auditorAware;
   private final MessageService messageService;
 
   public List<TrainingPlan> findAllTrainingPlans() {
     return trainingPlanRepository.findAll();
   }
 
-  public List<TrainingPlan> findAllUserTrainingPlans(Jwt jwt) {
-    var userId = (String) jwt.getClaim("id");
-    return trainingPlanRepository.findAllByCreatedBy(userId);
+  public List<TrainingPlan> findAllUserTrainingPlans() {
+    return trainingPlanRepository
+        .findAllByCreatedBy(auditorAware.getCurrentAuditor().orElseThrow());
   }
 
   public TrainingPlan findTrainingPlanByLocalId(String localId) {

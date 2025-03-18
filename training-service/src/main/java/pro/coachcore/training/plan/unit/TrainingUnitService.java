@@ -1,50 +1,54 @@
 package pro.coachcore.training.plan.unit;
 
-import lombok.RequiredArgsConstructor;
+import static org.apache.commons.lang3.EnumUtils.getEnum;
+import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
+import java.time.DayOfWeek;
+import java.time.format.TextStyle;
+import java.util.List;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import lombok.RequiredArgsConstructor;
 import pro.coachcore.exception.ResourceAlreadyExistsException;
 import pro.coachcore.exception.ResourceNotFoundException;
+import pro.coachcore.lang.message.MessageService;
 import pro.coachcore.training.plan.TrainingPlan;
 import pro.coachcore.training.plan.TrainingPlanRepository;
 import pro.coachcore.training.plan.parameter.ParameterDisplay;
-
-import java.time.DayOfWeek;
-import java.util.List;
-
-import static java.lang.String.format;
-import static org.apache.commons.lang3.EnumUtils.getEnum;
-import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
 
 @Service
 @RequiredArgsConstructor
 public class TrainingUnitService {
   private final TrainingUnitRepository trainingUnitRepository;
   private final TrainingPlanRepository trainingPlanRepository;
+  private final MessageService messageService;
 
   public List<TrainingUnit> findAllTrainingUnitsByTrainingPlanLocalId(String planLocalId) {
     if (!trainingPlanRepository.existsByLocalId(planLocalId)) {
-      throw new ResourceNotFoundException("Training plan does not exist");
+      throw new ResourceNotFoundException(messageService.getMessage("training.plan.not-found"));
     }
     return trainingUnitRepository.findAllByTrainingPlan_LocalId(planLocalId);
   }
 
-  public TrainingUnit findTrainingUnitByTrainingPlanLocalIdAndLocalId(String planLocalId, String unitLocalId) {
+  public TrainingUnit findTrainingUnitByTrainingPlanLocalIdAndLocalId(String planLocalId,
+      String unitLocalId) {
     return trainingUnitRepository.findByTrainingPlan_LocalIdAndLocalId(planLocalId, unitLocalId)
-        .orElseThrow(ResourceNotFoundException.supplier("Training unit does not exist"));
+        .orElseThrow(ResourceNotFoundException
+            .supplier(messageService.getMessage("training.unit.not-found")));
   }
 
-  public TrainingUnit findTrainingUnitByTrainingPlanLocalIdAndDayOfWeek(String planLocalId, DayOfWeek dayOfWeek) {
+  public TrainingUnit findTrainingUnitByTrainingPlanLocalIdAndDayOfWeek(String planLocalId,
+      DayOfWeek dayOfWeek) {
     return trainingUnitRepository.findByTrainingPlan_LocalIdAndDayOfWeek(planLocalId, dayOfWeek)
-        .orElseThrow(ResourceNotFoundException.supplier("Training unit does not exist"));
+        .orElseThrow(ResourceNotFoundException
+            .supplier(messageService.getMessage("training.unit.not-found")));
   }
 
   public TrainingUnit saveTrainingUnit(TrainingPlan plan, CreateTrainingUnitDto dto) {
     var dayOfWeek = getEnum(DayOfWeek.class, dto.dayOfWeek());
 
     if (trainingUnitRepository.existsByTrainingPlanAndDayOfWeek(plan, dayOfWeek)) {
-      throw new ResourceAlreadyExistsException(format("Training unit for %s already exists", dayOfWeek));
+      throw new ResourceAlreadyExistsException(getExistsByDayOfWeekMessage(dayOfWeek));
     }
 
     var unit = new TrainingUnit();
@@ -60,10 +64,11 @@ public class TrainingUnitService {
     return savedUnit;
   }
 
-  public TrainingUnit updateTrainingUnit(TrainingUnit unit, UpdateTrainingUnitDto dto, String planLocalId) {
+  public TrainingUnit updateTrainingUnit(TrainingUnit unit, UpdateTrainingUnitDto dto,
+      String planLocalId) {
     var dayOfWeek = getEnum(DayOfWeek.class, dto.dayOfWeek());
     if (trainingUnitRepository.existsByTrainingPlan_LocalIdAndDayOfWeek(planLocalId, dayOfWeek)) {
-      throw new ResourceAlreadyExistsException(format("Training unit for %s already exists", dayOfWeek));
+      throw new ResourceAlreadyExistsException(getExistsByDayOfWeekMessage(dayOfWeek));
     }
     updateIfNotNull(dayOfWeek, unit::setDayOfWeek);
     updateIfNotNull(dto.notes(), unit::setNotes);
@@ -73,10 +78,16 @@ public class TrainingUnitService {
   }
 
   @Transactional
-  public void deleteTrainingUnitByTrainingPlanLocalIdAndLocalId(String planLocalId, String unitLocalId) {
+  public void deleteTrainingUnitByTrainingPlanLocalIdAndLocalId(String planLocalId,
+      String unitLocalId) {
     if (!trainingUnitRepository.existsByTrainingPlan_LocalIdAndLocalId(planLocalId, unitLocalId)) {
-      throw new ResourceNotFoundException("Training unit does not exist");
+      throw new ResourceNotFoundException(messageService.getMessage("training.unit.not-found"));
     }
     trainingUnitRepository.deleteByTrainingPlan_LocalIdAndLocalId(planLocalId, unitLocalId);
+  }
+
+  private String getExistsByDayOfWeekMessage(DayOfWeek dayOfWeek) {
+    return messageService.getMessage("training.unit.exists.day-of-week",
+        dayOfWeek.getDisplayName(TextStyle.FULL, LocaleContextHolder.getLocale()));
   }
 }
