@@ -1,7 +1,6 @@
 package pro.coachcore.oauth2.server.user.account;
 
 import org.springframework.stereotype.Component;
-
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;

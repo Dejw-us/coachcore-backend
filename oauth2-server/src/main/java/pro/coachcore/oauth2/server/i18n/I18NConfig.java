@@ -1,4 +1,4 @@
-package pro.coachcore.training.i18n;
+package pro.coachcore.oauth2.server.i18n;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

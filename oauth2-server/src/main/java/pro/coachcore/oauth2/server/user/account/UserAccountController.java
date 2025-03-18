@@ -1,17 +1,16 @@
 package pro.coachcore.oauth2.server.user.account;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import pro.coachcore.oauth2.server.user.UserService;
-import pro.coachcore.exception.ResourceNotFoundException;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import pro.coachcore.exception.ResourceNotFoundException;
+import pro.coachcore.oauth2.server.user.UserService;
 
 @Slf4j
 @Controller
@@ -21,7 +20,6 @@ public class UserAccountController {
 
   @GetMapping("/account/login")
   String getLoginPage() {
-    log.info("Login");
     return "account/login";
   }
 
@@ -32,9 +30,7 @@ public class UserAccountController {
   }
 
   @PostMapping("/account/register")
-  String postRegister(
-      @Valid @ModelAttribute("registerUser") RegisterUserDto dto,
-      Errors errors,
+  String postRegister(@Valid @ModelAttribute("registerUser") RegisterUserDto dto, Errors errors,
       Model model) throws ResourceNotFoundException {
     if (errors.hasErrors()) {
       return "account/register";

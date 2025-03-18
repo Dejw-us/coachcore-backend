@@ -1,11 +1,9 @@
 package pro.coachcore.oauth2.server.user;
 
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
 import pro.coachcore.oauth2.server.user.role.UserRole;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
