@@ -45,7 +45,7 @@
 
   <modules>
     <module>common</module>
-    <module>training-api</module>
+    <module>training-service</module>
     <module>oauth2-server</module>
     <module>images-api</module>
     <module>gateway</module>
