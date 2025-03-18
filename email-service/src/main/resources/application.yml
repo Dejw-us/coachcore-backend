@@ -29,6 +29,6 @@ logging:
     org:
       springframework: ${LOGGING_LEVEL:INFO}
     pro:
-     coachcore: ${LOGGING_LEVEL:INFO}
+      coachcore: ${LOGGING_LEVEL:INFO}
 server:
   port: 8083
