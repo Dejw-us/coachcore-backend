@@ -1,7 +1,6 @@
 package pro.coachcore.training.plan.set;
 
 import java.util.List;
-
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -1,37 +1,35 @@
 package pro.coachcore.training.plan.set;
 
-import lombok.RequiredArgsConstructor;
+import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import lombok.RequiredArgsConstructor;
 import pro.coachcore.exception.ResourceNotFoundException;
+import pro.coachcore.lang.message.MessageService;
 import pro.coachcore.training.plan.exercise.TrainingExercise;
 import pro.coachcore.training.plan.exercise.TrainingExerciseRepository;
-
-import static org.apache.commons.lang3.EnumUtils.getEnum;
-import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class TrainingSetService {
+  private final MessageService messageService;
   private final TrainingSetRepository trainingSetRepository;
   private final TrainingExerciseRepository trainingExerciseRepository;
 
-  public TrainingSet findTrainingSetByLocalId(String localId) {
-    return trainingSetRepository.findByLocalId(localId)
-        .orElseThrow(ResourceNotFoundException.supplier("Training set does not exist"));
+  public TrainingSet getSet(String localId) {
+    return trainingSetRepository.findByLocalId(localId).orElseThrow(
+        ResourceNotFoundException.supplier(messageService.getMessage("training.set.not-found")));
   }
 
-  public List<TrainingSet> findAllByTrainingExerciseLocalId(String localId) {
-    if (!trainingExerciseRepository.existsByLocalId(localId)) {
-      throw new ResourceNotFoundException("Training exercise does not exist");
+  public List<TrainingSet> getExerciseSets(String exerciseLocalId) {
+    if (!trainingExerciseRepository.existsByLocalId(exerciseLocalId)) {
+      throw new ResourceNotFoundException(messageService.getMessage("training.exercise.not-found"));
     }
-    return trainingSetRepository.findAllByTrainingExercise_LocalId(localId);
+    return trainingSetRepository.findAllByTrainingExercise_LocalId(exerciseLocalId);
   }
 
-  public TrainingSet saveTrainingSet(TrainingExercise exercise) {
+  public TrainingSet saveSet(TrainingExercise exercise) {
     var set = new TrainingSet();
     var index = trainingSetRepository.countByTrainingExercise_LocalId(exercise.getLocalId());
     set.setIndex(index + 1L);
@@ -41,7 +39,7 @@ public class TrainingSetService {
     return savedSet;
   }
 
-  public TrainingSet updateTrainingSet(TrainingSet set, UpdateTrainingSetDto dto) {
+  public TrainingSet updateSet(TrainingSet set, UpdateTrainingSetDto dto) {
     updateIfNotNull(dto.intensity(), set::setIntensity);
     updateIfNotNull(dto.rate(), set::setRate);
     updateIfNotNull(dto.reps(), set::setReps);
@@ -52,11 +50,11 @@ public class TrainingSetService {
   }
 
   @Transactional
-  public String deleteTrainingSetByLocalId(String localId) {
-    if (!trainingSetRepository.existsByLocalId(localId)) {
-      throw new ResourceNotFoundException("Training set does not exist");
+  public String deleteSet(String setLocalId) {
+    if (!trainingSetRepository.existsByLocalId(setLocalId)) {
+      throw new ResourceNotFoundException(messageService.getMessage("training.set.not-found"));
     }
-    trainingSetRepository.deleteByLocalId(localId);
-    return localId;
+    trainingSetRepository.deleteByLocalId(setLocalId);
+    return setLocalId;
   }
 }
