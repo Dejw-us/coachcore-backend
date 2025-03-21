@@ -7,14 +7,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-
+import pro.coachcore.exception.ResourceAlreadyExistsException;
 import pro.coachcore.oauth2.server.security.RsaKeyProperties;
 import pro.coachcore.oauth2.server.user.UserService;
 import pro.coachcore.oauth2.server.user.admin.AdminCredentialsProperties;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableConfigurationProperties({ RsaKeyProperties.class, AdminCredentialsProperties.class })
+@EnableConfigurationProperties({RsaKeyProperties.class, AdminCredentialsProperties.class})
 public class AuthServerApplication {
   public static void main(String[] args) {
     SpringApplication.run(AuthServerApplication.class, args);
@@ -24,9 +24,12 @@ public class AuthServerApplication {
   @Order(1)
   ApplicationRunner defaultRolesRunner(UserService userService) {
     return args -> {
-      userService.saveDefaultRole("USER");
-      userService.saveDefaultRole("ADMIN");
-      userService.saveDefaultRole("TRAINER");
+      try {
+        userService.saveDefaultRole("USER");
+        userService.saveDefaultRole("ADMIN");
+        userService.saveDefaultRole("TRAINER");
+      } catch (ResourceAlreadyExistsException exception) {
+      }
     };
   }
 }

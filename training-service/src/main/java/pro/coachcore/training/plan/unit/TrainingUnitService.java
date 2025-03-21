@@ -85,12 +85,13 @@ public class TrainingUnitService {
         dayOfWeek);
     var unit = new TrainingUnit();
 
+
     if (count == plan.getWeeks()) {
       throw new ResourceAlreadyExistsException(messageService
           .getMessage("training.unit.cannot-create-more", dayOfWeek.name().toLowerCase()));
     }
 
-    unit.setIndex(dayOfWeek.getValue() * (int) count);
+    unit.setIndex(dayOfWeek.getValue() + (7 * ((int) count + 1)) - 8);
     unit.setName(dto.name());
     unit.setNotes(dto.notes());
     unit.setDayOfWeek(dayOfWeek);
