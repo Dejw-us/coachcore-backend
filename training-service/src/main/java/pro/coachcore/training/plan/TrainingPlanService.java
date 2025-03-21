@@ -76,6 +76,7 @@ public class TrainingPlanService {
     plan.setName(dto.name());
     plan.setDescription(dto.description());
     plan.setGoals(savedGoals);
+    plan.setWeeks(dto.weeks());
 
     var savedPlan = trainingPlanRepository.save(plan);
 

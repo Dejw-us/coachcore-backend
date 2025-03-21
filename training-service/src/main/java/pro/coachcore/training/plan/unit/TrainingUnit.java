@@ -52,6 +52,9 @@ public class TrainingUnit implements IdentifiableEntity<String> {
   @Column(name = "day_of_week")
   private DayOfWeek dayOfWeek;
 
+  @Column(name = "index")
+  private Integer index;
+
   @CreatedDate
   @Column(name = "created_at")
   private LocalDate createdAt;

@@ -43,7 +43,7 @@ public class User implements UserDetails, IdentifiableEntity<String> {
   @Column(name = "password", nullable = false)
   private String password;
 
-  @Column(name = "email", unique = true, nullable = false)
+  @Column(name = "email", unique = true, nullable = true)
   private String email;
 
   @Column(name = "first_name")
@@ -56,7 +56,7 @@ public class User implements UserDetails, IdentifiableEntity<String> {
   private LocalDate dateOfBirth;
 
   @CreatedDate
-  @Column(name = "updated_at", updatable = false)
+  @Column(name = "created_at", updatable = false)
   private LocalDateTime createdAt;
 
   @LastModifiedDate

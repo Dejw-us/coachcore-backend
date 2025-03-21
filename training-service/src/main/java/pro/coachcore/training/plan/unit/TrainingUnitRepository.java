@@ -30,4 +30,6 @@ public interface TrainingUnitRepository extends JpaRepository<TrainingUnit, Long
   boolean existsByTrainingPlan_LocalIdAndDayOfWeek(String planLocalId, DayOfWeek dayOfWeek);
 
   boolean existsByTrainingPlanAndDayOfWeek(TrainingPlan trainingPlan, DayOfWeek dayOfWeek);
+
+  long countByTrainingPlan_LocalIdAndDayOfWeek(String planLocalId, DayOfWeek dayOfWeek);
 }

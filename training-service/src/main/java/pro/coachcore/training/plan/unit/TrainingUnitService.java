@@ -81,13 +81,16 @@ public class TrainingUnitService {
    */
   public TrainingUnit saveUnit(TrainingPlan plan, CreateTrainingUnitDto dto) {
     var dayOfWeek = getEnum(DayOfWeek.class, dto.dayOfWeek());
-
-    if (trainingUnitRepository.existsByTrainingPlanAndDayOfWeek(plan, dayOfWeek)) {
-      throw new ResourceAlreadyExistsException(getExistsByDayOfWeekMessage(dayOfWeek));
-    }
-
+    var count = trainingUnitRepository.countByTrainingPlan_LocalIdAndDayOfWeek(plan.getLocalId(),
+        dayOfWeek);
     var unit = new TrainingUnit();
 
+    if (count == plan.getWeeks()) {
+      throw new ResourceAlreadyExistsException(messageService
+          .getMessage("training.unit.cannot-create-more", dayOfWeek.name().toLowerCase()));
+    }
+
+    unit.setIndex(dayOfWeek.getValue() * (int) count);
     unit.setName(dto.name());
     unit.setNotes(dto.notes());
     unit.setDayOfWeek(dayOfWeek);
