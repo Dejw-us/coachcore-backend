@@ -16,7 +16,6 @@ public class S3Config {
       @Value("${cloud.aws.credentials.secret-key}") String secretKey,
       @Value("${cloud.aws.region.static}") String region,
       @Value("${cloud.aws.s3.endpoint}") String endpoint) {
-
     return S3Client.builder().region(Region.of(region))
         .credentialsProvider(
             StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))

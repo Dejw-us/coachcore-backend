@@ -17,12 +17,12 @@ spring:
               client-id: ${OAUTH2_WEB_APP_CLIENT_ID:coachcore-web-app}
               client-secret: ${OAUTH2_WEB_APP_CLIENT_SECRET:$2a$10$vLW8gLjoVpksEJf70SGPAOUd1H.ppsIgFTQbU63HVyXDaAcvcZuMe}
               client-authentication-methods:
-                - "client_secret_basic" 
+                - "client_secret_basic"
               authorization-grant-types:
                 - "authorization_code"
                 - "refresh_token"
               redirect-uris:
-                - ${OAUTH2_WEB_APP_CLIENT_REDIRECT_URI:http://localhost:3000}  
+                - ${OAUTH2_WEB_APP_CLIENT_REDIRECT_URI:http://localhost:3000}
               scopes:
                 - "openid"
           coachcore-mail-sender:
@@ -34,8 +34,8 @@ spring:
               authorization-grant-types:
                 - "client_credentials"
               scopes:
-                - "mail.send" 
-            
+                - "mail.send"
+
 logging:
   level:
     org:
@@ -43,14 +43,14 @@ logging:
         security: ${LOGGING_LEVEL:INFO}
         web: ${LOGGING_LEVEL:INFO}
     pro:
-     coachcore: ${LOGGING_LEVEL:INFO}
+      coachcore: ${LOGGING_LEVEL:INFO}
 server:
-  port: 9000
+  port: 8089
 
 rsa:
   public-key: classpath:certs/public.pem
   private-key: classpath:certs/private.pem
-issuer: ${ISSUER:http://localhost:9000}
+issuer: ${ISSUER:http://localhost:8089}
 admin:
   username: ${ADMIN_USERNAME:admin}
   password: ${ADMIN_PASSWORD:admin}
