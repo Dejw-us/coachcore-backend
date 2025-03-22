@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: profile-service
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost:5435}/${DB_NAME:profile}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+logging:
+  level:
+    root: ${LOGGING_LEVEL:DEBUG}
+cloud:
+  aws:
+    s3:
+      bucket: my-local-bucket
+      endpoint: http://localhost:9000
+    credentials:
+      access-key: test
+      secret-key: test1234
+    region:
+      static: us-east-1
+    stack:
+      auto: false
+server:
+  port: 3080
