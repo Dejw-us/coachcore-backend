@@ -20,7 +20,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://${AUTH_SERVER_HOST:localhost}:${AUTH_SERVER_PORT:9000}
+          issuer-uri: http://${AUTH_SERVER_HOST:localhost}:${AUTH_SERVER_PORT:8089}
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/oauth2/jwks
 dev-mode:
   enabled: ${DEV_MODE_ENABLED:false}
