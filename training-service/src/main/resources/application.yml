@@ -17,18 +17,19 @@ spring:
         jwt:
           issuer-uri: ${AUTH_SERVER_HOST:http://localhost:8089}
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/oauth2/jwks
+logging-level: ${LOGGING_LEVEL:INFO}
 logging:
   level:
     org:
       springframework:
-        security: DEBUG
+        security: ${logging-level}
       hibernate:
-        sql: DEBUG
+        sql: ${logging-level}
         orm:
           jdbc:
-            bind: TRACE
+            bind: ${logging-level}
     pro:
-      coachcore: DEBUG
+      coachcore: ${logging-level}
 
 server:
   port: 8082

@@ -1,16 +1,18 @@
 version: "version"
 services:
   gateway:
-    image: ghcr.io/coachcore/gateway:0.0.3
+    image: ghcr.io/coachcore/gateway:1.0.0
     ports:
       - 8080:8080
     environment:
-      OAUTH2_SERVER_URL: http://oauth2-server:9000
+      OAUTH2_SERVER_URL: http://oauth2-server:8089
       TRAINING_SERVICE_URL: http://training-service:8082
+      PROFILE_SERVICE_URL: http://profile-service:3080
       LOGGING_LEVEL: DEBUG
     depends_on:
       - oauth2-server
       - training-service
+      - profile-service
   training-db:
     image: postgres:16.2
     ports:
@@ -23,10 +25,27 @@ services:
     image: ghcr.io/coachcore/training-api:1.4.0
     environment:
       DB_HOST: training-db:5432
-      AUTH_SERVER_HOST: http://oauth2-server:9000
+      AUTH_SERVER_HOST: http://oauth2-server:8089
       LOGGING_LEVEL: DEBUG
     depends_on:
       - training-db
+      - oauth2-server
+  profile-db:
+    image: postgres:16.2
+    ports:
+      - 5435:5432
+    environment:
+      POSRGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: profile
+  profile-service:
+    image: ghcr.io/coachcore/profile-service:0.0.1
+    environment:
+      DB_HOST: profile-db:5432
+      AUTH_SERVER_HOST: http://oauth2-server:8089
+      LOGGING_LEVEL: DEBUG
+    depends_on:
+      - profile-db
       - oauth2-server
   oauth2-db:
     image: postgres:16.2
@@ -39,11 +58,11 @@ services:
   oauth2-server:
     image: ghcr.io/coachcore/oauth2-server:0.0.5
     ports:
-      - 9000:9000
+      - 8089:8089
     environment:
       DB_HOST: oauth2-db:5432
       DB_NAME: oauth2
-      ISSUER: http://oauth2-server:9000
+      ISSUER: http://oauth2-server:8089
       OAUTH2_WEB_APP_CLIENT_SECRET: $$2a$$10$$vLW8gLjoVpksEJf70SGPAOUd1H.ppsIgFTQbU63HVyXDaAcvcZuMe
       LOGGING_LEVEL: DEBUG
     depends_on:
