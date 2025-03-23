@@ -10,6 +10,16 @@ public abstract class GlobalHandlerRuntimeException extends RuntimeException {
     this.status = status;
   }
 
+  public static GlobalHandlerRuntimeException create(String message, HttpStatus status,
+      String errorCode) {
+    return new GlobalHandlerRuntimeException(message, status) {
+      @Override
+      public String getErrorCode() {
+        return errorCode;
+      }
+    };
+  }
+
   public abstract String getErrorCode();
 
   public HttpStatus getStatus() {

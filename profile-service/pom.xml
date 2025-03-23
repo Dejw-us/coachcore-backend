@@ -37,6 +37,16 @@
     </dependency>
 
     <dependency>
+      <groupId>pro.coachcore</groupId>
+      <artifactId>dto-common</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>pro.coachcore</groupId>
+      <artifactId>exception-common</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>

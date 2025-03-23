@@ -4,19 +4,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import software.amazon.awssdk.core.ResponseInputStream;
+import pro.coachcore.exception.GlobalHandlerRuntimeException;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class S3Service {
   @Value("${cloud.aws.s3.bucket}")
@@ -30,34 +28,34 @@ public class S3Service {
     }
     s3Client.putObject(PutObjectRequest.builder().bucket(bucketName).key(key).build(),
         RequestBody.fromFile(Path.of(filePath)));
-    log.debug("Saved {} with key {}", filePath, key);
   }
 
   public void uploadFile(MultipartFile file, String key) {
     if (file.isEmpty()) {
-      throw new RuntimeException("Mulitpart file is empty");
+      throw GlobalHandlerRuntimeException.create("File is empty", HttpStatus.BAD_REQUEST,
+          "EMPTY_FILE");
     }
 
     try {
       s3Client.putObject(PutObjectRequest.builder().bucket(bucketName).key(key).build(),
           RequestBody.fromBytes(file.getBytes()));
     } catch (IOException exception) {
-      throw new RuntimeException("Failed to save mulitpart file");
+      throw GlobalHandlerRuntimeException.create("Failed to save mulitpart file",
+          HttpStatus.INTERNAL_SERVER_ERROR, "IO_ERROR");
     }
   }
 
   public byte[] downloadFile(String key) {
     try {
-      GetObjectRequest getObjectRequest =
-          GetObjectRequest.builder().bucket(bucketName).key(key).build();
+      var getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(key).build();
 
-      ResponseInputStream<GetObjectResponse> objectResponse = s3Client.getObject(getObjectRequest);
+      var objectResponse = s3Client.getObject(getObjectRequest);
 
       byte[] content = objectResponse.readAllBytes();
-      log.debug("Downloaded file with key {}", key);
       return content;
     } catch (IOException exception) {
-      throw new RuntimeException("Failed to download file from S3", exception);
+      throw GlobalHandlerRuntimeException.create("Failed to download file from S3",
+          HttpStatus.INTERNAL_SERVER_ERROR, "S3_ERROR");
     }
   }
 }
