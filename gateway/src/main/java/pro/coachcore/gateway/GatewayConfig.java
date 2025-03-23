@@ -1,19 +1,19 @@
 package pro.coachcore.gateway;
 
-import lombok.RequiredArgsConstructor;
-import pro.coachcore.gateway.service.ServicesProperites;
-
+import java.util.List;
+import java.util.function.Function;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.route.RouteLocator;
-import org.springframework.cloud.gateway.route.builder.*;
+import org.springframework.cloud.gateway.route.builder.Buildable;
+import org.springframework.cloud.gateway.route.builder.PredicateSpec;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
-import java.util.function.Function;
+import lombok.RequiredArgsConstructor;
+import pro.coachcore.gateway.service.ServicesProperites;
 
 @Configuration
 @RequiredArgsConstructor
@@ -24,22 +24,14 @@ public class GatewayConfig {
 
   @Bean
   RouteLocator routeLocator(RouteLocatorBuilder builder) {
-    return builder.routes()
-        .route("training-plans", configureTrainingApiRoute("/training-plans/**"))
-        .route("catalog-exercises",
-        configureTrainingApiRoute("/catalog-exercises/**"))
-        .route("exercise-categories",
-        configureTrainingApiRoute("/exercise-categories/**"))
-        .route("oauth2-refresh-token", route -> route
-            .path("/oauth2/token")
-            .filters(filters -> filters.filter(cookieRefreshTokenGatewayFilter))
-            .uri(servicesProperites.oauth2ServerUrl()))
-        .route("newsletter-service", route -> route
-            .path("/newsletter/**")
-            .filters(cookieTokenGatewayFilter.asFunctionFilter())
-            .uri(servicesProperites.newsletterServiceUrl()))
-        // .route("users", configureApiRoute("/users/**",
-        // servicesProperites.oauth2ServerUrl()))
+    return builder.routes().route("training-plans", configureTrainingApiRoute("/training-plans/**"))
+        .route("catalog-exercises", configureTrainingApiRoute("/catalog-exercises/**"))
+        .route("exercise-categories", configureTrainingApiRoute("/exercise-categories/**"))
+        .route("oauth2-refresh-token",
+            route -> route.path("/oauth2/token")
+                .filters(filters -> filters.filter(cookieRefreshTokenGatewayFilter))
+                .uri(servicesProperites.oauth2ServerUrl()))
+        .route("profiles", configureApiRoute("/avatars/*", servicesProperites.profileServiceUrl()))
         .build();
   }
 
@@ -64,11 +56,7 @@ public class GatewayConfig {
   }
 
   private Function<PredicateSpec, Buildable<Route>> configureApiRoute(String path, String uri) {
-    return route -> route
-        .path(path)
-        .filters(filters -> filters
-            .prefixPath("/v1")
-            .filter(cookieTokenGatewayFilter))
-        .uri(uri);
+    return route -> route.path(path)
+        .filters(filters -> filters.prefixPath("/v1").filter(cookieTokenGatewayFilter)).uri(uri);
   }
 }

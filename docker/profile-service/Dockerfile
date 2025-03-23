@@ -6,6 +6,6 @@ RUN mkdir /app
 COPY ./target /app
 WORKDIR /app
 
-EXPOSE 8089
+EXPOSE 3080
 
-ENTRYPOINT ["java", "-jar", "oauth2-server-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "profile-service-0.0.1-SNAPSHOT.jar"]
