@@ -1,4 +1,4 @@
-# Env vars
+# Env vars for [configuration](https://github.com/CoachCore/Backend-microservices/blob/dev/profile-service/src/main/resources/application.yml)
 
 - `AUTH_SERVER_HOST` - host and port of oauth2 server
 - `DB_HOST` - host and port of db
