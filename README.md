@@ -4,3 +4,5 @@
 - [Training service](https://github.com/CoachCore/Backend-microservices/tree/dev/training-service#readme) is used for managing training plans and exercise catalog
 - [Oauth2 server](https://github.com/CoachCore/Backend-microservices/tree/dev/oauth2-server#readme) is used for user authorization and authentication
 - [Email service](https://github.com/CoachCore/Backend-microservices/tree/dev/email-service#readme) is used for sending emails
+
+See [Changelog](https://github.com/CoachCore/Backend-microservices/blob/dev/CHANGELOG.md)
