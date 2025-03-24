@@ -6,10 +6,12 @@
   <parent>
     <groupId>pro.coachcore</groupId>
     <artifactId>backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
 
   <artifactId>oauth2-server</artifactId>
+  <name>oauth2-server</name>
+  <version>0.0.6</version>
 
   <properties>
     <maven.compiler.source>23</maven.compiler.source>
