@@ -25,13 +25,13 @@ logging:
 cloud:
   aws:
     s3:
-      bucket: my-local-bucket
-      endpoint: http://localhost:9000
+      bucket: ${AWS_S3_BUCKET_NAME:my-local-bucket}
+      endpoint: ${AWS_S3_ENDPOINT:http://localhost:9000}
     credentials:
-      access-key: test
-      secret-key: test1234
+      access-key: ${AWS_ACCESS_KEY:test}
+      secret-key: ${AWS_SECRET_KEY:test1234}
     region:
-      static: us-east-1
+      static: ${AWS_REGION:us-east-1}
     stack:
       auto: false
 server:

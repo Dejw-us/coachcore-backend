@@ -13,6 +13,7 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +57,9 @@ public class S3Service {
     } catch (IOException exception) {
       throw GlobalHandlerRuntimeException.create("Failed to download file from S3",
           HttpStatus.INTERNAL_SERVER_ERROR, "S3_ERROR");
+    } catch (S3Exception exception) {
+      throw GlobalHandlerRuntimeException.create("User does not exist or has no profile picture",
+          HttpStatus.NOT_FOUND, "NOT_FOUND");
     }
   }
 }

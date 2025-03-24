@@ -31,7 +31,7 @@ public class GatewayConfig {
             route -> route.path("/oauth2/token")
                 .filters(filters -> filters.filter(cookieRefreshTokenGatewayFilter))
                 .uri(servicesProperites.oauth2ServerUrl()))
-        .route("profiles", configureApiRoute("/avatars/*", servicesProperites.profileServiceUrl()))
+        .route("profiles", configureApiRoute("/avatars/**", servicesProperites.profileServiceUrl()))
         .build();
   }
 

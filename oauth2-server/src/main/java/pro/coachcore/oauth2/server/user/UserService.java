@@ -1,5 +1,7 @@
 package pro.coachcore.oauth2.server.user;
 
+import static pro.coachcore.util.ServiceUtils.updateIf;
+import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,8 +12,7 @@ import pro.coachcore.exception.ResourceAlreadyExistsException;
 import pro.coachcore.exception.ResourceNotFoundException;
 import pro.coachcore.lang.message.MessageService;
 import pro.coachcore.oauth2.server.user.account.RegisterUserDto;
-import pro.coachcore.oauth2.server.user.role.UserRole;
-import pro.coachcore.oauth2.server.user.role.UserRoleRepository;
+import pro.coachcore.oauth2.server.user.role.UserRoleService;
 
 /**
  * Service class for managing users and roles.
@@ -21,25 +22,9 @@ import pro.coachcore.oauth2.server.user.role.UserRoleRepository;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
   private final UserRepository appUserRepository;
-  private final UserRoleRepository userRoleRepository;
+  private final UserRoleService userRoleService;
   private final PasswordEncoder passwordEncoder;
   private final MessageService messageService;
-
-  /**
-   * Saves a new default role in the system.
-   *
-   * @param authority the name of the role (e.g., "USER", "ADMIN")
-   * @return the saved UserRole entity
-   * @throws ResourceAlreadyExistsException if the role already exists
-   */
-  public UserRole saveDefaultRole(String authority) {
-    if (userRoleRepository.existsByAuthority(authority)) {
-      throw new ResourceAlreadyExistsException(authority);
-    }
-    var role = new UserRole();
-    role.setAuthority(authority);
-    return userRoleRepository.save(role);
-  }
 
   /**
    * Retrieves a user by username.
@@ -66,18 +51,6 @@ public class UserService implements UserDetailsService {
   }
 
   /**
-   * Finds a role by authority name.
-   *
-   * @param authority the role name
-   * @return the UserRole entity
-   * @throws ResourceNotFoundException if the role does not exist
-   */
-  public UserRole findRole(String authority) throws ResourceNotFoundException {
-    return userRoleRepository.findByAuthority(authority).orElseThrow(
-        ResourceNotFoundException.supplier(messageService.getMessage("role.not-found")));
-  }
-
-  /**
    * Registers an admin user if one does not already exist.
    *
    * @param username the username for the admin
@@ -92,7 +65,7 @@ public class UserService implements UserDetailsService {
     var user = new User();
     user.setUsername(username);
     user.setPassword(passwordEncoder.encode(password));
-    user.getRoles().add(findRole("ADMIN"));
+    user.getRoles().add(userRoleService.findRole("ADMIN"));
     return appUserRepository.save(user);
   }
 
@@ -108,7 +81,7 @@ public class UserService implements UserDetailsService {
     user.setUsername(dto.getUsername());
     user.setEmail(dto.getEmail());
     user.setPassword(passwordEncoder.encode(dto.getPassword()));
-    user.getRoles().add(findRole("USER"));
+    user.getRoles().add(userRoleService.findRole("USER"));
     return appUserRepository.save(user);
   }
 
@@ -129,23 +102,25 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  /**
-   * Checks if a username is already taken.
-   *
-   * @param username the username to check
-   * @return true if the username exists, false otherwise
-   */
+  public User updateUser(User user, UpdateUserDto dto) {
+    updateIfNotNull(dto.description(), user::setDescription);
+    var updated = updateIf(dto.username(), user::setUsername, this::canUpdateUsername);
+    return appUserRepository.save(user);
+  }
+
+
   public boolean isUsernameTaken(String username) {
     return appUserRepository.existsByUsername(username);
   }
 
-  /**
-   * Checks if an email is already taken.
-   *
-   * @param email the email to check
-   * @return true if the email exists, false otherwise
-   */
   public boolean isEmailTaken(String email) {
     return appUserRepository.existsByEmail(email);
+  }
+
+  private boolean canUpdateUsername(String username) {
+    if (isUsernameTaken(username)) {
+      throw new ResourceAlreadyExistsException("Username is taken");
+    }
+    return true;
   }
 }

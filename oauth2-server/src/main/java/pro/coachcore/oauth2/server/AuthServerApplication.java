@@ -9,8 +9,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import pro.coachcore.exception.ResourceAlreadyExistsException;
 import pro.coachcore.oauth2.server.security.RsaKeyProperties;
-import pro.coachcore.oauth2.server.user.UserService;
 import pro.coachcore.oauth2.server.user.admin.AdminCredentialsProperties;
+import pro.coachcore.oauth2.server.user.role.UserRoleService;
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -22,7 +22,7 @@ public class AuthServerApplication {
 
   @Bean
   @Order(1)
-  ApplicationRunner defaultRolesRunner(UserService userService) {
+  ApplicationRunner defaultRolesRunner(UserRoleService userService) {
     return args -> {
       try {
         userService.saveDefaultRole("USER");

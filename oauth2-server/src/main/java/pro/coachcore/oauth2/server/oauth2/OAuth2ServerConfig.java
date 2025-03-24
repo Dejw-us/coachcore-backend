@@ -6,11 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
@@ -51,24 +49,6 @@ public class OAuth2ServerConfig {
     http.exceptionHandling(exceptions -> exceptions.defaultAuthenticationEntryPointFor(
         new LoginUrlAuthenticationEntryPoint("/account/login"),
         new MediaTypeRequestMatcher(MediaType.TEXT_HTML)));
-    return http.build();
-  }
-
-  @Bean
-  @Order(2)
-  SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-    http.csrf(AbstractHttpConfigurer::disable);
-    http.authorizeHttpRequests(auth -> {
-      auth.requestMatchers("/account/register", "/account/login").permitAll();
-      auth.requestMatchers(HttpMethod.GET, "/v1/users/public/**").permitAll();
-      auth.requestMatchers(HttpMethod.GET, "/refresh-token").permitAll();
-      auth.anyRequest().authenticated();
-    });
-    http.formLogin(form -> form.loginPage("/account/login"));
-    http.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("http://localhost:3000")
-        .invalidateHttpSession(true).clearAuthentication(true)
-        .deleteCookies("JSESSIONID", "refresh_token", "access_token", "id_token"));
-
     return http.build();
   }
 

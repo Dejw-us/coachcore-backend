@@ -21,7 +21,7 @@ import pro.coachcore.dto.MessageDto;
 public class AvatarController {
   private final AvatarService avatarService;
 
-  @PostMapping
+  @PostMapping("/me")
   ResponseEntity<MessageDto> postAvatar(@RequestParam MultipartFile avatar)
       throws BadRequestException {
     avatarService.setAvatar(avatar);

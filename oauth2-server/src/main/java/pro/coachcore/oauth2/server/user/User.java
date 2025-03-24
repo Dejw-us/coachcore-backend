@@ -55,6 +55,9 @@ public class User implements UserDetails, IdentifiableEntity<String> {
   @Column(name = "date_of_birth")
   private LocalDate dateOfBirth;
 
+  @Column(name = "description")
+  private String description;
+
   @CreatedDate
   @Column(name = "created_at", updatable = false)
   private LocalDateTime createdAt;

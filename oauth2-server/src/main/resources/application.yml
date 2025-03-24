@@ -10,6 +10,10 @@ spring:
     driver-class-name: org.postgresql.Driver
   security:
     oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AUTH_SERVER_HOST:http://localhost:8089}
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/oauth2/jwks
       authorizationserver:
         client:
           coachcore-web-app:

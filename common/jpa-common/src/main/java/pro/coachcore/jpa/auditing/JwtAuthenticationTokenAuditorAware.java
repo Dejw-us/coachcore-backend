@@ -1,13 +1,11 @@
 package pro.coachcore.jpa.auditing;
 
+import java.util.Optional;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Optional;
 
 @Slf4j
 public class JwtAuthenticationTokenAuditorAware implements AuditorAware<String> {
