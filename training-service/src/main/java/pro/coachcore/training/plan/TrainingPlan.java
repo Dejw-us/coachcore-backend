@@ -22,6 +22,7 @@ import lombok.Data;
 import pro.coachcore.jpa.id.IdentifiableEntity;
 import pro.coachcore.jpa.id.LocalIdEntityListener;
 import pro.coachcore.training.plan.goal.TrainingGoal;
+import pro.coachcore.training.plan.owner.TrainingPlanOwner;
 import pro.coachcore.training.plan.unit.TrainingUnit;
 
 @Data
@@ -62,6 +63,9 @@ public class TrainingPlan implements IdentifiableEntity<String> {
       joinColumns = @JoinColumn(name = "training_plan_id"))
   private List<TrainingGoal> goals = new ArrayList<>();
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "trainingPlan", cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "trainingPlan", cascade = CascadeType.REMOVE)
   private List<TrainingUnit> units = new ArrayList<>();
+
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "trainingPlan")
+  private List<TrainingPlanOwner> owners = new ArrayList<>();
 }
