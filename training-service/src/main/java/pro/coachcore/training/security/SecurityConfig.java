@@ -1,6 +1,6 @@
 package pro.coachcore.training.security;
 
-import lombok.RequiredArgsConstructor;
+import static org.springframework.security.config.Customizer.withDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import static org.springframework.security.config.Customizer.withDefaults;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
@@ -29,7 +29,8 @@ public class SecurityConfig {
       auth.requestMatchers("/v1/training-plans/me").authenticated();
       auth.requestMatchers("/v1/training-plans/{planId}/**")
           .access(trainingPlanAuthorizationManager);
-      auth.requestMatchers("/v1/catalog-exercises").permitAll();
+      auth.requestMatchers(HttpMethod.POST, "/v1/catalog-exercises").hasAuthority("ADMIN");
+      auth.requestMatchers(HttpMethod.GET, "/v1/catalog-exercises").permitAll();
 
       auth.requestMatchers(HttpMethod.GET, "/v1/exercise-categories").permitAll();
       auth.requestMatchers(HttpMethod.GET, "/v1/training-plans").permitAll();
