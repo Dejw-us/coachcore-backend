@@ -8,4 +8,4 @@ WORKDIR /app
 
 EXPOSE 3080
 
-ENTRYPOINT ["java", "-jar", "profile-service-0.0.1.jar"]
+ENTRYPOINT ["java", "-jar", "profile-service-0.0.2.jar"]

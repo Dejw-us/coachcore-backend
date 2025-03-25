@@ -21,7 +21,8 @@ spring:
     driver-class-name: org.postgresql.Driver
 logging:
   level:
-    root: ${LOGGING_LEVEL:DEBUG}
+    pro:
+      coachcore: ${LOGGING_LEVEL:DEBUG}
 cloud:
   aws:
     s3:
