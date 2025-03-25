@@ -4,7 +4,7 @@
 
 - Fix deleting plans
 - Let only admins edit catalog
-- Fix and add tests
+- Fix and add tests for training service
 
 # Todo
 
