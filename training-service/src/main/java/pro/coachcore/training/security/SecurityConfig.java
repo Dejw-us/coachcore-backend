@@ -16,10 +16,9 @@ import pro.coachcore.jwt.JwtAuthConverter;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-  private final TrainingPlanAuthorizationManager trainingPlanAuthorizationManager;
-
   @Bean
-  SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  SecurityFilterChain filterChain(HttpSecurity http,
+      TrainingPlanAuthorizationManager trainingPlanAuthorizationManager) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable);
 
     http.authorizeHttpRequests(auth -> {
