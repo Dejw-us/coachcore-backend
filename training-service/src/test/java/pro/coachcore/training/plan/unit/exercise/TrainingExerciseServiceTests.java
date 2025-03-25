@@ -1,5 +1,10 @@
 package pro.coachcore.training.plan.unit.exercise;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -7,14 +12,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import pro.coachcore.exception.ResourceNotFoundException;
+import pro.coachcore.lang.message.MessageService;
 import pro.coachcore.training.plan.exercise.TrainingExerciseRepository;
 import pro.coachcore.training.plan.exercise.TrainingExerciseService;
 import pro.coachcore.training.plan.unit.TrainingUnitRepository;
-
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TrainingExerciseServiceTests {
@@ -23,6 +24,9 @@ class TrainingExerciseServiceTests {
 
   @Mock
   private TrainingUnitRepository trainingUnitRepository;
+
+  @Mock
+  private MessageService messageService;
 
   @InjectMocks
   private TrainingExerciseService trainingExerciseService;
@@ -35,7 +39,6 @@ class TrainingExerciseServiceTests {
 
     assertThrows(
         ResourceNotFoundException.class,
-        () -> trainingExerciseService.deleteTrainingExerciseByLocalId(exerciseId)
-    );
+        () -> trainingExerciseService.deleteTrainingExerciseByLocalId(exerciseId));
   }
 }

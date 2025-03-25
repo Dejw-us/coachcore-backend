@@ -7,6 +7,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Objects;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +19,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import pro.coachcore.common.test.security.jwt.TestJwtUtils;
 import pro.coachcore.training.TestDtoFactory;
 import pro.coachcore.training.catalog.exercise.CatalogExerciseDto;
 import pro.coachcore.training.plan.TrainingPlanDto;
@@ -42,54 +48,63 @@ class TrainingSetControllerTests {
 
   @BeforeEach
   void setup() throws Exception {
-    if (createdPlanId == null) {
-      var requestBody = objectMapper.writeValueAsString(TestDtoFactory.createPlanDto());
-
-      var result = mockMvc.perform(
-          post("/v1/training-plans").contentType(MediaType.APPLICATION_JSON).content(requestBody))
-          .andExpect(status().isCreated()).andReturn();
-
-      var json = result.getResponse().getContentAsString();
-      var plan = objectMapper.readValue(json, TrainingPlanDto.class);
-      createdPlanId = plan.id();
-
-      result = mockMvc
-          .perform(post("/v1/training-plans/" + createdPlanId + "/units")
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(TestDtoFactory.createUnitDto())))
-          .andExpect(status().isCreated()).andReturn();
-
-      createdUnitId = objectMapper
-          .readValue(result.getResponse().getContentAsString(), TrainingUnitDto.class).id();
-
-      result = mockMvc.perform(get("/v1/catalog-exercises")).andReturn();
-
-      var exercises = objectMapper.readValue(result.getResponse().getContentAsString(),
-          CatalogExerciseDto[].class);
-      var catalogExerciseId = exercises[0].id();
-
-      result = mockMvc
-          .perform(post("/v1/training-plans/{planId}/units/{unitId}/exercises", createdPlanId,
-              createdUnitId).param("catalogExerciseId", catalogExerciseId))
-          .andExpect(status().isCreated()).andReturn();
-
-      createdExerciseId = objectMapper
-          .readValue(result.getResponse().getContentAsString(), TrainingExerciseDto.class).id();
-
-      result = mockMvc.perform(post("/v1/training-plans/{planId}/exercises/{exerciseId}/sets",
-          createdPlanId, createdExerciseId)).andExpect(status().isCreated()).andReturn();
-
-      createdSetId = objectMapper
-          .readValue(result.getResponse().getContentAsString(), TrainingSetDto.class).id();
+    if (Objects.nonNull(createdPlanId)) {
+      return;
     }
+
+    mockMvc.perform(post("/v1/training-plans")
+        .with(TestJwtUtils.createJwtPostProccessor("user1"))
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(TestDtoFactory.createPlanDto())))
+        .andExpect(status().isCreated()).andDo(result -> {
+          var json = result.getResponse().getContentAsString();
+          var plan = objectMapper.readValue(json, TrainingPlanDto.class);
+          createdPlanId = plan.id();
+        });
+
+    mockMvc.perform(post("/v1/training-plans/" + createdPlanId + "/units")
+        .with(TestJwtUtils.createJwtPostProccessor("user1"))
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(TestDtoFactory.createUnitDto())))
+        .andExpect(status().isCreated())
+        .andDo(result -> {
+          var json = result.getResponse().getContentAsString();
+          var unit = objectMapper.readValue(json, TrainingUnitDto.class);
+          createdUnitId = unit.id();
+        });
+
+    var response = mockMvc.perform(get("/v1/catalog-exercises")).andReturn();
+
+    var exercises = objectMapper.readValue(response.getResponse().getContentAsString(),
+        CatalogExerciseDto[].class);
+    var catalogExerciseId = exercises[0].id();
+
+    mockMvc.perform(post("/v1/training-plans/{planId}/units/{unitId}/exercises", createdPlanId, createdUnitId)
+        .with(TestJwtUtils.createJwtPostProccessor("user1"))
+        .param("catalogExerciseId", catalogExerciseId))
+        .andExpect(status().isCreated())
+        .andDo(result -> {
+          var json = result.getResponse().getContentAsString();
+          var exercise = objectMapper.readValue(json, TrainingExerciseDto.class);
+          createdExerciseId = exercise.id();
+        });
+
+    mockMvc.perform(post("/v1/training-plans/{planId}/exercises/{exerciseId}/sets", createdPlanId, createdExerciseId)
+        .with(TestJwtUtils.createJwtPostProccessor("user1")))
+        .andExpect(status().isCreated())
+        .andDo(result -> {
+          var json = result.getResponse().getContentAsString();
+          var set = objectMapper.readValue(json, TrainingSetDto.class);
+          createdSetId = set.id();
+        });
   }
 
   @Test
-  void shouldPatchTrainingSet() throws Exception {
-    mockMvc
-        .perform(patch("/v1/training-plans/{planId}/sets/{setId}", createdPlanId, createdSetId)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(TestDtoFactory.updateSetDto())))
+  void patchSet_shouldUpdateSet_whenSetExistsAndPermitted() throws Exception {
+    mockMvc.perform(patch("/v1/training-plans/{planId}/sets/{setId}", createdPlanId, createdSetId)
+        .with(TestJwtUtils.createJwtPostProccessor("user1"))
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(TestDtoFactory.updateSetDto())))
         .andExpect(jsonPath("$.reps", is(TestDtoFactory.updateSetDto().reps())))
         .andExpect(jsonPath("$.intensity", is(TestDtoFactory.updateSetDto().intensity())))
         .andExpect(jsonPath("$.rate", is(TestDtoFactory.updateSetDto().rate())))
@@ -99,8 +114,9 @@ class TrainingSetControllerTests {
   }
 
   @Test
-  void shouldDeleteTrainingSet() throws Exception {
-    mockMvc.perform(delete("/v1/training-plans/{planId}/sets/{setId}", createdPlanId, createdSetId))
+  void deleteSet_shouldDeleteSet_whenPermittedAndSetExists() throws Exception {
+    mockMvc.perform(delete("/v1/training-plans/{planId}/sets/{setId}", createdPlanId, createdSetId)
+        .with(TestJwtUtils.createJwtPostProccessor("user1")))
         .andExpect(status().isOk());
   }
 }
