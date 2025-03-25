@@ -8,4 +8,4 @@ WORKDIR /app
 
 EXPOSE 8083
 
-ENTRYPOINT ["java", "-jar", "email-service-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "email-service-0.0.1.jar"]

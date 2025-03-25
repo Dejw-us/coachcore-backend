@@ -24,14 +24,16 @@ public class GatewayConfig {
 
   @Bean
   RouteLocator routeLocator(RouteLocatorBuilder builder) {
-    return builder.routes().route("training-plans", configureTrainingApiRoute("/training-plans/**"))
-        .route("catalog-exercises", configureTrainingApiRoute("/catalog-exercises/**"))
-        .route("exercise-categories", configureTrainingApiRoute("/exercise-categories/**"))
+    return builder.routes()
+        .route("training-plans", configureTrainingApiRoute("/v1/training-plans/**"))
+        .route("catalog-exercises", configureTrainingApiRoute("/v1/catalog-exercises/**"))
+        .route("exercise-categories", configureTrainingApiRoute("/v1/exercise-categories/**"))
         .route("oauth2-refresh-token",
             route -> route.path("/oauth2/token")
                 .filters(filters -> filters.filter(cookieRefreshTokenGatewayFilter))
                 .uri(servicesProperites.oauth2ServerUrl()))
-        .route("profiles", configureApiRoute("/avatars/**", servicesProperites.profileServiceUrl()))
+        .route("avatars",
+            configureApiRoute("/v1/avatars/**", servicesProperites.profileServiceUrl()))
         .build();
   }
 
@@ -56,7 +58,7 @@ public class GatewayConfig {
   }
 
   private Function<PredicateSpec, Buildable<Route>> configureApiRoute(String path, String uri) {
-    return route -> route.path(path)
-        .filters(filters -> filters.prefixPath("/v1").filter(cookieTokenGatewayFilter)).uri(uri);
+    return route -> route.path(path).filters(filters -> filters.filter(cookieTokenGatewayFilter))
+        .uri(uri);
   }
 }

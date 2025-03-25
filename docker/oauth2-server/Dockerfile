@@ -8,4 +8,4 @@ WORKDIR /app
 
 EXPOSE 8089
 
-ENTRYPOINT ["java", "-jar", "oauth2-server-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "oauth2-server-0.0.6.jar"]

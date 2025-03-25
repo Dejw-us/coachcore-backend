@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 # Remember to escape $ in bcrpyt password with $. basically replace every $ with $$
 
@@ -29,4 +29,3 @@ services:
       - oauth2-db
     ports:
       - 9000:9000
-      
