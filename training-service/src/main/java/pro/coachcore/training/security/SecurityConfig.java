@@ -1,6 +1,5 @@
 package pro.coachcore.training.security;
 
-import static org.springframework.security.config.Customizer.withDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import lombok.RequiredArgsConstructor;
+import pro.coachcore.jwt.JwtAuthConverter;
 
 @Configuration
 @EnableWebSecurity
@@ -37,7 +37,9 @@ public class SecurityConfig {
       auth.requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll();
     });
 
-    http.oauth2ResourceServer(server -> server.jwt(withDefaults()));
+    http.oauth2ResourceServer(server -> server.jwt(jwt -> {
+      jwt.jwtAuthenticationConverter(new JwtAuthConverter());
+    }));
 
     http.sessionManagement(session -> {
       session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);

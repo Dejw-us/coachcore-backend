@@ -1,14 +1,11 @@
 package pro.coachcore.jwt;
 
 import java.util.stream.Collectors;
-
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -26,9 +23,7 @@ public class JwtAuthConverter implements Converter<Jwt, JwtAuthenticationToken> 
       return null;
     }
 
-    var roles = claim.stream()
-        .map(SimpleGrantedAuthority::new)
-        .collect(Collectors.toList());
+    var roles = claim.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
     return new JwtAuthenticationToken(jwt, roles);
   }
