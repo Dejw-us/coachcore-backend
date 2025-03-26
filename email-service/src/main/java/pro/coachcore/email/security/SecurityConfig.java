@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-
 import pro.coachcore.jwt.JwtAuthConverter;
 
 @Configuration
@@ -17,8 +16,7 @@ public class SecurityConfig {
       });
     });
     http.authorizeHttpRequests(auth -> {
-      auth.requestMatchers("/email/**").hasAnyAuthority(
-          "ADMIN", "MAIL_SENDER");
+      auth.requestMatchers("/email/**").hasAnyAuthority("ADMIN", "MAIL_SENDER");
       auth.anyRequest().denyAll();
     });
     return http.build();

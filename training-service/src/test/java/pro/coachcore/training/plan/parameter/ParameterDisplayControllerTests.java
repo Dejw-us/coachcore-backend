@@ -1,7 +1,5 @@
-package pro.coachcore.training.plan.unit.exercise;
+package pro.coachcore.training.plan.parameter;
 
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,16 +22,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import pro.coachcore.common.test.security.jwt.TestJwtUtils;
 import pro.coachcore.training.TestDtoFactory;
-import pro.coachcore.training.catalog.exercise.CatalogExerciseDto;
 import pro.coachcore.training.plan.TrainingPlanDto;
-import pro.coachcore.training.plan.exercise.TrainingExerciseDto;
 import pro.coachcore.training.plan.unit.TrainingUnitDto;
 
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
-class TrainingExerciseControllerTests {
+public class ParameterDisplayControllerTests {
   @Autowired
   private MockMvc mockMvc;
 
@@ -41,8 +37,8 @@ class TrainingExerciseControllerTests {
   private ObjectMapper objectMapper;
 
   private String createdPlanId;
+
   private String createdUnitId;
-  private String createdExerciseId;
 
   @BeforeEach
   void setup() throws Exception {
@@ -71,38 +67,22 @@ class TrainingExerciseControllerTests {
           var unit = objectMapper.readValue(json, TrainingUnitDto.class);
           createdUnitId = unit.id();
         });
-
-    var response = mockMvc.perform(get("/v1/catalog-exercises"))
-        .andReturn();
-
-    var exercises = objectMapper.readValue(response.getResponse().getContentAsString(),
-        CatalogExerciseDto[].class);
-    var catalogExerciseId = exercises[0].id();
-
-    mockMvc.perform(post("/v1/training-plans/{planId}/units/{unitId}/exercises", createdPlanId, createdUnitId)
-        .param("catalogExerciseId", catalogExerciseId)
-        .with(TestJwtUtils.createJwtPostProccessor("user1")))
-        .andExpect(status().isCreated())
-        .andDo(result -> {
-          createdExerciseId = objectMapper
-              .readValue(result.getResponse().getContentAsString(), TrainingExerciseDto.class).id();
-        });
   }
 
   @Test
-  void patchExercise_shouldUpdateExercise_whenPermittedAndExercsiseExists() throws Exception {
-    mockMvc.perform(patch("/v1/training-plans/{planId}/exercises/{exerciseId}", createdPlanId, createdExerciseId)
-        .contentType(MediaType.APPLICATION_JSON)
-        .with(TestJwtUtils.createJwtPostProccessor("user1"))
-        .content(objectMapper.writeValueAsString(TestDtoFactory.updateExerciseDto())))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.notes", is(TestDtoFactory.updateExerciseDto().notes())));
-  }
-
-  @Test
-  void deleteExercise_shouldDeleteExercise_whenPermittedAndExerciseExists() throws Exception {
-    mockMvc.perform(delete("/v1/training-plans/{planId}/exercises/{exerciseId}", createdPlanId, createdExerciseId)
+  void getParameterDisplay_shouldReturnDisplay_whenUnitExists() throws Exception {
+    mockMvc.perform(get("/v1/training-plans/" + createdPlanId + "/units/" + createdUnitId + "/display")
         .with(TestJwtUtils.createJwtPostProccessor("user1")))
         .andExpect(status().isOk());
+  }
+
+  @Test
+  void patchParameterDisplay_shouldUpdateDisplay_whenUnitExists() throws Exception {
+    mockMvc.perform(patch("/v1/training-plans/" + createdPlanId + "/units/" + createdUnitId + "/display")
+        .with(TestJwtUtils.createJwtPostProccessor("user1"))
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(TestDtoFactory.updateDisplayDto())))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.displayIntensity").value(true));
   }
 }

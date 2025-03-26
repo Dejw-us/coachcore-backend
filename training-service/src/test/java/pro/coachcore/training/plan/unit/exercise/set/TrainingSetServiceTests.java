@@ -2,13 +2,17 @@ package pro.coachcore.training.plan.unit.exercise.set;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
+
 import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import pro.coachcore.exception.ResourceNotFoundException;
+import pro.coachcore.lang.message.MessageService;
 import pro.coachcore.training.plan.exercise.TrainingExerciseRepository;
 import pro.coachcore.training.plan.set.TrainingSetRepository;
 import pro.coachcore.training.plan.set.TrainingSetService;
@@ -20,6 +24,9 @@ class TrainingSetServiceTests {
 
   @Mock
   private TrainingSetRepository trainingSetRepository;
+
+  @Mock
+  private MessageService messageService;
 
   @InjectMocks
   private TrainingSetService trainingSetService;

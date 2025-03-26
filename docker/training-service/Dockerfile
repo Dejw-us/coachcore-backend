@@ -8,4 +8,4 @@ WORKDIR /app
 
 EXPOSE 8082
 
-ENTRYPOINT ["java", "-jar", "training-service-1.4.0.jar"]
+ENTRYPOINT ["java", "-jar", "training-service-1.4.1.jar"]

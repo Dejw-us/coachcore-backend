@@ -24,7 +24,7 @@ services:
   training-service:
     ports:
       - 8082:8082
-    image: ghcr.io/coachcore/training-service:1.4.1
+    image: ghcr.io/coachcore/training-service:1.4.2
     environment:
       DB_HOST: training-db:5432
       AUTH_SERVER_HOST: http://oauth2-server:8089
@@ -53,11 +53,11 @@ services:
     volumes:
       - minio_data:/data
   profile-service:
-    image: ghcr.io/coachcore/profile-service:0.0.2
+    image: ghcr.io/coachcore/profile-service:0.0.3
     environment:
       DB_HOST: profile-db:5432
       AUTH_SERVER_HOST: http://oauth2-server:8089
-      LOGGING_LEVEL: DEBUG
+      LOGGING_LEVEL: INFO
       AWS_S3_BUCKET_NAME: avatars
       AWS_S3_ENPOINT: http://minio:9000
       AWS_ACCESS_KEY: minio

@@ -1,36 +1,35 @@
 package pro.coachcore.training.plan.unit;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Objects;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import pro.coachcore.common.test.security.jwt.JwtTestContext;
-import pro.coachcore.training.TestDtos;
-import pro.coachcore.training.jwt.JwtTestConfig;
-import pro.coachcore.training.plan.TrainingPlanDto;
-import pro.coachcore.training.plan.unit.TrainingUnitDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import pro.coachcore.common.test.security.jwt.TestJwtUtils;
+import pro.coachcore.training.TestDtoFactory;
+import pro.coachcore.training.plan.TrainingPlanDto;
 
 @Transactional
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
-@Import(JwtTestConfig.class)
 public class TrainingUnitControllerTests {
   @Autowired
   private MockMvc mockMvc;
@@ -38,65 +37,79 @@ public class TrainingUnitControllerTests {
   @Autowired
   private ObjectMapper objectMapper;
 
-  @Autowired
-  private JwtTestContext jwtTestContext;
-
   private String createdPlanId;
 
   private String createdUnitId;
 
   @BeforeEach
   void setup() throws Exception {
-    if (createdPlanId == null) {
-      var requestBody = objectMapper.writeValueAsString(TestDtos.CREATE_PLAN_DTO);
-
-      var result = mockMvc.perform(post("/v1/training-plans")
-              .with(jwtTestContext.getJwtPostProcessor(1))
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(requestBody))
-          .andExpect(status().isCreated())
-          .andReturn();
-
-      var json = result.getResponse().getContentAsString();
-      var plan = objectMapper.readValue(json, TrainingPlanDto.class);
-      createdPlanId = plan.id();
-
-      result = mockMvc.perform(post("/v1/training-plans/" + createdPlanId + "/units")
-              .with(jwtTestContext.getJwtPostProcessor(1))
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(TestDtos.CREATE_UNIT_DTO)))
-          .andExpect(status().isCreated())
-          .andReturn();
-
-      createdUnitId = objectMapper.readValue(result.getResponse().getContentAsString(), TrainingUnitDto.class).id();
+    if (Objects.nonNull(createdPlanId)) {
+      return;
     }
+
+    mockMvc.perform(post("/v1/training-plans")
+        .with(TestJwtUtils.createJwtPostProccessor("user1"))
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(TestDtoFactory.createPlanDto())))
+        .andExpect(status().isCreated())
+        .andDo(result -> {
+          var json = result.getResponse().getContentAsString();
+          var plan = objectMapper.readValue(json, TrainingPlanDto.class);
+          createdPlanId = plan.id();
+        });
+
+    mockMvc.perform(post("/v1/training-plans/" + createdPlanId + "/units")
+        .with(TestJwtUtils.createJwtPostProccessor("user1"))
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(TestDtoFactory.createUnitDto())))
+        .andExpect(status().isCreated())
+        .andDo(result -> {
+          var json = result.getResponse().getContentAsString();
+          var unit = objectMapper.readValue(json, TrainingUnitDto.class);
+          createdUnitId = unit.id();
+        });
   }
 
   @Test
-  void shouldGetTrainingPlanUnits() throws Exception {
+  void getUnit_shouldReturnUnit_whenExists() throws Exception {
+    mockMvc.perform(get("/v1/training-plans/" + createdPlanId + "/units/" + createdUnitId)
+        .with(TestJwtUtils.createJwtPostProccessor("user1")))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id", is(createdUnitId)));
+  }
+
+  @Test
+  void getUnitByDayOfWeek_shouldGetUnit_whenExists() throws Exception {
     mockMvc.perform(get("/v1/training-plans/" + createdPlanId + "/units")
-            .with(jwtTestContext.getJwtPostProcessor(1)))
+        .param("dayOfWeek", TestDtoFactory.createUnitDto().dayOfWeek())
+        .with(TestJwtUtils.createJwtPostProccessor("user1")))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  void getUnits_shouldGetUnits_whenPlanHasUnitsAndUserIsAuthorized() throws Exception {
+    mockMvc.perform(get("/v1/training-plans/" + createdPlanId + "/units")
+        .with(TestJwtUtils.createJwtPostProccessor("user1")))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$").isArray());
   }
 
   @Test
-  void shouldPatchTrainingPlanUnits() throws Exception {
+  void patchUnit_shouldUpdateUnit_whenPlanHasUnitAndUserIsAuthorized() throws Exception {
     mockMvc.perform(patch("/v1/training-plans/" + createdPlanId + "/units/" + createdUnitId)
-            .with(jwtTestContext.getJwtPostProcessor(1))
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(TestDtos.UPDATE_UNIT_DTO)))
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(TestDtoFactory.updateUnitDto()))
+        .with(TestJwtUtils.createJwtPostProccessor("user1")))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.notes", is(TestDtos.UPDATE_UNIT_DTO.notes())))
-        .andExpect(jsonPath("$.dayOfWeek", is(TestDtos.UPDATE_UNIT_DTO.dayOfWeek())))
-        .andExpect(jsonPath("$.name", is(TestDtos.UPDATE_UNIT_DTO.name())));
+        .andExpect(jsonPath("$.notes", is(TestDtoFactory.updateUnitDto().notes())))
+        .andExpect(jsonPath("$.dayOfWeek", is(TestDtoFactory.updateUnitDto().dayOfWeek())))
+        .andExpect(jsonPath("$.name", is(TestDtoFactory.updateUnitDto().name())));
   }
 
   @Test
-  void shouldDeleteTrainingPlanUnit() throws Exception {
+  void deleteUnit_shouldDeleteUnit_whenUniteExistsAndUserIsAuthorized() throws Exception {
     mockMvc.perform(delete("/v1/training-plans/" + createdPlanId + "/units/" + createdUnitId)
-            .with(jwtTestContext.getJwtPostProcessor(1)))
-        .andExpect(status().isOk());
-    createdUnitId = null;
+        .with(TestJwtUtils.createJwtPostProccessor("user1")))
+        .andExpect(status().isOk()).andDo(result -> createdUnitId = null);
   }
 }
