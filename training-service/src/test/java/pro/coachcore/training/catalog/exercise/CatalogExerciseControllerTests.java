@@ -1,5 +1,6 @@
 package pro.coachcore.training.catalog.exercise;
 
+import static org.hamcrest.Matchers.hasItems;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -11,18 +12,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import pro.coachcore.common.test.security.jwt.TestJwtUtils;
+import pro.coachcore.training.TestConfig;
 import pro.coachcore.training.TestDtoFactory;
 import pro.coachcore.training.catalog.category.ExerciseCategoryDto;
 
 @Transactional
-@SpringBootTest
-@AutoConfigureMockMvc
+@SpringBootTest(classes = TestConfig.class)
+@Import(TestConfig.class)
 @AutoConfigureTestDatabase
+@AutoConfigureMockMvc(addFilters = true)
 class CatalogExerciseControllerTests {
   @Autowired
   private MockMvc mockMvc;
@@ -31,14 +37,14 @@ class CatalogExerciseControllerTests {
   private ObjectMapper objectMapper;
 
   @Test
-  void shouldGetCatalogExercises() throws Exception {
+  void getCatalogExercise_shouldReturn200_forAnyUser() throws Exception {
     mockMvc.perform(get("/v1/catalog-exercises"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$").isArray());
   }
 
   @Test
-  void shouldNotPostCatalogExercise() throws Exception {
+  void postCatalogExercise_shoulGetCategoryAndReturn401_whenNoAdminRole() throws Exception {
     var result = mockMvc.perform(get("/v1/exercise-categories")).andReturn();
     var json = result.getResponse().getContentAsString();
     var categoryId = objectMapper.readValue(json, ExerciseCategoryDto[].class)[0].id();
@@ -50,5 +56,29 @@ class CatalogExerciseControllerTests {
         .andExpect(status().is(401));
   }
 
-  // TODO add test for post catalog exercise success
+  void testRoles() throws Exception {
+    mockMvc.perform(get("/test/roles")
+        .with(TestJwtUtils.createJwtPostProccessor("user", "TEST", "ADMIN")))
+        .andExpect(jsonPath("$", hasItems("TEST", "ADMIN")));
+  }
+
+  void testAuthorities() throws Exception {
+    mockMvc.perform(get("/test/authorities")
+        .with(TestJwtUtils.createJwtPostProccessor("user", "TEST", "ADMIN")))
+        .andExpect(jsonPath("$", hasItems("TEST", "ADMIN")));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = "ADMIN")
+  void postCatalogExercise_shoulGetCategoryAndReturn201_whenAdminAccess() throws Exception {
+    var result = mockMvc.perform(get("/v1/exercise-categories")).andReturn();
+    var json = result.getResponse().getContentAsString();
+    var categoryId = objectMapper.readValue(json, ExerciseCategoryDto[].class)[0].id();
+    var requestBody = TestDtoFactory.createCatalogExerciseDto();
+
+    mockMvc.perform(post("/v1/catalog-exercises")
+        .param("categoryId", categoryId)
+        .contentType(APPLICATION_JSON).content(objectMapper.writeValueAsString(requestBody)))
+        .andExpect(status().is(201));
+  }
 }

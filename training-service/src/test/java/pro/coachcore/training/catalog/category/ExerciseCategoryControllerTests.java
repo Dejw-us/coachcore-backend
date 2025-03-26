@@ -21,7 +21,7 @@ class ExerciseCategoryControllerTests {
   private MockMvc mockMvc;
 
   @Test
-  void shouldGetExerciseCategories() throws Exception {
+  void getCategories_shouldGetCategories_forAnyUser() throws Exception {
     mockMvc.perform(get("/v1/exercise-categories"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$").isArray());

@@ -13,6 +13,7 @@ public class TestJwtUtils {
     return SecurityMockMvcRequestPostProcessors.jwt().jwt(jwt -> {
       jwt.claim("id", userId);
       jwt.claim("roles", List.of(authorities));
+      jwt.claim("scope", List.of(authorities));
     });
   }
 }
