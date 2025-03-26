@@ -100,6 +100,14 @@ class TrainingSetControllerTests {
   }
 
   @Test
+  void getSets_shouldReturnSets_whenExerciseHasSet() throws Exception {
+    mockMvc.perform(get("/v1/training-plans/{planId}/exercises/{exerciseId}/sets", createdPlanId, createdExerciseId)
+        .with(TestJwtUtils.createJwtPostProccessor("user1")))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$").isArray());
+  }
+
+  @Test
   void patchSet_shouldUpdateSet_whenSetExistsAndPermitted() throws Exception {
     mockMvc.perform(patch("/v1/training-plans/{planId}/sets/{setId}", createdPlanId, createdSetId)
         .with(TestJwtUtils.createJwtPostProccessor("user1"))

@@ -61,6 +61,14 @@ public class TrainingPlanControllerTests {
   }
 
   @Test
+  void getUserPlans_shouldReturnUserPlans_forAuthenticatedUser() throws Exception {
+    mockMvc.perform(get("/v1/training-plans/me")
+        .with(TestJwtUtils.createJwtPostProccessor("user1")))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$").isArray());
+  }
+
+  @Test
   void postPlan_shouldNotCreatePlan_whenNotAuthorized() throws Exception {
     var requestBody = objectMapper.writeValueAsString(TestDtoFactory.createPlanDto());
     mockMvc.perform(post("/v1/training-plans")

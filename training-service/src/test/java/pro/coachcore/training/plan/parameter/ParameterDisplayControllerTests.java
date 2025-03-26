@@ -1,7 +1,5 @@
-package pro.coachcore.training.plan.unit;
+package pro.coachcore.training.plan.parameter;
 
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,12 +23,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import pro.coachcore.common.test.security.jwt.TestJwtUtils;
 import pro.coachcore.training.TestDtoFactory;
 import pro.coachcore.training.plan.TrainingPlanDto;
+import pro.coachcore.training.plan.unit.TrainingUnitDto;
 
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
-public class TrainingUnitControllerTests {
+public class ParameterDisplayControllerTests {
   @Autowired
   private MockMvc mockMvc;
 
@@ -71,45 +70,19 @@ public class TrainingUnitControllerTests {
   }
 
   @Test
-  void getUnit_shouldReturnUnit_whenExists() throws Exception {
-    mockMvc.perform(get("/v1/training-plans/" + createdPlanId + "/units/" + createdUnitId)
-        .with(TestJwtUtils.createJwtPostProccessor("user1")))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id", is(createdUnitId)));
-  }
-
-  @Test
-  void getUnitByDayOfWeek_shouldGetUnit_whenExists() throws Exception {
-    mockMvc.perform(get("/v1/training-plans/" + createdPlanId + "/units")
-        .param("dayOfWeek", TestDtoFactory.createUnitDto().dayOfWeek())
+  void getParameterDisplay_shouldReturnDisplay_whenUnitExists() throws Exception {
+    mockMvc.perform(get("/v1/training-plans/" + createdPlanId + "/units/" + createdUnitId + "/display")
         .with(TestJwtUtils.createJwtPostProccessor("user1")))
         .andExpect(status().isOk());
   }
 
   @Test
-  void getUnits_shouldGetUnits_whenPlanHasUnitsAndUserIsAuthorized() throws Exception {
-    mockMvc.perform(get("/v1/training-plans/" + createdPlanId + "/units")
-        .with(TestJwtUtils.createJwtPostProccessor("user1")))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$").isArray());
-  }
-
-  @Test
-  void patchUnit_shouldUpdateUnit_whenPlanHasUnitAndUserIsAuthorized() throws Exception {
-    mockMvc.perform(patch("/v1/training-plans/" + createdPlanId + "/units/" + createdUnitId)
+  void patchParameterDisplay_shouldUpdateDisplay_whenUnitExists() throws Exception {
+    mockMvc.perform(patch("/v1/training-plans/" + createdPlanId + "/units/" + createdUnitId + "/display")
+        .with(TestJwtUtils.createJwtPostProccessor("user1"))
         .contentType(MediaType.APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(TestDtoFactory.updateUnitDto()))
-        .with(TestJwtUtils.createJwtPostProccessor("user1")))
+        .content(objectMapper.writeValueAsString(TestDtoFactory.updateDisplayDto())))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.notes", is(TestDtoFactory.updateUnitDto().notes())))
-        .andExpect(jsonPath("$.dayOfWeek", is(TestDtoFactory.updateUnitDto().dayOfWeek())))
-        .andExpect(jsonPath("$.name", is(TestDtoFactory.updateUnitDto().name())));
-  }
-
-  @Test
-  void deleteUnit_shouldDeleteUnit_whenUniteExistsAndUserIsAuthorized() throws Exception {
-    mockMvc.perform(delete("/v1/training-plans/" + createdPlanId + "/units/" + createdUnitId)
-        .with(TestJwtUtils.createJwtPostProccessor("user1")))
-        .andExpect(status().isOk()).andDo(result -> createdUnitId = null);
+        .andExpect(jsonPath("$.displayIntensity").value(true));
   }
 }

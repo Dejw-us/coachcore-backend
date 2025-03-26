@@ -1,6 +1,5 @@
 package pro.coachcore.training.catalog.exercise;
 
-import static org.hamcrest.Matchers.hasItems;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import pro.coachcore.common.test.security.jwt.TestJwtUtils;
 import pro.coachcore.training.TestConfig;
 import pro.coachcore.training.TestDtoFactory;
 import pro.coachcore.training.catalog.category.ExerciseCategoryDto;
@@ -54,18 +52,6 @@ class CatalogExerciseControllerTests {
         .param("categoryId", categoryId)
         .contentType(APPLICATION_JSON).content(objectMapper.writeValueAsString(requestBody)))
         .andExpect(status().is(401));
-  }
-
-  void testRoles() throws Exception {
-    mockMvc.perform(get("/test/roles")
-        .with(TestJwtUtils.createJwtPostProccessor("user", "TEST", "ADMIN")))
-        .andExpect(jsonPath("$", hasItems("TEST", "ADMIN")));
-  }
-
-  void testAuthorities() throws Exception {
-    mockMvc.perform(get("/test/authorities")
-        .with(TestJwtUtils.createJwtPostProccessor("user", "TEST", "ADMIN")))
-        .andExpect(jsonPath("$", hasItems("TEST", "ADMIN")));
   }
 
   @Test
