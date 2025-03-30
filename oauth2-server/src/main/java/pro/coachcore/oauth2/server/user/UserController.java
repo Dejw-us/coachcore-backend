@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import lombok.RequiredArgsConstructor;
 import pro.coachcore.dto.MessageDto;
 import pro.coachcore.exception.ResourceNotFoundException;
@@ -20,10 +22,11 @@ public class UserController {
   private final UserService userService;
   private final UserMapper userMapper;
 
-  @GetMapping("/public/{username}")
-  ResponseEntity<PublicUserDto> getPublicAppUser(@PathVariable String username)
+  @GetMapping("/public/{identifier}")
+  ResponseEntity<PublicUserDto> getPublicAppUser(@PathVariable String identifier,
+      @RequestParam(defaultValue = "false") Boolean byUsername)
       throws ResourceNotFoundException {
-    var user = userService.getUser(username);
+    var user = userService.getUser(identifier, byUsername);
     var publicUserDto = userMapper.mapToPublic(user);
 
     return ResponseEntity.ok(publicUserDto);

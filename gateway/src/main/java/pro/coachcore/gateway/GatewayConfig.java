@@ -36,7 +36,7 @@ public class GatewayConfig {
                 .uri(servicesProperites.oauth2ServerUrl()))
         .route("avatars",
             configureApiRoute("/v1/avatars/**", servicesProperites.profileServiceUrl()))
-        .route("users", configureApiRoute("/v1/users", servicesProperites.oauth2ServerUrl()))
+        .route("users", configureApiRoute("/v1/users/**", servicesProperites.oauth2ServerUrl()))
         .build();
   }
 

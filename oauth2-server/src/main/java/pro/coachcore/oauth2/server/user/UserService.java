@@ -2,10 +2,12 @@ package pro.coachcore.oauth2.server.user;
 
 import static pro.coachcore.util.ServiceUtils.updateIf;
 import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
+
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pro.coachcore.exception.ResourceAlreadyExistsException;
@@ -21,7 +23,7 @@ import pro.coachcore.oauth2.server.user.role.UserRoleService;
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
-  private final UserRepository appUserRepository;
+  private final UserRepository userRepository;
   private final UserRoleService userRoleService;
   private final PasswordEncoder passwordEncoder;
   private final MessageService messageService;
@@ -33,9 +35,16 @@ public class UserService implements UserDetailsService {
    * @return the User entity
    * @throws ResourceNotFoundException if the user does not exist
    */
-  public User getUser(String username) throws ResourceNotFoundException {
-    return appUserRepository.findByUsername(username).orElseThrow(
+  public User getUserByUsername(String username) throws ResourceNotFoundException {
+    return userRepository.findByUsername(username).orElseThrow(
         ResourceNotFoundException.supplier(messageService.getMessage("user.not-found")));
+  }
+
+  public User getUser(String identifier, Boolean byUsername) {
+    if (byUsername) {
+      return getUserByUsername(identifier);
+    }
+    return getUserByLocalId(identifier);
   }
 
   /**
@@ -46,7 +55,7 @@ public class UserService implements UserDetailsService {
    * @throws ResourceNotFoundException if the user does not exist
    */
   public User getUserByLocalId(String localId) throws ResourceNotFoundException {
-    return appUserRepository.findByLocalId(localId).orElseThrow(
+    return userRepository.findByLocalId(localId).orElseThrow(
         ResourceNotFoundException.supplier(messageService.getMessage("user.not-found")));
   }
 
@@ -58,7 +67,7 @@ public class UserService implements UserDetailsService {
    * @return the created User entity or null if an admin already exists
    */
   public User registerAdmin(String username, String password) {
-    if (appUserRepository.existsByUsername(username)) {
+    if (userRepository.existsByUsername(username)) {
       log.info("Admin user already exists. Skipping creating default admin...");
       return null;
     }
@@ -66,7 +75,7 @@ public class UserService implements UserDetailsService {
     user.setUsername(username);
     user.setPassword(passwordEncoder.encode(password));
     user.getRoles().add(userRoleService.findRole("ADMIN"));
-    return appUserRepository.save(user);
+    return userRepository.save(user);
   }
 
   /**
@@ -82,7 +91,7 @@ public class UserService implements UserDetailsService {
     user.setEmail(dto.getEmail());
     user.setPassword(passwordEncoder.encode(dto.getPassword()));
     user.getRoles().add(userRoleService.findRole("USER"));
-    return appUserRepository.save(user);
+    return userRepository.save(user);
   }
 
   /**
@@ -95,7 +104,7 @@ public class UserService implements UserDetailsService {
   @Override
   public User loadUserByUsername(String username) throws UsernameNotFoundException {
     try {
-      return getUser(username);
+      return getUserByUsername(username);
     } catch (ResourceNotFoundException exception) {
       throw new UsernameNotFoundException(
           messageService.getMessage("username.not-found", username));
@@ -105,16 +114,15 @@ public class UserService implements UserDetailsService {
   public User updateUser(User user, UpdateUserDto dto) {
     updateIfNotNull(dto.description(), user::setDescription);
     var updated = updateIf(dto.username(), user::setUsername, this::canUpdateUsername);
-    return appUserRepository.save(user);
+    return userRepository.save(user);
   }
 
-
   public boolean isUsernameTaken(String username) {
-    return appUserRepository.existsByUsername(username);
+    return userRepository.existsByUsername(username);
   }
 
   public boolean isEmailTaken(String email) {
-    return appUserRepository.existsByEmail(email);
+    return userRepository.existsByEmail(email);
   }
 
   private boolean canUpdateUsername(String username) {
