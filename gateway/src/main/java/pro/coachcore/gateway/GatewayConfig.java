@@ -2,6 +2,7 @@ package pro.coachcore.gateway;
 
 import java.util.List;
 import java.util.function.Function;
+
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.Buildable;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+
 import lombok.RequiredArgsConstructor;
 import pro.coachcore.gateway.service.ServicesProperites;
 
@@ -34,6 +36,7 @@ public class GatewayConfig {
                 .uri(servicesProperites.oauth2ServerUrl()))
         .route("avatars",
             configureApiRoute("/v1/avatars/**", servicesProperites.profileServiceUrl()))
+        .route("users", configureApiRoute("/v1/users", servicesProperites.oauth2ServerUrl()))
         .build();
   }
 
