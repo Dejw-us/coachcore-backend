@@ -1,5 +1,7 @@
 package pro.coachcore.exception;
 
+import java.util.function.Supplier;
+
 import org.springframework.http.HttpStatus;
 
 public abstract class GlobalHandlerRuntimeException extends RuntimeException {
@@ -8,6 +10,10 @@ public abstract class GlobalHandlerRuntimeException extends RuntimeException {
   public GlobalHandlerRuntimeException(String message, HttpStatus status) {
     super(message);
     this.status = status;
+  }
+
+  public static Supplier<GlobalHandlerRuntimeException> supplier(String message, HttpStatus status, String errorCode) {
+    return () -> create(message, status, errorCode);
   }
 
   public static GlobalHandlerRuntimeException create(String message, HttpStatus status,

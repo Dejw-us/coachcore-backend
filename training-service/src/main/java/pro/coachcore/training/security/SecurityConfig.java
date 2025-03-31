@@ -40,6 +40,8 @@ public class SecurityConfig {
 
       auth.requestMatchers(HttpMethod.GET, "/v1/exercise-categories").permitAll();
       auth.requestMatchers(HttpMethod.GET, "/v1/training-plans").permitAll();
+      auth.requestMatchers(HttpMethod.GET, "/v1/rating/{planId}/average").permitAll();
+      auth.requestMatchers(HttpMethod.PUT, "/v1/rating/{planId}").authenticated();
       auth.requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll();
       auth.requestMatchers("/test/**").permitAll();
     });
