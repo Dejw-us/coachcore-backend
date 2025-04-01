@@ -32,6 +32,8 @@ public class GatewayConfig {
         .route("exercise-categories", configureTrainingApiRoute("/v1/exercise-categories/**"))
         .route("rating", configureApiRoute("/v1/rating/**", servicesProperites.trainingServiceUrl()))
         .route("saved-plans", configureApiRoute("/v1/saved-plans", servicesProperites.trainingServiceUrl()))
+        .route("public-training-plans",
+            configureApiRoute("/v1/public/training-plans/**", servicesProperites.trainingServiceUrl()))
         .route("oauth2-refresh-token",
             route -> route.path("/oauth2/token")
                 .filters(filters -> filters.filter(cookieRefreshTokenGatewayFilter))
