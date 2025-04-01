@@ -10,4 +10,8 @@ public interface SavedPlanRepository extends JpaRepository<SavedPlan, Long> {
   List<SavedPlan> findAllByUserId(String userId);
 
   boolean existsBySavedPlan_LocalIdAndUserId(String planLocalId, String userId);
+
+  long countBySavedPlan_LocalId(String planLocalId);
+
+  void deleteBySavedPlan_LocalIdAndUserId(String planLocalId, String userId);
 }

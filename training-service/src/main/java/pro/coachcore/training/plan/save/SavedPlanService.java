@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import pro.coachcore.exception.GlobalHandlerRuntimeException;
@@ -26,9 +27,18 @@ public class SavedPlanService {
     return savedPlanRepository.save(savedPlan);
   }
 
+  @Transactional
+  public void removeSavedPlan(String planId) {
+    savedPlanRepository.deleteBySavedPlan_LocalIdAndUserId(planId, getUserId());
+  }
+
   public List<SavedPlan> getSavedPlans() {
     var userId = getUserId();
     return savedPlanRepository.findAllByUserId(userId);
+  }
+
+  public long getUsersAmount(String planLocalId) {
+    return savedPlanRepository.countBySavedPlan_LocalId(planLocalId);
   }
 
   private String getUserId() {

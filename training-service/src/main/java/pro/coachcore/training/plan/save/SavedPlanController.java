@@ -3,6 +3,7 @@ package pro.coachcore.training.plan.save;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import pro.coachcore.dto.MessageDto;
 import pro.coachcore.training.plan.TrainingPlanService;
 
 @RestController
@@ -27,6 +29,13 @@ public class SavedPlanController {
     var savedPlan = savedPlanService.savePlan(plan);
 
     return ResponseEntity.ok(savedPlanMapper.map(savedPlan));
+  }
+
+  @DeleteMapping
+  ResponseEntity<MessageDto> deleteSavedPlan(
+      @RequestParam String planId) {
+    savedPlanService.removeSavedPlan(planId);
+    return ResponseEntity.ok(new MessageDto("Unfollowed training plan"));
   }
 
   @GetMapping

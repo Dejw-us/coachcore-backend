@@ -3,8 +3,10 @@ package pro.coachcore.training.plan.unit;
 import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import pro.coachcore.training.plan.TrainingPlan;
 
 @Repository
@@ -30,6 +32,8 @@ public interface TrainingUnitRepository extends JpaRepository<TrainingUnit, Long
   boolean existsByTrainingPlan_LocalIdAndDayOfWeek(String planLocalId, DayOfWeek dayOfWeek);
 
   boolean existsByTrainingPlanAndDayOfWeek(TrainingPlan trainingPlan, DayOfWeek dayOfWeek);
+
+  long countByTrainingPlan_LocalIdAndIndexBetween(String planLocalId, int start, int end);
 
   long countByTrainingPlan_LocalIdAndDayOfWeek(String planLocalId, DayOfWeek dayOfWeek);
 }

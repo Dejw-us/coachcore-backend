@@ -4,10 +4,12 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,7 +34,7 @@ import pro.coachcore.training.plan.parameter.ParameterDisplay;
 
 @Data
 @Entity(name = "training_unit")
-@EntityListeners({LocalIdEntityListener.class, AuditingEntityListener.class})
+@EntityListeners({ LocalIdEntityListener.class, AuditingEntityListener.class })
 public class TrainingUnit implements IdentifiableEntity<String> {
   @Id
   @Column(name = "id")
@@ -76,7 +78,6 @@ public class TrainingUnit implements IdentifiableEntity<String> {
   @JoinColumn(name = "parameter_display_id")
   private ParameterDisplay parameterDisplay;
 
-  @OneToMany(mappedBy = "trainingUnit", fetch = FetchType.LAZY, cascade = CascadeType.ALL,
-      orphanRemoval = true)
+  @OneToMany(mappedBy = "trainingUnit", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<TrainingExercise> exercises = new ArrayList<>();
 }

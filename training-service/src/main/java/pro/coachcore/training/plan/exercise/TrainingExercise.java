@@ -3,10 +3,12 @@ package pro.coachcore.training.plan.exercise;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,6 +23,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
+import lombok.ToString;
 import pro.coachcore.jpa.id.IdentifiableEntity;
 import pro.coachcore.jpa.id.LocalIdEntityListener;
 import pro.coachcore.training.catalog.exercise.CatalogExercise;
@@ -29,7 +32,7 @@ import pro.coachcore.training.plan.unit.TrainingUnit;
 
 @Data
 @Entity(name = "training_exercise")
-@EntityListeners({LocalIdEntityListener.class, AuditingEntityListener.class})
+@EntityListeners({ LocalIdEntityListener.class, AuditingEntityListener.class })
 public class TrainingExercise implements IdentifiableEntity<String> {
   @Id
   @Column(name = "id")
@@ -54,6 +57,7 @@ public class TrainingExercise implements IdentifiableEntity<String> {
   @JoinColumn(name = "catalog_exercise_id")
   private CatalogExercise catalogExercise;
 
+  @ToString.Exclude
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "training_unit_id")
   private TrainingUnit trainingUnit;
@@ -73,8 +77,7 @@ public class TrainingExercise implements IdentifiableEntity<String> {
   @Column(name = "created_by")
   private String createdBy;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "trainingExercise", cascade = CascadeType.ALL,
-      orphanRemoval = true)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "trainingExercise", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<TrainingSet> trainingSets = new ArrayList<>();
 
   public enum IntensityType {

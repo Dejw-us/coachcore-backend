@@ -2,12 +2,15 @@ package pro.coachcore.training.plan.unit;
 
 import static org.apache.commons.lang3.EnumUtils.getEnum;
 import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
+
 import java.time.DayOfWeek;
 import java.time.format.TextStyle;
 import java.util.List;
+
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import pro.coachcore.exception.ResourceAlreadyExistsException;
 import pro.coachcore.exception.ResourceNotFoundException;
@@ -17,8 +20,10 @@ import pro.coachcore.training.plan.TrainingPlanRepository;
 import pro.coachcore.training.plan.parameter.ParameterDisplay;
 
 /**
- * Service class responsible for handling operations related to training units within a training
- * plan. Provides methods to retrieve, create, update, and delete training units.
+ * Service class responsible for handling operations related to training units
+ * within a training
+ * plan. Provides methods to retrieve, create, update, and delete training
+ * units.
  */
 @Service
 @RequiredArgsConstructor
@@ -42,7 +47,8 @@ public class TrainingUnitService {
   }
 
   /**
-   * Retrieves a specific training unit by its local ID and the local ID of the training plan.
+   * Retrieves a specific training unit by its local ID and the local ID of the
+   * training plan.
    *
    * @param planLocalId the local ID of the training plan.
    * @param unitLocalId the local ID of the training unit.
@@ -56,11 +62,12 @@ public class TrainingUnitService {
   }
 
   /**
-   * Retrieves a specific training unit by the day of the week and the local ID of the training
+   * Retrieves a specific training unit by the day of the week and the local ID of
+   * the training
    * plan.
    *
    * @param planLocalId the local ID of the training plan.
-   * @param dayOfWeek the day of the week for the training unit.
+   * @param dayOfWeek   the day of the week for the training unit.
    * @return the training unit for the specified day of the week.
    * @throws ResourceNotFoundException if the training unit is not found.
    */
@@ -74,17 +81,17 @@ public class TrainingUnitService {
    * Saves a new training unit for a given training plan.
    *
    * @param plan the training plan to which the training unit will be added.
-   * @param dto the DTO containing the details of the training unit.
+   * @param dto  the DTO containing the details of the training unit.
    * @return the saved training unit.
-   * @throws ResourceAlreadyExistsException if a training unit already exists for the specified day
-   *         of the week.
+   * @throws ResourceAlreadyExistsException if a training unit already exists for
+   *                                        the specified day
+   *                                        of the week.
    */
   public TrainingUnit saveUnit(TrainingPlan plan, CreateTrainingUnitDto dto) {
     var dayOfWeek = getEnum(DayOfWeek.class, dto.dayOfWeek());
     var count = trainingUnitRepository.countByTrainingPlan_LocalIdAndDayOfWeek(plan.getLocalId(),
         dayOfWeek);
     var unit = new TrainingUnit();
-
 
     if (count == plan.getWeeks()) {
       throw new ResourceAlreadyExistsException(messageService
@@ -106,12 +113,13 @@ public class TrainingUnitService {
   /**
    * Updates an existing training unit.
    *
-   * @param unit the training unit to be updated.
-   * @param dto the DTO containing the updates for the training unit.
+   * @param unit        the training unit to be updated.
+   * @param dto         the DTO containing the updates for the training unit.
    * @param planLocalId the local ID of the training plan the unit belongs to.
    * @return the updated training unit.
-   * @throws ResourceAlreadyExistsException if a training unit already exists for the specified day
-   *         of the week.
+   * @throws ResourceAlreadyExistsException if a training unit already exists for
+   *                                        the specified day
+   *                                        of the week.
    */
   public TrainingUnit updateUnit(TrainingUnit unit, UpdateTrainingUnitDto dto, String planLocalId) {
     var dayOfWeek = getEnum(DayOfWeek.class, dto.dayOfWeek());
@@ -141,7 +149,8 @@ public class TrainingUnitService {
   }
 
   /**
-   * Generates a message indicating that a training unit already exists for the given day of the
+   * Generates a message indicating that a training unit already exists for the
+   * given day of the
    * week.
    *
    * @param dayOfWeek the day of the week for which the unit already exists.
@@ -151,5 +160,5 @@ public class TrainingUnitService {
     return messageService.getMessage("training.unit.exists.day-of-week",
         dayOfWeek.getDisplayName(TextStyle.FULL, LocaleContextHolder.getLocale()));
   }
-}
 
+}

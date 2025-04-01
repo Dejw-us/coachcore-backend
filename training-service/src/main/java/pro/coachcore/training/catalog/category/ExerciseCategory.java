@@ -20,7 +20,7 @@ import pro.coachcore.jpa.id.LocalIdEntityListener;
 
 @Data
 @Entity(name = "exercise_category")
-@EntityListeners({LocalIdEntityListener.class, AuditingEntityListener.class})
+@EntityListeners({ LocalIdEntityListener.class, AuditingEntityListener.class })
 public class ExerciseCategory implements IdentifiableEntity<String> {
   @Id
   @Column(name = "id")

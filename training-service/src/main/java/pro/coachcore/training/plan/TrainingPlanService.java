@@ -4,6 +4,8 @@ import static java.lang.String.format;
 import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.AuditorAware;
@@ -17,11 +19,14 @@ import pro.coachcore.dto.DeletedObjectDto;
 import pro.coachcore.exception.GlobalHandlerRuntimeException;
 import pro.coachcore.exception.ResourceNotFoundException;
 import pro.coachcore.lang.message.MessageService;
+import pro.coachcore.training.catalog.category.ExerciseCategory;
+import pro.coachcore.training.plan.exercise.TrainingExerciseRepository;
 import pro.coachcore.training.plan.goal.TrainingGoal;
 import pro.coachcore.training.plan.goal.TrainingGoalRepository;
 import pro.coachcore.training.plan.owner.TrainingPlanOwner;
 import pro.coachcore.training.plan.owner.TrainingPlanOwner.Permission;
 import pro.coachcore.training.plan.owner.TrainingPlanOwnerRepository;
+import pro.coachcore.training.plan.unit.TrainingUnitRepository;
 
 /**
  * Service class responsible for handling operations related to training plans.
@@ -36,6 +41,8 @@ import pro.coachcore.training.plan.owner.TrainingPlanOwnerRepository;
 public class TrainingPlanService {
   private final TrainingPlanRepository trainingPlanRepository;
   private final TrainingGoalRepository trainingGoalRepository;
+  private final TrainingExerciseRepository trainingExerciseRepository;
+  private final TrainingUnitRepository trainingUnitRepository;
   private final TrainingPlanOwnerRepository trainingPlanOwnerRepository;
   private final AuditorAware<String> auditorAware;
   private final MessageService messageService;
@@ -114,6 +121,19 @@ public class TrainingPlanService {
     return trainingPlanRepository.save(plan);
   }
 
+  public ExerciseCategory getDominantCategory(String planLocalId) {
+    var exercises = trainingExerciseRepository.findAllByTrainingUnit_TrainingPlan_LocalId(planLocalId);
+
+    return exercises.stream()
+        .map(exercise -> exercise.getCatalogExercise().getCategory())
+        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+        .entrySet()
+        .stream()
+        .max(Map.Entry.comparingByValue())
+        .map(Map.Entry::getKey)
+        .orElseThrow(ResourceNotFoundException.supplier("Plan doesn't have dominant category"));
+  }
+
   public TrainingPlan removeTag(TrainingPlan plan, String tagName) {
     var tags = plan.getTags();
 
@@ -167,5 +187,11 @@ public class TrainingPlanService {
     trainingPlanRepository.delete(plan);
 
     return new DeletedObjectDto(planLocalId);
+  }
+
+  public TR getTR(String planLocalId) {
+    var trainingDays = trainingUnitRepository.countByTrainingPlan_LocalIdAndIndexBetween(planLocalId, 0, 6);
+    var restDays = 7 - trainingDays;
+    return new TR((int) trainingDays, (int) restDays);
   }
 }
