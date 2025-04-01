@@ -1,7 +1,7 @@
 version: "version"
 services:
   gateway:
-    image: ghcr.io/coachcore/gateway:1.1.3
+    image: ghcr.io/coachcore/gateway:1.1.4
     ports:
       - 8080:8080
     environment:
@@ -24,7 +24,7 @@ services:
   training-service:
     ports:
       - 8082:8082
-    image: ghcr.io/coachcore/training-service:1.4.2
+    image: ghcr.io/coachcore/training-service:1.4.3
     environment:
       DB_HOST: training-db:5432
       AUTH_SERVER_HOST: http://oauth2-server:8089
