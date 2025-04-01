@@ -8,8 +8,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Objects;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,26 +36,13 @@ public class TrainingPlanControllerTests {
   @Autowired
   private ObjectMapper objectMapper;
 
-  private String createdPlanId;
+  private TestPlan testPlan;
 
   @BeforeEach
   void setup() throws Exception {
-    if (Objects.nonNull(createdPlanId)) {
-      return;
+    if (testPlan == null || testPlan.isEmpty()) {
+      testPlan = new TestPlan().setup(mockMvc, objectMapper);
     }
-
-    var requestBody = objectMapper.writeValueAsString(TestDtoFactory.createPlanDto());
-
-    mockMvc.perform(post("/v1/training-plans")
-        .with(TestJwtUtils.createJwtPostProccessor("user1"))
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(requestBody))
-        .andExpect(status().isCreated())
-        .andDo(result -> {
-          var json = result.getResponse().getContentAsString();
-          var plan = objectMapper.readValue(json, TrainingPlanDto.class);
-          createdPlanId = plan.id();
-        });
   }
 
   @Test
@@ -66,6 +51,14 @@ public class TrainingPlanControllerTests {
         .with(TestJwtUtils.createJwtPostProccessor("user1")))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$").isArray());
+  }
+
+  @Test
+  void getPlanTR_shouldReturnTR_forAnyUser() throws Exception {
+    mockMvc.perform(get("/v1/public/training-plans/{planId}/tr", testPlan.getCreatedPlanId()))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.trainingDays", is(1)))
+        .andExpect(jsonPath("$.restDays", is(6)));
   }
 
   @Test
@@ -79,17 +72,16 @@ public class TrainingPlanControllerTests {
 
   @Test
   void getPlans_shouldReturnPlans_forAnyAuth() throws Exception {
-    mockMvc.perform(get("/v1/training-plans"))
+    mockMvc.perform(get("/v1/public/training-plans"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$").isArray());
   }
 
   @Test
-  void getPlan_shouldReturnPlan_whenAuthorized() throws Exception {
-    mockMvc.perform(get("/v1/training-plans/" + createdPlanId)
-        .with(TestJwtUtils.createJwtPostProccessor("user1")))
+  void getPlan_shouldReturnPlan_forAnyUser() throws Exception {
+    mockMvc.perform(get("/v1/public/training-plans/" + testPlan.getCreatedPlanId()))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id", is(createdPlanId)))
+        .andExpect(jsonPath("$.id", is(testPlan.getCreatedPlanId())))
         .andExpect(jsonPath("$.createdBy", is("user1")))
         .andExpect(jsonPath("$.goals.size()", is(TestDtoFactory.createPlanDto().goals().size())));
   }
@@ -98,7 +90,7 @@ public class TrainingPlanControllerTests {
   void patchPlan_shouldPatchPlan_whenAuthorized() throws Exception {
     var dto = TestDtoFactory.updatePlanDto();
 
-    mockMvc.perform(patch("/v1/training-plans/" + createdPlanId)
+    mockMvc.perform(patch("/v1/training-plans/" + testPlan.getCreatedPlanId())
         .with(TestJwtUtils.createJwtPostProccessor("user1"))
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(dto)))
@@ -108,14 +100,14 @@ public class TrainingPlanControllerTests {
 
   @Test
   void deletePlan_shouldDeletePlan_whenAuthorized() throws Exception {
-    mockMvc.perform(delete("/v1/training-plans/" + createdPlanId)
+    mockMvc.perform(delete("/v1/training-plans/" + testPlan.getCreatedPlanId())
         .with(TestJwtUtils.createJwtPostProccessor("user1")))
         .andExpect(status().isOk())
-        .andDo(result -> createdPlanId = null);
+        .andDo(result -> testPlan.clear());
   }
 
   @Test
   void deletePlan_shouldNotDeletePlan_whenNotAuthorized() throws Exception {
-    mockMvc.perform(delete("/v1/training-plans/" + createdPlanId)).andExpect(status().is(401));
+    mockMvc.perform(delete("/v1/training-plans/" + testPlan.getCreatedPlanId())).andExpect(status().is(401));
   }
 }

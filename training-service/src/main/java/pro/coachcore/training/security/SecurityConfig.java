@@ -30,21 +30,23 @@ public class SecurityConfig {
 
     http.authorizeHttpRequests(auth -> {
       auth.requestMatchers(HttpMethod.OPTIONS, "/v1/**").permitAll();
-      auth.requestMatchers(HttpMethod.POST, "/v1/training-plans").authenticated();
 
+      auth.requestMatchers(HttpMethod.POST, "/v1/training-plans").authenticated();
       auth.requestMatchers("/v1/training-plans/me").authenticated();
       auth.requestMatchers("/v1/training-plans/{planId}/**")
           .access(trainingPlanAuthorizationManager);
+      auth.requestMatchers("/v1/public/training-plans/**").permitAll();
+
       auth.requestMatchers(HttpMethod.POST, "/v1/catalog-exercises").hasAuthority("ADMIN");
       auth.requestMatchers(HttpMethod.GET, "/v1/catalog-exercises").permitAll();
-
       auth.requestMatchers(HttpMethod.GET, "/v1/exercise-categories").permitAll();
-      auth.requestMatchers(HttpMethod.GET, "/v1/training-plans").permitAll();
+
       auth.requestMatchers(HttpMethod.GET, "/v1/rating/{planId}/average").permitAll();
       auth.requestMatchers(HttpMethod.PUT, "/v1/rating/{planId}").authenticated();
+
       auth.requestMatchers("/v1/saved-plans/**").authenticated();
+
       auth.requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll();
-      auth.requestMatchers("/test/**").permitAll();
     });
 
     http.oauth2ResourceServer(server -> server.jwt(jwt -> {

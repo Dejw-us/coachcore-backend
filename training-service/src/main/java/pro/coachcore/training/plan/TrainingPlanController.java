@@ -19,8 +19,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pro.coachcore.dto.DeletedObjectDto;
 import pro.coachcore.exception.ResourceNotFoundException;
-import pro.coachcore.training.catalog.category.ExerciseCategoryDto;
-import pro.coachcore.training.catalog.category.ExerciseCategoryMapper;
 import pro.coachcore.training.plan.tag.AddTagsDto;
 import pro.coachcore.training.plan.tag.RemoveTagDto;
 
@@ -31,43 +29,12 @@ import pro.coachcore.training.plan.tag.RemoveTagDto;
 class TrainingPlanController {
   private final TrainingPlanService trainingPlanService;
   private final TrainingPlanMapper trainingPlanMapper;
-  private final ExerciseCategoryMapper exerciseCategoryMapper;
 
   @GetMapping("/me")
   public ResponseEntity<List<TrainingPlanDto>> getUserTrainingPlans() {
     var plans = trainingPlanMapper.map(trainingPlanService.getUserPlans());
 
     return ResponseEntity.ok(plans);
-  }
-
-  @GetMapping
-  ResponseEntity<List<TrainingPlanDto>> getTrainingPlans() {
-    var plans = trainingPlanService.getAllPlans();
-    var plansDto = trainingPlanMapper.map(plans);
-
-    return ResponseEntity.ok(plansDto);
-  }
-
-  @GetMapping("/{planId}")
-  ResponseEntity<TrainingPlanDto> getTrainingPlan(@PathVariable String planId)
-      throws ResourceNotFoundException {
-    var plan = trainingPlanService.getPlan(planId);
-    var planDto = trainingPlanMapper.map(plan);
-    trainingPlanService.getDominantCategory(planId);
-    return ResponseEntity.ok(planDto);
-  }
-
-  @GetMapping("/{planId}/category")
-  ResponseEntity<ExerciseCategoryDto> getPlanCategory(@PathVariable String planId) {
-    var category = trainingPlanService.getDominantCategory(planId);
-    return ResponseEntity.ok(exerciseCategoryMapper.map(category));
-  }
-
-  @GetMapping("/{planId}/tr")
-  ResponseEntity<TR> getPlanTR(
-      @PathVariable String planId) {
-    var tr = trainingPlanService.getTR(planId);
-    return ResponseEntity.ok(tr);
   }
 
   @PostMapping
