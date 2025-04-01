@@ -27,6 +27,7 @@ import pro.coachcore.jpa.id.IdentifiableEntity;
 import pro.coachcore.jpa.id.LocalIdEntityListener;
 import pro.coachcore.training.plan.goal.TrainingGoal;
 import pro.coachcore.training.plan.owner.TrainingPlanOwner;
+import pro.coachcore.training.plan.save.SavedPlan;
 import pro.coachcore.training.plan.unit.TrainingUnit;
 
 @Data
@@ -76,4 +77,7 @@ public class TrainingPlan implements IdentifiableEntity<String> {
   @Column(name = "tag")
   @CollectionTable(name = "training_plan_tags", joinColumns = @JoinColumn(name = "training_plan_id"))
   private List<String> tags = new ArrayList<>();
+
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "savedPlan")
+  private List<SavedPlan> savedPlans = new ArrayList<>();
 }
