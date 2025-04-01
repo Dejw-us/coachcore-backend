@@ -1,13 +1,20 @@
 package pro.coachcore.training.plan;
 
+import static java.lang.String.format;
 import static pro.coachcore.util.ServiceUtils.updateIfNotNull;
+
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pro.coachcore.dto.DeletedObjectDto;
+import pro.coachcore.exception.GlobalHandlerRuntimeException;
 import pro.coachcore.exception.ResourceNotFoundException;
 import pro.coachcore.lang.message.MessageService;
 import pro.coachcore.training.plan.goal.TrainingGoal;
@@ -17,8 +24,10 @@ import pro.coachcore.training.plan.owner.TrainingPlanOwner.Permission;
 import pro.coachcore.training.plan.owner.TrainingPlanOwnerRepository;
 
 /**
- * Service class responsible for handling operations related to training plans. Provides methods to
- * retrieve, create, update, and delete training plans, as well as manage associated goals and
+ * Service class responsible for handling operations related to training plans.
+ * Provides methods to
+ * retrieve, create, update, and delete training plans, as well as manage
+ * associated goals and
  * owners.
  */
 @Slf4j
@@ -55,7 +64,8 @@ public class TrainingPlanService {
    *
    * @param planLocalId the local ID of the training plan.
    * @return the training plan with the specified local ID.
-   * @throws ResourceNotFoundException if the plan with the specified ID is not found.
+   * @throws ResourceNotFoundException if the plan with the specified ID is not
+   *                                   found.
    */
   public TrainingPlan getPlan(String planLocalId) {
     return trainingPlanRepository.findByLocalId(planLocalId).orElseThrow(
@@ -94,7 +104,7 @@ public class TrainingPlanService {
    * Updates an existing training plan.
    *
    * @param plan the existing training plan to be updated.
-   * @param dto the DTO containing the updates for the training plan.
+   * @param dto  the DTO containing the updates for the training plan.
    * @return the updated training plan.
    */
   public TrainingPlan updatePlan(TrainingPlan plan, UpdateTrainingPlanDto dto) {
@@ -104,12 +114,48 @@ public class TrainingPlanService {
     return trainingPlanRepository.save(plan);
   }
 
+  public TrainingPlan removeTag(TrainingPlan plan, String tagName) {
+    var tags = plan.getTags();
+
+    if (!tags.contains(tagName)) {
+      throw GlobalHandlerRuntimeException.create(
+          format("Plan does not have tag: %s", tagName),
+          HttpStatus.BAD_REQUEST,
+          "TAG_NOT_FOUND");
+    }
+
+    var updatedTags = tags.stream()
+        .filter(tag -> !tag.equals(tagName))
+        .collect(Collectors.toList());
+
+    plan.setTags(updatedTags);
+
+    return trainingPlanRepository.save(plan);
+  }
+
+  public TrainingPlan addTag(TrainingPlan plan, List<String> tagsToAdd) {
+    var tags = plan.getTags();
+
+    if (tags.stream().anyMatch(tagsToAdd::contains)) {
+      throw GlobalHandlerRuntimeException.create(
+          "Plan already has provided tags",
+          HttpStatus.BAD_REQUEST,
+          "TAG_ALREADY_EXISTS");
+    }
+
+    tags.addAll(tagsToAdd);
+    plan.setTags(tags);
+
+    return trainingPlanRepository.save(plan);
+  }
+
   /**
    * Deletes a training plan by its local ID.
    *
    * @param planLocalId the local ID of the training plan to be deleted.
    * @return a DTO containing the ID of the deleted training plan.
-   * @throws ResourceNotFoundException if the plan with the specified ID is not found.
+   * @throws ResourceNotFoundException if the plan with the specified ID is not
+   *                                   found.
    */
   @Transactional
   public DeletedObjectDto deletePlan(String planLocalId) {

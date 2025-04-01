@@ -1,8 +1,10 @@
 package pro.coachcore.training.plan.owner;
 
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import pro.coachcore.exception.ResourceNotFoundException;
 import pro.coachcore.lang.message.MessageService;
@@ -10,8 +12,10 @@ import pro.coachcore.training.plan.TrainingPlan;
 import pro.coachcore.training.plan.TrainingPlanRepository;
 
 /**
- * Service class responsible for handling operations related to the owners of training plans.
- * Provides methods to check user permissions and retrieve owners of a training plan.
+ * Service class responsible for handling operations related to the owners of
+ * training plans.
+ * Provides methods to check user permissions and retrieve owners of a training
+ * plan.
  */
 @Service
 @RequiredArgsConstructor
@@ -24,7 +28,7 @@ public class TrainingPlanOwnerService {
    * Checks if a user has view permission for a specific training plan.
    *
    * @param planLocalId the local ID of the training plan.
-   * @param userId the ID of the user.
+   * @param userId      the ID of the user.
    * @return true if the user has permission to view the plan, false otherwise.
    * @throws ResourceNotFoundException if the training plan does not exist.
    */
@@ -38,7 +42,8 @@ public class TrainingPlanOwnerService {
   }
 
   /**
-   * Retrieves the list of owners for a specific training plan identified by its local ID.
+   * Retrieves the list of owners for a specific training plan identified by its
+   * local ID.
    *
    * @param planLocalId the local ID of the training plan.
    * @return a list of TrainingPlanOwner objects for the specified plan.

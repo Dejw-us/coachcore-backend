@@ -10,7 +10,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
@@ -69,4 +71,9 @@ public class TrainingPlan implements IdentifiableEntity<String> {
 
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "trainingPlan")
   private List<TrainingPlanOwner> owners = new ArrayList<>();
+
+  @ElementCollection
+  @Column(name = "tag")
+  @CollectionTable(name = "training_plan_tags", joinColumns = @JoinColumn(name = "training_plan_id"))
+  private List<String> tags = new ArrayList<>();
 }

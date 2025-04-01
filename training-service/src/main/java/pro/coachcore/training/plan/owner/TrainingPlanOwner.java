@@ -2,6 +2,7 @@ package pro.coachcore.training.plan.owner;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -34,8 +35,7 @@ public class TrainingPlanOwner {
 
   @ElementCollection
   @Column(name = "permission")
-  @CollectionTable(name = "training_plan_owner_permissions",
-      joinColumns = @JoinColumn(name = "training_plan_owner_id"))
+  @CollectionTable(name = "training_plan_owner_permissions", joinColumns = @JoinColumn(name = "training_plan_owner_id"))
   private List<String> permissions = new ArrayList<>();
 
   public void addPermission(Permission permission) {
