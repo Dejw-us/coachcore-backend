@@ -10,7 +10,12 @@
     <div class="w-full max-w-sm p-6 bg-white rounded-lg shadow-lg text-center">
       <h1 class="text-3xl font-semibold text-indigo-900 mb-4">Coach Core</h1>
 
-      <form id="loginForm" class="space-y-4" th:action="@{/account/login}" method="POST">
+      <form
+        id="loginForm"
+        class="space-y-4"
+        th:action="@{/account/login}"
+        method="POST"
+      >
         <input
           type="text"
           name="username"
@@ -28,6 +33,7 @@
         <p th:if="${param.error}" class="text-red-600 mb-2">
           Invalid username or password.
         </p>
+
         <button
           type="submit"
           id="loginButton"
@@ -36,8 +42,20 @@
           Login
         </button>
       </form>
+      <div class="text-center mt-2 mb-2">
+        <a
+          th:href="@{/account/register}"
+          class="text-black hover:text-yellow-400"
+          >Don't have an account? Register here</a
+        >
+      </div>
+      <hr />
       <div class="text-center mt-2">
-        <a th:href="@{/account/register}" class="text-black hover:text-yellow-400">Don't have an account? Register here</a>
+        <a
+          th:href="@{/password/reset/generate}"
+          class="text-black hover:text-yellow-400"
+          >Forgot password? Reset it here</a
+        >
       </div>
     </div>
   </body>

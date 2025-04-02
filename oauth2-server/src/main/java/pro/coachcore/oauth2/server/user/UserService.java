@@ -83,9 +83,8 @@ public class UserService implements UserDetailsService {
    *
    * @param dto the DTO containing user registration details
    * @return the created User entity
-   * @throws ResourceNotFoundException if the "USER" role is not found
    */
-  public User registerUser(RegisterUserDto dto) throws ResourceNotFoundException {
+  public User registerUser(RegisterUserDto dto) {
     var user = new User();
     user.setUsername(dto.getUsername());
     user.setEmail(dto.getEmail());
@@ -104,8 +103,12 @@ public class UserService implements UserDetailsService {
   @Override
   public User loadUserByUsername(String username) throws UsernameNotFoundException {
     try {
-      return getUserByUsername(username);
-    } catch (ResourceNotFoundException exception) {
+      if (username.contains("@")) {
+        return userRepository.findByEmail(username).orElseThrow();
+      } else {
+        return userRepository.findByUsername(username).orElseThrow();
+      }
+    } catch (Exception exception) {
       throw new UsernameNotFoundException(
           messageService.getMessage("username.not-found", username));
     }

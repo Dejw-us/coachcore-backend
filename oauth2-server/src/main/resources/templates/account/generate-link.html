@@ -29,6 +29,15 @@
         >
           Send link
         </button>
+        <div class="text-center mt-2 mb-2" th:if="${message}">
+          <a class="text-black mb-2" th:text="${message}"></a>
+          <hr />
+          <a
+            th:href="@{/account/login}"
+            class="text-black hover:text-yellow-400 mt-2"
+            >Login here</a
+          >
+        </div>
       </form>
     </div>
   </body>

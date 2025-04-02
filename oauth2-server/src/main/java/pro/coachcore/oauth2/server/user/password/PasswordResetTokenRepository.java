@@ -10,4 +10,8 @@ public interface PasswordResetTokenRepository extends JpaRepository<PasswordRese
   Optional<PasswordResetToken> findByUser_Email(String email);
 
   Optional<PasswordResetToken> findByToken(String token);
+
+  boolean existsByUser_Email(String email);
+
+  void deleteByUser_Email(String email);
 }

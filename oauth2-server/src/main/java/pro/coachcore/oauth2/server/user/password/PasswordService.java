@@ -6,9 +6,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import pro.coachcore.dto.SendEmailDto;
@@ -23,12 +25,20 @@ import pro.coachcore.oauth2.server.user.UserRepository;
 public class PasswordService {
   private static final Long TOKEN_LIFE_MINUTES = 10L;
 
+  @Value("${issuer}")
+  private String issuer;
+
   private final PasswordResetTokenRepository passwordResetTokenRepository;
   private final UserRepository userRepository;
   private final EmailService emailService;
   private final PasswordEncoder passwordEncoder;
 
+  @Transactional
   public PasswordResetToken generateToken(String email) {
+    if (passwordResetTokenRepository.existsByUser_Email(email)) {
+      passwordResetTokenRepository.deleteByUser_Email(email);
+      passwordResetTokenRepository.flush();
+    }
     var token = new PasswordResetToken();
     var user = userRepository.findByEmail(email).orElseThrow();
 
@@ -39,7 +49,7 @@ public class PasswordService {
   }
 
   public void sendResetLink(PasswordResetToken token, String toEmail) {
-    var content = format("<a href=\"http://localhost:8089/password/reset?token=%s\">Reset password</a>",
+    var content = format("<a href=\"%s/password/reset?token=%s\">Reset password</a>", issuer,
         token.getToken());
     var email = new SendEmailDto("no-reply@coachcore.pro", List.of(toEmail), "Password reset", content);
     emailService.sendEmail(email);

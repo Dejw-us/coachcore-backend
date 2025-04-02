@@ -59,6 +59,6 @@ public class PasswordResetController {
       return "account/reset-password";
     }
 
-    return "account/reset-password";
+    return "redirect:/account/login";
   }
 }
