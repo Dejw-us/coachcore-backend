@@ -27,6 +27,7 @@ class SecurityConfig {
     http.oauth2ResourceServer(server -> server.jwt(withDefaults()));
     http.csrf(AbstractHttpConfigurer::disable);
     http.authorizeHttpRequests(auth -> {
+      auth.requestMatchers("/password/reset/**").permitAll();
       auth.requestMatchers("/account/register", "/account/login").permitAll();
       auth.requestMatchers(HttpMethod.GET, "/v1/users/public/**").permitAll();
       auth.anyRequest().authenticated();

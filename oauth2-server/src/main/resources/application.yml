@@ -1,5 +1,19 @@
 spring:
-  # database config
+  mail:
+    host: email-smtp.us-east-1.amazonaws.com
+    port: 587
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          port: 587
+          auth: true
+          starttls:
+            enabled: true
+            required: true
   jpa:
     hibernate:
       ddl-auto: update
@@ -57,3 +71,5 @@ issuer: ${ISSUER:http://localhost:8089}
 admin:
   username: ${ADMIN_USERNAME:admin}
   password: ${ADMIN_PASSWORD:admin}
+dev-mode:
+  enabled: ${DEV_MODE_ENABLED:false}

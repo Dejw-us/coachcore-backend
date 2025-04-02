@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Coach Core</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="flex justify-center items-center h-screen bg-gray-100">
+    <div class="w-full max-w-sm p-6 bg-white rounded-lg shadow-lg text-center">
+      <h1 class="text-3xl font-semibold text-indigo-900 mb-4">Coach Core</h1>
+      <form
+        id="loginForm"
+        class="space-y-4"
+        th:action="@{/password/reset/generate}"
+        method="POST"
+      >
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter email"
+          class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+        />
+        <button
+          type="submit"
+          id="loginButton"
+          class="w-full bg-yellow-400 text-indigo-900 font-semibold px-6 py-3 rounded-lg shadow-lg hover:bg-yellow-300 transition"
+        >
+          Send link
+        </button>
+      </form>
+    </div>
+  </body>
+</html>

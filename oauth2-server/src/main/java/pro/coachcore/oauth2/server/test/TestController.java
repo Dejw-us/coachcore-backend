@@ -1,26 +1,22 @@
 package pro.coachcore.oauth2.server.test;
 
-import static org.springframework.security.oauth2.client.web.client.RequestAttributeClientRegistrationIdResolver.clientRegistrationId;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestClient;
 
 import lombok.RequiredArgsConstructor;
+import pro.coachcore.dto.SendEmailDto;
+import pro.coachcore.oauth2.server.email.EmailService;
 
 @RestController
 @RequiredArgsConstructor
 public class TestController {
-  private final RestClient restClient;
+  private final EmailService emailService;
 
   @GetMapping("/test")
-  ResponseEntity<String> testEmail() {
-    var response = restClient.get()
-        .uri("/email/send")
-        .attributes(clientRegistrationId("mail-client"))
-        .retrieve()
-        .body(String.class);
-    return ResponseEntity.ok(response);
+  ResponseEntity<String> testEmail(@RequestBody SendEmailDto dto) {
+    emailService.sendEmail(dto);
+    return ResponseEntity.ok("ok");
   }
 }
