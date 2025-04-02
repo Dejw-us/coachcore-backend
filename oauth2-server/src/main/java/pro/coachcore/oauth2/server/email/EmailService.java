@@ -1,4 +1,4 @@
-package pro.coachcore.email;
+package pro.coachcore.oauth2.server.email;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -12,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import pro.coachcore.dto.SendEmailDto;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class EmailService {
   @Value("${dev-mode.enabled}")
   private Boolean devMode;

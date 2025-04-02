@@ -50,7 +50,6 @@ logging:
       coachcore: ${LOGGING_LEVEL:INFO}
 server:
   port: 8089
-
 rsa:
   public-key: classpath:certs/public.pem
   private-key: classpath:certs/private.pem
