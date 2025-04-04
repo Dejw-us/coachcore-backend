@@ -41,6 +41,8 @@ spring:
                 - "refresh_token"
               redirect-uris:
                 - ${OAUTH2_WEB_APP_CLIENT_REDIRECT_URI:http://localhost:3000}
+                - "coachcore://redirect"
+                - ${mobile-app.url}
               scopes:
                 - "openid"
           coachcore-mail-sender:
@@ -73,3 +75,5 @@ admin:
   password: ${ADMIN_PASSWORD:admin}
 dev-mode:
   enabled: ${DEV_MODE_ENABLED:false}
+mobile-app:
+  url: ${MOBILE_APP_URL:exp://192.168.13.17:8081}

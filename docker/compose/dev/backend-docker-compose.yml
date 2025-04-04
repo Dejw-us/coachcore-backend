@@ -75,13 +75,15 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: oauth2
   oauth2-server:
-    image: ghcr.io/coachcore/oauth2-server:1.1.0
+    image: ghcr.io/coachcore/oauth2-server:1.1.2
     ports:
       - 8089:8089
     environment:
       DB_HOST: oauth2-db:5432
       ISSUER: http://oauth2-server:8089
       LOGGING_LEVEL: DEBUG
+      SMTP_PASSWORD: BElhG8mONTHwZhRtO7cgelTV90PBQWZeuhpcOzZU0Ipp
+      SMTP_USERNAME: AKIATHVQLBDEZ3VVTO57
     depends_on:
       - oauth2-db
 

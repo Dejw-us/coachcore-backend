@@ -2,6 +2,7 @@ package pro.coachcore.oauth2.server.security;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -16,6 +17,9 @@ import pro.coachcore.oauth2.common.CookieTokensNames;
 
 @Configuration
 class SecurityConfig {
+  @Value("${mobile-app.url}")
+  private String mobileAppUrl;
+
   @Bean
   PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
@@ -33,7 +37,7 @@ class SecurityConfig {
       auth.anyRequest().authenticated();
     });
     http.formLogin(form -> form.loginPage("/account/login"));
-    http.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("http://localhost:3000")
+    http.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl(mobileAppUrl)
         .invalidateHttpSession(true).clearAuthentication(true).deleteCookies("JSESSIONID",
             CookieTokensNames.ACCESS_TOKEN, CookieTokensNames.ID_TOKEN,
             CookieTokensNames.REFRESH_TOKEN));
