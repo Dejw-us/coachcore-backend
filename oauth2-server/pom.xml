@@ -11,7 +11,7 @@
 
   <artifactId>oauth2-server</artifactId>
   <name>oauth2-server</name>
-  <version>1.1.3</version>
+  <version>1.1.4</version>
 
   <properties>
     <maven.compiler.source>23</maven.compiler.source>

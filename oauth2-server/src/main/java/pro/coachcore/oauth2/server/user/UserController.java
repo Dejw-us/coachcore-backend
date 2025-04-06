@@ -32,7 +32,16 @@ public class UserController {
     return ResponseEntity.ok(publicUserDto);
   }
 
-  @PatchMapping("me")
+  @GetMapping("/me")
+  ResponseEntity<PublicUserDto> getCurrentUser(@AuthenticationPrincipal Jwt jwt) {
+    var userId = (String) jwt.getClaim("id");
+    var user = userService.getUserByLocalId(userId);
+    var publicUserDto = userMapper.mapToPublic(user);
+
+    return ResponseEntity.ok(publicUserDto);
+  }
+
+  @PatchMapping("/me")
   ResponseEntity<MessageDto> updateUser(@RequestBody UpdateUserDto body,
       @AuthenticationPrincipal Jwt jwt) {
     var userId = (String) jwt.getClaim("id");
