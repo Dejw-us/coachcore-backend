@@ -24,7 +24,7 @@ public class TrainingPlanRatingService {
         "You have to be logged in to rate plans",
         HttpStatus.UNAUTHORIZED,
         "NOT_AUTHORIZED"));
-    var rating = trainingPlanRatingRepository.findByUserId(userId)
+    var rating = trainingPlanRatingRepository.findByUserIdAndTrainingPlan_LocalId(userId, planLocalId)
         .orElseGet(() -> createRating(planLocalId, stars));
     rating.setStars(stars);
     return trainingPlanRatingRepository.save(rating);

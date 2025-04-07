@@ -12,5 +12,5 @@ public interface TrainingPlanRatingRepository extends JpaRepository<TrainingPlan
   @Query("SELECT COALESCE(AVG(r.stars), 0) FROM training_plan_rating r where r.trainingPlan.localId = :trainingPlanLocalId")
   Double getAverageRating(@Param("trainingPlanLocalId") String planLocalId);
 
-  Optional<TrainingPlanRating> findByUserId(String userId);
+  Optional<TrainingPlanRating> findByUserIdAndTrainingPlan_LocalId(String userId, String planLocalId);
 }
