@@ -1,9 +1,5 @@
 package pro.coachcore.training.plan.unit;
 
-import static org.apache.commons.lang3.EnumUtils.getEnum;
-
-import java.time.DayOfWeek;
-
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -31,22 +26,6 @@ public class TrainingUnitController {
   private final TrainingUnitService trainingUnitService;
 
   private final TrainingUnitMapper trainingUnitMapper;
-
-  @GetMapping
-  ResponseEntity<?> getTrainingUnits(@PathVariable String planId,
-      @RequestParam(required = false) String dayOfWeek,
-      @RequestParam(required = false) Boolean preview) {
-    if (dayOfWeek != null) {
-      var unit = trainingUnitService.getUnit(planId, getEnum(DayOfWeek.class, dayOfWeek));
-      var unitDto = trainingUnitMapper.map(unit, preview);
-
-      return ResponseEntity.ok(unitDto);
-    }
-
-    var units = trainingUnitService.getAllUnits(planId);
-    var unitsDto = trainingUnitMapper.map(units, preview);
-    return ResponseEntity.ok(unitsDto);
-  }
 
   @GetMapping("/{unitId}")
   ResponseEntity<TrainingUnitDto> getTrainingUnit(@PathVariable String planId,

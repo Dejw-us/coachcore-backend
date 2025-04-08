@@ -24,7 +24,7 @@ services:
   training-service:
     ports:
       - 8082:8082
-    image: ghcr.io/coachcore/training-service:1.4.4
+    image: ghcr.io/coachcore/training-service:1.4.5
     environment:
       DB_HOST: training-db:5432
       AUTH_SERVER_HOST: http://oauth2-server:8089
@@ -48,7 +48,7 @@ services:
       - "9001:9001"
     environment:
       MINIO_ROOT_USER: minio
-      MINIO_ROOT_PASSWORD: minio
+      MINIO_ROOT_PASSWORD: minio123
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
@@ -59,9 +59,9 @@ services:
       AUTH_SERVER_HOST: http://oauth2-server:8089
       LOGGING_LEVEL: INFO
       AWS_S3_BUCKET_NAME: avatars
-      AWS_S3_ENPOINT: http://minio:9000
+      AWS_S3_ENDPOINT: http://minio:9000
       AWS_ACCESS_KEY: minio
-      AWS_SECRET_KEY: minio
+      AWS_SECRET_KEY: minio123
     depends_on:
       - profile-db
       - oauth2-server
