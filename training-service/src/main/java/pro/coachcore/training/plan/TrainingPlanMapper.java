@@ -1,5 +1,6 @@
 package pro.coachcore.training.plan;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.mapstruct.InjectionStrategy;
@@ -22,5 +23,5 @@ public abstract class TrainingPlanMapper {
   public abstract TrainingPlanDto map(
       TrainingPlan plan);
 
-  public abstract List<TrainingPlanDto> map(List<TrainingPlan> plans);
+  public abstract List<TrainingPlanDto> map(Collection<TrainingPlan> plans);
 }

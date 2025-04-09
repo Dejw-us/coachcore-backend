@@ -23,7 +23,7 @@ public class PublicTrainingPlanController {
 
   @GetMapping
   ResponseEntity<List<TrainingPlanDto>> getTrainingPlans() {
-    var plans = trainingPlanService.getAllPlans();
+    var plans = trainingPlanService.getAllPublicPlans();
     var plansDto = trainingPlanMapper.map(plans);
 
     return ResponseEntity.ok(plansDto);

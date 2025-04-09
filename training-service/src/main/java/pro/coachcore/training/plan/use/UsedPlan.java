@@ -1,4 +1,4 @@
-package pro.coachcore.training.plan.save;
+package pro.coachcore.training.plan.use;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -14,13 +14,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import pro.coachcore.jpa.id.LocalIdEntityListener;
 import pro.coachcore.training.plan.TrainingPlan;
 
 @Data
 @Entity
-@Table(name = "saved_plan")
-@EntityListeners(AuditingEntityListener.class)
-public class SavedPlan {
+@Table(name = "used_plan")
+@EntityListeners({ LocalIdEntityListener.class, AuditingEntityListener.class })
+public class UsedPlan {
   @Id
   @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,5 +33,9 @@ public class SavedPlan {
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "training_plan_id")
-  private TrainingPlan savedPlan;
+  private TrainingPlan usedPlan;
+
+  public UsedPlan(TrainingPlan usedPlan) {
+    this.usedPlan = usedPlan;
+  }
 }

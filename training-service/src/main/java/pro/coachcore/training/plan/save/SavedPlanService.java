@@ -1,25 +1,27 @@
 package pro.coachcore.training.plan.save;
 
-import java.util.List;
-
 import org.springframework.data.domain.AuditorAware;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import pro.coachcore.exception.GlobalHandlerRuntimeException;
 import pro.coachcore.exception.ResourceAlreadyExistsException;
 import pro.coachcore.training.plan.TrainingPlan;
+import pro.coachcore.training.plan.collection.UserPlansCollectionService;
 
 @Service
 @RequiredArgsConstructor
-public class SavedPlanService {
+public class SavedPlanService implements UserPlansCollectionService<SavedPlan, String> {
   private final SavedPlanRepository savedPlanRepository;
+
+  @Getter
   private final AuditorAware<String> auditorAware;
 
   public SavedPlan savePlan(TrainingPlan plan) {
-    if (savedPlanRepository.existsBySavedPlan_LocalIdAndUserId(plan.getLocalId(), getUserId())) {
+    if (savedPlanRepository.existsBySavedPlan_LocalIdAndUserId(plan.getLocalId(), getAuditor())) {
       throw new ResourceAlreadyExistsException("Plan is already saved");
     }
     var savedPlan = new SavedPlan();
@@ -28,21 +30,16 @@ public class SavedPlanService {
   }
 
   @Transactional
-  public void removeSavedPlan(String planId) {
-    savedPlanRepository.deleteBySavedPlan_LocalIdAndUserId(planId, getUserId());
+  public void removePlan(String planId) {
+    savedPlanRepository.deleteBySavedPlan_LocalIdAndUserId(planId, getAuditor());
   }
 
-  public List<SavedPlan> getSavedPlans() {
-    var userId = getUserId();
-    return savedPlanRepository.findAllByUserId(userId);
+  public Page<TrainingPlan> getPlans(Pageable pageable) {
+    return savedPlanRepository.findAllByUserId(getAuditor(), pageable)
+        .map(SavedPlan::getSavedPlan);
   }
 
-  public long getUsersAmount(String planLocalId) {
+  public Long getUsersAmount(String planLocalId) {
     return savedPlanRepository.countBySavedPlan_LocalId(planLocalId);
-  }
-
-  private String getUserId() {
-    return auditorAware.getCurrentAuditor().orElseThrow(() -> GlobalHandlerRuntimeException.create(
-        "You have to be authorized using jwt", HttpStatus.UNAUTHORIZED, "NO_JWT"));
   }
 }

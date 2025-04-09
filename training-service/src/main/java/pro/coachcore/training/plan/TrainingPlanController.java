@@ -1,7 +1,10 @@
 package pro.coachcore.training.plan;
 
+import java.util.HashSet;
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -19,8 +23,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pro.coachcore.dto.DeletedObjectDto;
 import pro.coachcore.exception.ResourceNotFoundException;
+import pro.coachcore.training.plan.save.SavedPlanService;
 import pro.coachcore.training.plan.tag.AddTagsDto;
 import pro.coachcore.training.plan.tag.RemoveTagDto;
+import pro.coachcore.training.plan.use.UsedPlanService;
 
 @Slf4j
 @RestController
@@ -28,13 +34,36 @@ import pro.coachcore.training.plan.tag.RemoveTagDto;
 @RequiredArgsConstructor
 class TrainingPlanController {
   private final TrainingPlanService trainingPlanService;
+  private final UsedPlanService usedPlanService;
+  private final SavedPlanService savedPlanService;
   private final TrainingPlanMapper trainingPlanMapper;
 
   @GetMapping("/me")
-  public ResponseEntity<List<TrainingPlanDto>> getUserTrainingPlans() {
-    var plans = trainingPlanMapper.map(trainingPlanService.getUserPlans());
+  public ResponseEntity<List<TrainingPlanDto>> getUserTrainingPlans(
+      @RequestParam(defaultValue = "false") Boolean used,
+      @RequestParam(defaultValue = "false") Boolean saved,
+      @RequestParam(defaultValue = "false") Boolean my,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(defaultValue = "id") String sort) {
+    var pageable = PageRequest.of(page, size, Sort.by(sort.split(",")));
+    var plans = new HashSet<TrainingPlan>();
 
-    return ResponseEntity.ok(plans);
+    if (used) {
+      plans.addAll(usedPlanService.getPlans(pageable).getContent());
+    }
+    if (saved) {
+      plans.addAll(savedPlanService.getPlans(pageable).getContent());
+    }
+    if (my) {
+      plans.addAll(trainingPlanService.getUserPlans(pageable).getContent());
+    }
+
+    if (plans.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+
+    return ResponseEntity.ok(trainingPlanMapper.map(plans));
   }
 
   @PostMapping

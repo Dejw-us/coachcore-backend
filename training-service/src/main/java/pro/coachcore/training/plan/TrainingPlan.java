@@ -51,6 +51,9 @@ public class TrainingPlan implements IdentifiableEntity<String> {
   @Column(name = "weeks")
   private Integer weeks;
 
+  @Column(name = "is_public")
+  private Boolean isPublic;
+
   @CreatedBy
   @Column(name = "created_by")
   private String createdBy;

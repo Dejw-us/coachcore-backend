@@ -9,6 +9,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,13 +49,8 @@ public class TrainingPlanService {
   private final AuditorAware<String> auditorAware;
   private final MessageService messageService;
 
-  /**
-   * Retrieves all training plans.
-   *
-   * @return a list of all training plans.
-   */
-  public List<TrainingPlan> getAllPlans() {
-    return trainingPlanRepository.findAll();
+  public List<TrainingPlan> getAllPublicPlans() {
+    return trainingPlanRepository.findAllByIsPublic(true);
   }
 
   /**
@@ -61,9 +58,9 @@ public class TrainingPlanService {
    *
    * @return a list of training plans created by the current user.
    */
-  public List<TrainingPlan> getUserPlans() {
+  public Page<TrainingPlan> getUserPlans(Pageable pageable) {
     return trainingPlanRepository
-        .findAllByCreatedBy(auditorAware.getCurrentAuditor().orElseThrow());
+        .findAllByCreatedBy(auditorAware.getCurrentAuditor().orElseThrow(), pageable);
   }
 
   /**
@@ -94,6 +91,7 @@ public class TrainingPlanService {
     plan.setDescription(dto.description());
     plan.setGoals(savedGoals);
     plan.setWeeks(dto.weeks());
+    plan.setIsPublic(dto.isPublic());
 
     var savedPlan = trainingPlanRepository.save(plan);
 
@@ -117,6 +115,7 @@ public class TrainingPlanService {
   public TrainingPlan updatePlan(TrainingPlan plan, UpdateTrainingPlanDto dto) {
     updateIfNotNull(dto.name(), plan::setName);
     updateIfNotNull(dto.description(), plan::setDescription);
+    updateIfNotNull(dto.isPublic(), plan::setIsPublic);
 
     return trainingPlanRepository.save(plan);
   }

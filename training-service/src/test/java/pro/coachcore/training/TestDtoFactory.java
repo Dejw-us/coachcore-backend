@@ -18,7 +18,7 @@ import pro.coachcore.training.plan.unit.UpdateTrainingUnitDto;
 @UtilityClass
 public class TestDtoFactory {
   public static CreateTrainingPlanDto createPlanDto() {
-    return new CreateTrainingPlanDto("Plan A", "Description A", List.of("Goal1", "Goal2"), 1);
+    return new CreateTrainingPlanDto("Plan A", "Description A", List.of("Goal1", "Goal2"), 1, true);
   }
 
   public static CreateTrainingUnitDto createUnitDto() {
@@ -30,7 +30,7 @@ public class TestDtoFactory {
   }
 
   public static UpdateTrainingPlanDto updatePlanDto() {
-    return new UpdateTrainingPlanDto("Plan B", "Description B");
+    return new UpdateTrainingPlanDto("Plan B", "Description B", true);
   }
 
   public static UpdateTrainingExerciseDto updateExerciseDto() {
