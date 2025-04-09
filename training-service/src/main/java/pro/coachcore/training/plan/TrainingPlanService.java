@@ -115,7 +115,6 @@ public class TrainingPlanService {
   public TrainingPlan updatePlan(TrainingPlan plan, UpdateTrainingPlanDto dto) {
     updateIfNotNull(dto.name(), plan::setName);
     updateIfNotNull(dto.description(), plan::setDescription);
-    updateIfNotNull(dto.isPublic(), plan::setIsPublic);
 
     return trainingPlanRepository.save(plan);
   }

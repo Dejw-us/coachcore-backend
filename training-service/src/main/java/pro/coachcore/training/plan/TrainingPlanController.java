@@ -2,6 +2,7 @@ package pro.coachcore.training.plan;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -63,7 +64,11 @@ class TrainingPlanController {
       return ResponseEntity.noContent().build();
     }
 
-    return ResponseEntity.ok(trainingPlanMapper.map(plans));
+    var uniquePlans = plans.stream()
+        .collect(Collectors.toMap(TrainingPlan::getId, plan -> plan, (existing, replacement) -> existing))
+        .values();
+
+    return ResponseEntity.ok(trainingPlanMapper.map(uniquePlans));
   }
 
   @PostMapping
