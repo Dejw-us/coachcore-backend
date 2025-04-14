@@ -30,7 +30,7 @@ public class TestDtoFactory {
   }
 
   public static UpdateTrainingPlanDto updatePlanDto() {
-    return new UpdateTrainingPlanDto("Plan B", "Description B", true);
+    return new UpdateTrainingPlanDto("Plan B", "Description B");
   }
 
   public static UpdateTrainingExerciseDto updateExerciseDto() {
