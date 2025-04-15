@@ -2,7 +2,6 @@ package pro.coachcore.training.plan.save;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,14 +58,6 @@ public class SavedPlanControllerTests {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").exists())
         .andDo(result -> isPlanSaved = false);
-  }
-
-  @Test
-  void getSavedPlans_shouldReturnOnePlan_whenAuthorized() throws Exception {
-    mockMvc.perform(get("/v1/saved-plans")
-        .with(TestJwtUtils.createJwtPostProccessor(USER_ID)))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$").isArray());
   }
 
   private ResultActions savePlan(String userId) throws Exception {

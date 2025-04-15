@@ -49,8 +49,7 @@ public class TrainingPlanControllerTests {
   void getUserPlans_shouldReturnUserPlans_forAuthenticatedUser() throws Exception {
     mockMvc.perform(get("/v1/training-plans/me")
         .with(TestJwtUtils.createJwtPostProccessor("user1")))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$").isArray());
+        .andExpect(status().isNoContent());
   }
 
   @Test

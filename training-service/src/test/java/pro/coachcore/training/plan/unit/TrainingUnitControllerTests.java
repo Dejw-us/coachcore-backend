@@ -80,7 +80,7 @@ public class TrainingUnitControllerTests {
 
   @Test
   void getUnitByDayOfWeek_shouldGetUnit_whenExists() throws Exception {
-    mockMvc.perform(get("/v1/training-plans/" + createdPlanId + "/units")
+    mockMvc.perform(get("/v1/public/training-plans/" + createdPlanId + "/units")
         .param("dayOfWeek", TestDtoFactory.createUnitDto().dayOfWeek())
         .with(TestJwtUtils.createJwtPostProccessor("user1")))
         .andExpect(status().isOk());
@@ -88,7 +88,7 @@ public class TrainingUnitControllerTests {
 
   @Test
   void getUnits_shouldGetUnits_whenPlanHasUnitsAndUserIsAuthorized() throws Exception {
-    mockMvc.perform(get("/v1/training-plans/" + createdPlanId + "/units")
+    mockMvc.perform(get("/v1/public/training-plans/" + createdPlanId + "/units")
         .with(TestJwtUtils.createJwtPostProccessor("user1")))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$").isArray());
