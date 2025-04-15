@@ -45,6 +45,7 @@ public class SecurityConfig {
       auth.requestMatchers(HttpMethod.PUT, "/v1/rating/{planId}").authenticated();
 
       auth.requestMatchers("/v1/saved-plans/**").authenticated();
+      auth.requestMatchers("/v1/used-plans/**").authenticated();
 
       auth.requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll();
     });

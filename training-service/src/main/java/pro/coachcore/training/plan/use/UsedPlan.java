@@ -14,13 +14,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
-import pro.coachcore.jpa.id.LocalIdEntityListener;
+import lombok.NoArgsConstructor;
 import pro.coachcore.training.plan.TrainingPlan;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "used_plan")
-@EntityListeners({ LocalIdEntityListener.class, AuditingEntityListener.class })
+@EntityListeners({ AuditingEntityListener.class })
 public class UsedPlan {
   @Id
   @Column(name = "id")

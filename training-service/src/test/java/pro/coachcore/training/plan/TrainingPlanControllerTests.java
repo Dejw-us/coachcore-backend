@@ -1,12 +1,18 @@
 package pro.coachcore.training.plan;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import pro.coachcore.common.test.security.jwt.TestJwtUtils;
 import pro.coachcore.training.TestDtoFactory;
+import pro.coachcore.training.plan.tag.AddTagsDto;
+import pro.coachcore.training.plan.tag.RemoveTagDto;
 
 @Slf4j
 @Transactional
@@ -48,8 +56,32 @@ public class TrainingPlanControllerTests {
   @Test
   void getUserPlans_shouldReturnUserPlans_forAuthenticatedUser() throws Exception {
     mockMvc.perform(get("/v1/training-plans/me")
+        .param("used", "true")
+        .param("saved", "true")
+        .param("my", "true")
         .with(TestJwtUtils.createJwtPostProccessor("user1")))
-        .andExpect(status().isNoContent());
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  void putTags_shouldAddTags_forPlanCreator() throws Exception {
+    var addTagsDto = new AddTagsDto(List.of("Test", "hah"));
+
+    mockMvc.perform(put("/v1/training-plans/{planId}/tags", testPlan.getCreatedPlanId())
+        .content(objectMapper.writeValueAsString(addTagsDto))
+        .contentType(APPLICATION_JSON)
+        .with(TestJwtUtils.createJwtPostProccessor("user1")))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.tags", is(addTagsDto.tags())));
+
+    var removeDto = new RemoveTagDto("Test");
+
+    mockMvc.perform(delete("/v1/training-plans/{planId}/tags", testPlan.getCreatedPlanId())
+        .content(objectMapper.writeValueAsString(removeDto))
+        .contentType(APPLICATION_JSON)
+        .with(TestJwtUtils.createJwtPostProccessor("user1")))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.tags", not(hasItem("Test"))));
   }
 
   @Test
