@@ -56,9 +56,6 @@ public class TrainingPlanControllerTests {
   @Test
   void getUserPlans_shouldReturnUserPlans_forAuthenticatedUser() throws Exception {
     mockMvc.perform(get("/v1/training-plans/me")
-        .param("used", "true")
-        .param("saved", "true")
-        .param("my", "true")
         .with(TestJwtUtils.createJwtPostProccessor("user1")))
         .andExpect(status().isOk());
   }

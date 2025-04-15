@@ -1,6 +1,5 @@
 package pro.coachcore.training.plan;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,24 +40,11 @@ class TrainingPlanController {
 
   @GetMapping("/me")
   public ResponseEntity<List<TrainingPlanDto>> getUserTrainingPlans(
-      @RequestParam(defaultValue = "false") Boolean used,
-      @RequestParam(defaultValue = "false") Boolean saved,
-      @RequestParam(defaultValue = "false") Boolean my,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "10") int size,
       @RequestParam(defaultValue = "id") String sort) {
     var pageable = PageRequest.of(page, size, Sort.by(sort.split(",")));
-    var plans = new HashSet<TrainingPlan>();
-
-    if (used) {
-      plans.addAll(usedPlanService.getPlans(pageable).getContent());
-    }
-    if (saved) {
-      plans.addAll(savedPlanService.getPlans(pageable).getContent());
-    }
-    if (my) {
-      plans.addAll(trainingPlanService.getUserPlans(pageable).getContent());
-    }
+    var plans = trainingPlanService.getUserPlans(pageable).getContent();
 
     if (plans.isEmpty()) {
       return ResponseEntity.noContent().build();

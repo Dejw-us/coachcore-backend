@@ -20,7 +20,7 @@ public class UsedPlanService implements UserPlansCollectionService<UsedPlan, Str
   private final AuditorAware<String> auditorAware;
 
   @Override
-  public UsedPlan savePlan(TrainingPlan plan) {
+  public UsedPlan savePlan(TrainingPlan plan) { // TODO Fix mulitple uses
     var usedPlan = new UsedPlan(plan);
     return usedPlanRepository.save(usedPlan);
   }

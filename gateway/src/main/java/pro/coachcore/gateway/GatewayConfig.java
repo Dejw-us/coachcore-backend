@@ -41,6 +41,7 @@ public class GatewayConfig {
         .route("avatars",
             configureApiRoute("/v1/avatars/**", servicesProperites.profileServiceUrl()))
         .route("users", configureApiRoute("/v1/users/**", servicesProperites.oauth2ServerUrl()))
+        .route("used-plans", configureApiRoute("/v1/used-plans/**", servicesProperites.trainingServiceUrl()))
         .build();
   }
 

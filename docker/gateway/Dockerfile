@@ -8,4 +8,4 @@ WORKDIR /app
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "gateway-1.1.4.jar"]
+ENTRYPOINT ["java", "-jar", "gateway-1.1.5.jar"]
