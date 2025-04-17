@@ -6,6 +6,6 @@ RUN mkdir /app
 COPY ./target /app
 WORKDIR /app
 
-EXPOSE 8082
+EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "training-service-1.4.7.jar"]
+ENTRYPOINT ["java", "-jar", "gateway-1.1.5.jar"]

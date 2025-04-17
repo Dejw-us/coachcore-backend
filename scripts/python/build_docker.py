@@ -25,7 +25,7 @@ def build_dockerfile(service_folder):
   jar_file = jar_files[0]
   jar_file_name = Path(jar_file).name
   
-  dockerfile_folder = os.path.join("..", "..", "docker", service_folder)
+  dockerfile_folder = os.path.join("..", "..", "docker", "generated", service_folder)
   target_folder = os.path.join(dockerfile_folder, "target")
   dockerfile = os.path.join(dockerfile_folder, "Dockerfile")
   
