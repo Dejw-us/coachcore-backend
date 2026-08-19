@@ -1,0 +1,79 @@
+spring:
+  mail:
+    host: email-smtp.us-east-1.amazonaws.com
+    port: 587
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          port: 587
+          auth: true
+          starttls:
+            enabled: true
+            required: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost:5432}/${DB_NAME:oauth2}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${issuer}
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/oauth2/jwks
+      authorizationserver:
+        client:
+          coachcore-web-app:
+            registration:
+              client-id: ${OAUTH2_WEB_APP_CLIENT_ID:coachcore-web-app}
+              client-secret: ${OAUTH2_WEB_APP_CLIENT_SECRET:$2a$10$vLW8gLjoVpksEJf70SGPAOUd1H.ppsIgFTQbU63HVyXDaAcvcZuMe}
+              client-authentication-methods:
+                - "client_secret_basic"
+              authorization-grant-types:
+                - "authorization_code"
+                - "refresh_token"
+              redirect-uris:
+                - ${OAUTH2_WEB_APP_CLIENT_REDIRECT_URI:http://localhost:3000}
+                - "coachcore://redirect"
+                - ${mobile-app.url}
+              scopes:
+                - "openid"
+          coachcore-mail-sender:
+            registration:
+              client-id: ${OAUTH2_MAIL_CLIENT_ID:coachcore-mail-sender}
+              client-secret: ${OAUTH2_MAIL_CLIENT_SECRET:$2a$10$D7XrC01tCS4fp2Odv8cnWeGbKlIJbLVb4Pb/bU0K9VTMIPWz2yHC.}
+              client-authentication-methods:
+                - "client_secret_basic"
+              authorization-grant-types:
+                - "client_credentials"
+              scopes:
+                - "mail.send"
+
+logging:
+  level:
+    org:
+      springframework:
+        security: ${LOGGING_LEVEL:INFO}
+        web: ${LOGGING_LEVEL:INFO}
+    pro:
+      coachcore: ${LOGGING_LEVEL:INFO}
+server:
+  port: 8089
+rsa:
+  public-key: classpath:certs/public.pem
+  private-key: classpath:certs/private.pem
+issuer: ${ISSUER:http://localhost:8089}
+admin:
+  username: ${ADMIN_USERNAME:admin}
+  password: ${ADMIN_PASSWORD:admin}
+dev-mode:
+  enabled: ${DEV_MODE_ENABLED:false}
+mobile-app:
+  url: ${MOBILE_APP_URL:exp://192.168.13.17:8081}

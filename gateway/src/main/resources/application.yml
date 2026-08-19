@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: gateway
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: ${LOGGING_LEVEL:INFO}
+    pro:
+      coachcore: ${LOGGING_LEVEL:INFO}
+services:
+  oauth2-server-url: ${OAUTH2_SERVER_URL:http://localhost:8089}
+  training-service-url: ${TRAINING_SERVICE_URL:http://localhost:8082}
+  newsletter-service-url: ${NEWSLETTER_SERVICE_URL:http://localhost:8001}
+  email-service-url: ${EMAIL_SERVICE_URL:http://localhost:8080}
+  image-service-url: ${IMAGE_SERVICE_URL:http://localhost:8000}
+  profile-service-url: ${PROFILE_SERVICE_URL:http://localhost:3080}

@@ -1,0 +1,74 @@
+package pro.coachcore.oauth2.server.token;
+
+import java.io.IOException;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.ContentCachingResponseWrapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import pro.coachcore.oauth2.common.CookieTokensNames;
+
+@Slf4j
+@Component
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class TokenCookieFilter extends OncePerRequestFilter {
+  @Override
+  protected void doFilterInternal(@NonNull HttpServletRequest request,
+      @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
+      throws ServletException, IOException {
+    if (!request.getRequestURI().toString().startsWith("/oauth2/token")) {
+      filterChain.doFilter(request, response);
+      return;
+    }
+
+    var responseWrapper = new ContentCachingResponseWrapper(response);
+
+    filterChain.doFilter(request, responseWrapper);
+
+    try {
+      var body =
+          new String(responseWrapper.getContentAsByteArray(), response.getCharacterEncoding());
+      var tokensData = new ObjectMapper().readValue(body, TokensData.class);
+
+      if (tokensData != null) {
+        tokensData.addCookies(response);
+      }
+    } catch (JsonProcessingException ignore) {
+    }
+
+    responseWrapper.copyBodyToResponse();
+  }
+
+  private record TokensData(String access_token, String refresh_token, String token_type,
+      String expires_in, String id_token, String scope) {
+    void addCookies(HttpServletResponse response) {
+      addCookie(CookieTokensNames.ACCESS_TOKEN, access_token, 180, true, response);
+      addCookie(CookieTokensNames.REFRESH_TOKEN, refresh_token, 24 * 3600, true, response);
+      addCookie(CookieTokensNames.ID_TOKEN, id_token, 360, false, response);
+    }
+
+    void addCookie(String name, @Nullable String value, int maxAge, boolean http,
+        HttpServletResponse response) {
+      if (value == null) {
+        return;
+      }
+      var cookie = new Cookie(name, value);
+      cookie.setHttpOnly(http);
+      cookie.setPath("/");
+      cookie.setSecure(true);
+      cookie.setMaxAge(maxAge);
+      response.addCookie(cookie);
+      log.debug("Added cookie with name {}", name);
+    }
+  }
+}

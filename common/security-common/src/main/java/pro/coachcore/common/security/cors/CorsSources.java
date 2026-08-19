@@ -1,0 +1,26 @@
+package pro.coachcore.common.security.cors;
+
+import lombok.experimental.UtilityClass;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
+
+@UtilityClass
+public class CorsSources {
+  public static CorsConfigurationSource enableReactClientCorsConfigurationSource() {
+    var config = new CorsConfiguration();
+
+    config.setAllowedOrigins(List.of("http://localhost:3000"));
+    config.setAllowedMethods(List.of("POST", "GET", "PATCH", "DELETE", "OPTIONS"));
+    config.setAllowedHeaders(List.of("*"));
+    config.setAllowCredentials(true);
+
+    var source = new UrlBasedCorsConfigurationSource();
+
+    source.registerCorsConfiguration("/**", config);
+
+    return source;
+  }
+}

@@ -1,0 +1,91 @@
+version: "version"
+services:
+  gateway:
+    image: ghcr.io/coachcore/gateway:1.1.5
+    ports:
+      - 8080:8080
+    environment:
+      OAUTH2_SERVER_URL: http://oauth2-server:8089
+      TRAINING_SERVICE_URL: http://training-service:8082
+      PROFILE_SERVICE_URL: http://profile-service:3080
+      LOGGING_LEVEL: DEBUG
+    depends_on:
+      - oauth2-server
+      - training-service
+      - profile-service
+  training-db:
+    image: postgres:16.2
+    ports:
+      - 5434:5432
+    environment:
+      POSRGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: training
+  training-service:
+    ports:
+      - 8082:8082
+    image: ghcr.io/coachcore/training-service:1.4.7
+    environment:
+      DB_HOST: training-db:5432
+      AUTH_SERVER_HOST: http://oauth2-server:8089
+      LOGGING_LEVEL: DEBUG
+    depends_on:
+      - training-db
+      - oauth2-server
+  profile-db:
+    image: postgres:16.2
+    ports:
+      - 5435:5432
+    environment:
+      POSRGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: profile
+  minio:
+    image: quay.io/minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+  profile-service:
+    image: ghcr.io/coachcore/profile-service:0.0.3
+    environment:
+      DB_HOST: profile-db:5432
+      AUTH_SERVER_HOST: http://oauth2-server:8089
+      LOGGING_LEVEL: INFO
+      AWS_S3_BUCKET_NAME: avatars
+      AWS_S3_ENDPOINT: http://minio:9000
+      AWS_ACCESS_KEY: minio
+      AWS_SECRET_KEY: minio123
+    depends_on:
+      - profile-db
+      - oauth2-server
+      - minio
+  oauth2-db:
+    image: postgres:16.2
+    ports:
+      - 5433:5432
+    environment:
+      POSRGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: oauth2
+  oauth2-server:
+    image: ghcr.io/coachcore/oauth2-server:1.1.4
+    ports:
+      - 8089:8089
+    environment:
+      DB_HOST: oauth2-db:5432
+      ISSUER: http://oauth2-server:8089
+      LOGGING_LEVEL: DEBUG
+      SMTP_PASSWORD: BElhG8mONTHwZhRtO7cgelTV90PBQWZeuhpcOzZU0Ipp
+      SMTP_USERNAME: AKIATHVQLBDEZ3VVTO57
+    depends_on:
+      - oauth2-db
+
+volumes:
+  minio_data:

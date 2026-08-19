@@ -1,5 +1,5 @@
 HELP.md
-target/
+target
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -12,12 +12,15 @@ target/
 .settings
 .springBeans
 .sts4-cache
-
+.env
+.vscode
+oauth2-server/src/main/resources/certs/**
 ### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
+/out/**
 
 ### NetBeans ###
 /nbproject/private/

@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>pro.coachcore</groupId>
+    <artifactId>backend</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>common</artifactId>
+  <name>common</name>
+
+  <modules>
+    <module>jpa-common</module>
+    <module>utils-common</module>
+    <module>dto-common</module>
+    <module>swagger-common</module>
+    <module>validation-common</module>
+    <module>exception-common</module>
+    <module>security-test-common</module>
+    <module>security-common</module>
+    <module>jwt-common</module>
+  </modules>
+  <packaging>pom</packaging>
+</project>

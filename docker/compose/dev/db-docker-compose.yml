@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  oauth2-db:
+    image: postgres:16.2
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: oauth2
+  newsletter-db:
+    image: postgres:16.2
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: newsletter
+  training-db:
+    image: postgres:16.2
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: training
+  profile-db:
+    image: postgres:16.2
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: profile

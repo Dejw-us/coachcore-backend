@@ -1,0 +1,23 @@
+package pro.coachcore.oauth2.server.user.admin;
+
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import pro.coachcore.oauth2.server.user.UserService;
+
+@Slf4j
+@Order(2)
+@Component
+@RequiredArgsConstructor
+class DefaultAdminAccountApplicationRunner implements ApplicationRunner {
+  private final AdminCredentialsProperties adminCredentials;
+  private final UserService userService;
+
+  @Override
+  public void run(ApplicationArguments args) throws Exception {
+    userService.registerAdmin(adminCredentials.username(), adminCredentials.password());
+  }
+}

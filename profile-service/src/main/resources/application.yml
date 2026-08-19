@@ -1,0 +1,42 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AUTH_SERVER_HOST:http://localhost:8089}
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/oauth2/jwks
+  application:
+    name: profile-service
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost:5435}/${DB_NAME:profile}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+logging:
+  level:
+    pro:
+      coachcore: ${LOGGING_LEVEL:DEBUG}
+cloud:
+  aws:
+    s3:
+      bucket: ${AWS_S3_BUCKET_NAME:my-local-bucket}
+      endpoint: ${AWS_S3_ENDPOINT:http://localhost:9000}
+    credentials:
+      access-key: ${AWS_ACCESS_KEY:test}
+      secret-key: ${AWS_SECRET_KEY:test1234}
+    region:
+      static: ${AWS_REGION:us-east-1}
+    stack:
+      auto: false
+server:
+  port: 3080
+  tomcat:
+    max-swallow-size: 10MB
+    max-http-form-post-size: 10MB

@@ -1,0 +1,31 @@
+version: "3.9"
+
+# Remember to escape $ in bcrpyt password with $. basically replace every $ with $$
+
+services:
+  oauth2-db:
+    image: postgres:16.2
+    environment:
+      POSRGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: oauth2
+  oauth2-server:
+    image: ghcr.io/coachcore/oauth2-server:0.0.2
+    environment:
+      DB_HOST: oauth2-db:5432
+      DB_NAME: oauth2
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      OAUTH2_WEB_APP_CLIENT_ID: coachcore-web-app
+      OAUTH2_WEB_APP_CLIENT_SECRET: $$2a$$10$$vLW8gLjoVpksEJf70SGPAOUd1H.ppsIgFTQbU63HVyXDaAcvcZuMe
+      OAUTH2_WEB_APP_CLIENT_REDIRECT_URI: http://localhost:3000
+      OAUTH2_MAIL_CLIENT_ID: coachcore-mail-sender
+      OAUTH2_MAIL_CLIENT_SECRET: $$2a$$10$$D7XrC01tCS4fp2Odv8cnWeGbKlIJbLVb4Pb/bU0K9VTMIPWz2yHC.
+      LOGGING_LEVEL: DEBUG
+      ISSUER: http://oauth2-server:9000
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: admin
+    depends_on:
+      - oauth2-db
+    ports:
+      - 9000:9000
